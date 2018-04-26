@@ -1,4 +1,7 @@
-test_that("CpSdEwma gives the correct result",{
+library(otsad)
+context("Clasic Processing Sd-Ewma")
+
+test_that("CpSdEwma gives the correct result", {
   ## Generate data
   set.seed(100)
   n <- 500
@@ -15,14 +18,12 @@ test_that("CpSdEwma gives the correct result",{
     threshold = 0.01,
     l = 3
   )
-  res <- cbind(df[6:n,], result)
-  rownames(res) <- 1:(n-5)
 
   ## read correct results
-  # correct.results <- read.csv("tests/correct_result.csv", stringsAsFactors = FALSE)
-  correct.results <- 1:500
+  correct.results <- rep(0, 495)
+  correct.results[c(20,87,315)] <- 1
 
-  expect_equal(res[,c("value","is.anomaly")], correct.results[,c("value","is.anomaly")])
+  expect_equal(as.numeric(result$is.anomaly), correct.results)
 })
 
 
