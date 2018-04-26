@@ -1,0 +1,5 @@
+.Rbuildignore
+.RData
+.Rhistory
+otsad.Rproj
+.Rproj.user/
