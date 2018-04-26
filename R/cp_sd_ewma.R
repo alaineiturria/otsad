@@ -20,7 +20,7 @@
 #' shift-detection methods for detecting covariate shifts in non-stationary
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
-#' @example R/cp_sd_ewma_example.R
+#' @example examples/cp_sd_ewma_example.R
 
 
 CpSdEwma <- function(train.data, test.data, threshold = 0.01, l = 3) {
