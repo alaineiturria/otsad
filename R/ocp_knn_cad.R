@@ -1,13 +1,37 @@
-#' Optimized Clasical processing KNN based Conformal Anomaly Detector
-#' @description calculates the anomalies of a data set using the optimized version of the classical processing based on the KNN-CAD algorithm
-#' @param data all data set
-#' @param threshold detection threshold
-#' @param l window length
-#' @param n number of training rows
-#' @param m number of calibration rows
-#' @param k number of neighbours to take into account
+#' Optimized classic processing KNN based Conformal Anomaly Detector (KNN-CAD)
 #'
-#' @return anomaly and grade results
+#' \code{OcpKnnCad} calculates the anomalies of a data set using optimized
+#' version of classical processing based on the KNN-CAD algorithm
+#' \code{\link{CpKnnCad}}. KNN-CAD is a model-free anomaly detection method for
+#' univariate time-series which adapts to non-stationarity in the data stream
+#' and provides probabilistic abnormality scores based on the conformal
+#' prediction paradigm.
+#'
+#' @param data Numerical vector that conforms the training and test data set.
+#' @param threshold Anomaly threshold.
+#' @param l Window length.
+#' @param n Number of training set rows.
+#' @param m Number of calibration set rows.
+#' @param k Number of neighbours to take into account.
+#'
+#' @details \code{data} must be numerical vector without NA values.
+#' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
+#' score obtained for an observation is less than the \code{threshold}, the
+#' observation will be considered abnormal. It should be noted that to determine
+#' whether an observation in time t is anomalous the dataset must have at least
+#' \code{l}+\code{n}+\code{m} values.
+#'
+#' @return Data set conformed by the following columns:
+#'
+#'   \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+#'   \item{anomaly.score}{Probability of anomaly.}
+#'
+#' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev, Conformal
+#' k-NN Anomaly Detector for Univariate Data Streams, ArXiv e-prints, jun. 2017.
+#'
+#' @example examples/ocp_knn_cad_example.R
+
+
 OcpKnnCad <- function(data, threshold, l, n, m, k) {
 
   # Reshape dataset

@@ -1,7 +1,7 @@
 library(otsad)
-context("Clasic Processing Sd-Ewma")
+context("Optimized clasic Processing Sd-Ewma")
 
-test_that("CpSdEwma gives the correct result", {
+test_that("OcpSdEwma gives the correct result", {
   ## Generate data
   set.seed(100)
   n <- 500
@@ -12,7 +12,7 @@ test_that("CpSdEwma gives the correct result", {
   df <- data.frame(timestamp=1:n,value=x)
 
   ## Calculate anomalies
-  result <- CpSdEwma(
+  result <- OcpSdEwma(
     train.data = df[1:5,"value"],
     test.data = df[6:n,"value"],
     threshold = 0.01,
@@ -26,7 +26,3 @@ test_that("CpSdEwma gives the correct result", {
   expect_equal(as.numeric(result$is.anomaly), correct.results)
 
 })
-
-
-
-

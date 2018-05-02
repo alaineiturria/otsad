@@ -2,26 +2,46 @@
 % Please edit documentation in R/ocp_knn_cad.R
 \name{OcpKnnCad}
 \alias{OcpKnnCad}
-\title{Optimized Clasical processing KNN based Conformal Anomaly Detector}
+\title{Optimized classic processing KNN based Conformal Anomaly Detector (KNN-CAD)}
 \usage{
 OcpKnnCad(data, threshold, l, n, m, k)
 }
 \arguments{
-\item{data}{all data set}
+\item{data}{Numerical vector that conforms the training and test data set.}
 
-\item{threshold}{detection threshold}
+\item{threshold}{Anomaly threshold.}
 
-\item{l}{window length}
+\item{l}{Window length.}
 
-\item{n}{number of training rows}
+\item{n}{Number of training set rows.}
 
-\item{m}{number of calibration rows}
+\item{m}{Number of calibration set rows.}
 
-\item{k}{number of neighbours to take into account}
+\item{k}{Number of neighbours to take into account.}
 }
 \value{
-anomaly and grade results
+Data set conformed by the following columns:
+
+  \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+  \item{anomaly.score}{Probability of anomaly.}
 }
 \description{
-calculates the anomalies of a data set using the optimized version of the classical processing based on the KNN-CAD algorithm
+\code{OcpKnnCad} calculates the anomalies of a data set using optimized
+version of classical processing based on the KNN-CAD algorithm
+\code{\link{CpKnnCad}}. KNN-CAD is a model-free anomaly detection method for
+univariate time-series which adapts to non-stationarity in the data stream
+and provides probabilistic abnormality scores based on the conformal
+prediction paradigm.
+}
+\details{
+\code{data} must be numerical vector without NA values.
+\code{threshold} must be a numeric value between 0 and 1. If the anomaly
+score obtained for an observation is less than the \code{threshold}, the
+observation will be considered abnormal. It should be noted that to determine
+whether an observation in time t is anomalous the dataset must have at least
+\code{l}+\code{n}+\code{m} values.
+}
+\references{
+V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev, Conformal
+k-NN Anomaly Detector for Univariate Data Streams, ArXiv e-prints, jun. 2017.
 }
