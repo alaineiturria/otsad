@@ -32,6 +32,7 @@
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
 #' @example examples/ocp_sd_ewma_example.R
+#'
 #' @export
 
 OcpSdEwma <- function(train.data, test.data, threshold, l = 3) {
