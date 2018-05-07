@@ -6,8 +6,7 @@
 #' EWMA which dynamically adjusts the parameterization based on the probability
 #' of the given observation. This method produces dynamic, data-driven anomaly
 #' thresholds which are robust to abrupt transient changes, yet quickly adjust
-#' to long-term distributional shifts. See also \code{\link{OcpPewma}} the
-#' optimized and faster function of the same.
+#' to long-term distributional shifts.
 #'
 #' @param data Numerical vector that conforms the training and test data set.
 #' @param n.train Number of points of the data set that correspond to the
@@ -32,7 +31,7 @@
 #'
 #' This algorithm can be used for both classical and incremental processing. It
 #' should be noted that in case of having a finite data set the
-#' \code{\link{CpPewma}} or \code{\link{OcpPEwma}} algorithms are faster.
+#' \code{\link{CpPewma}} or \code{\link{OcpPewma}} algorithms are faster.
 #' Incremental processing can be used in two ways. 1) Processing all available
 #' data and saving \code{last.res} for future runs in which you have new data.
 #' 2) Using the \href{https://CRAN.R-project.org/package=stream}{stream} library

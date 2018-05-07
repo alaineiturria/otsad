@@ -36,8 +36,6 @@
 #'
 #' @example examples/cp_pewma_example.R
 
-
-# Pewma CONTROL CHART
 CpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0.3, l = 3) {
 
   # Pewma
