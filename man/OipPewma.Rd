@@ -62,7 +62,7 @@ add the last results returned by the last run.
 
 This algorithm can be used for both classical and incremental processing. It
 should be noted that in case of having a finite data set the
-\code{\link{CpPewma}} or \code{\link{OcpPEwma}} algorithms are faster.
+\code{\link{CpPewma}} or \code{\link{OcpPewma}} algorithms are faster.
 Incremental processing can be used in two ways. 1) Processing all available
 data and saving \code{last.res} for future runs in which you have new data.
 2) Using the \href{https://CRAN.R-project.org/package=stream}{stream} library
