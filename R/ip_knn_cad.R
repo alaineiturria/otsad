@@ -1,20 +1,71 @@
-#' @function IpKnnCad
-#' @description Incremental processing KNN based Conformal Anomaly Detector
-#' @param data all data set
-#' @param threshold detection threshold
-#' @param l window length
-#' @param n number of training rows
-#' @param m number of calibration rows
-#' @param k number of neighbours to take into account
-#' @param calibration.alpha last execution calibration.alpha result
-#' @param last.data last execution reshaped dataset
+#' Incremental processing KNN based Conformal Anomaly Detector (KNN-CAD).
 #'
-#' @return anomaly and grade results
-IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL, last.data = NULL) {
-  
+#' \code{IpKnnCad} allows you to calculate anomalies using SD-EWMA in an
+#' incremental processing mode. See also \code{\link{OipKnnCad}} the optimized
+#' and faster function of the same. KNN-CAD is a model-free anomaly detection
+#' method for univariate time-series which adapts to non-stationarity in the
+#' data stream and provides probabilistic abnormality scores based on the
+#' conformal prediction paradigm.
+#'
+#' @param data Numerical vector that conforms the training and test data set.
+#' @param threshold Anomaly threshold.
+#' @param l Window length.
+#' @param n Number of training set rows.
+#' @param m Number of calibration set rows.
+#' @param k Number of neighbours to take into account.
+#' @param calibration.alpha Last calibration alpha values calculated in
+#' the previous iteration and required for the next run.
+#' @param last.data Last values of the data set converted into a
+#' multi-dimensional vectors.
+#'
+#' @details \code{data} must be numerical vector without NA values.
+#' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
+#' score obtained for an observation is less than the \code{threshold}, the
+#' observation will be considered abnormal. It should be noted that to determine
+#' whether an observation in time t is anomalous the dataset must have at least
+#' \code{l}+\code{n}+\code{m} values. \code{calibration.alpha} and
+#' \code{last.data} are the last calculations made in the last iteration of this
+#' algorithm. The first time the algorithm is executed \code{calibration.alpha}
+#' and \code{last.data} values are NULL. However, if you want to run a new batch
+#' of data without having to include it in the old data set and restart the
+#' process you only need to add this two parameters returned by the last run.
+#'
+#' #' This algorithm can be used for both classical and incremental processing.
+#' It should be noted that in case of having a finite data set the
+#' \code{\link{CpKnnCad}} or \code{\link{OcpKnnCad}} algorithms are faster.
+#' Incremental processing can be used in two ways. 1) Processing all available
+#' data and saving \code{calibration.alpha} and \code{last.data} for future runs
+#' in which you have new data. 2) Using the
+#' \href{https://CRAN.R-project.org/package=stream}{stream} library for when you
+#' have too much data and it does not fit into memory. An example has been made
+#' for this use case.
+#'
+#' @return Data set conformed by the following columns:
+#'
+#'   \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+#'   \item{anomaly.score}{Probability of anomaly.}
+#'   \item{calibration.alpha}{Last calibration alpha values calculated in the
+#'   previous iteration and required for the next run.}
+#'   \item{last.data}{Last values of the data set converted into a
+#'   multi-dimensional vectors.}
+#'
+#' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
+#' k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
+#'
+#' @example examples/ip_knn_cad_example.R
+
+IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL,
+                     last.data = NULL) {
+
   # Reshape dataset
-  data <- rbind(last.data, t(sapply(l:length(data), function(i) data[(i-l+1):i])))
-  
+  if (is.null(last.data)) {
+    data <- t(sapply(l:length(data), function(i) data[(i-l+1):i]))
+  } else {
+    data <- c(last.data[nrow(last.data),], data)
+    data <- rbind(last.data[-nrow(last.data),], t(sapply(l:length(data), function(i) data[(i-l+1):i])))
+    rownames(data) <- 1:nrow(data)
+  }
+
   # Auxiliar function
   CalculateKNN <- function(train, test, k) {
     complete.set <- rbind(test, train)
@@ -24,7 +75,7 @@ IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL, last
     alpha <- mean(nearest)
     return(alpha)
   }
-  
+
   # Test Phase
   init <- n + m + 1
   end <- nrow(data)
@@ -34,24 +85,25 @@ IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL, last
     training.set <- data[(index.row - n - m):(index.row - m - 1), ]
     calibration.set <- data[(index.row - m):(index.row - 1), ]
     test <- data[index.row, ]
-    
+
     # Apply KNN to Calibration and Test
     if (is.null(calibration.alpha)) {
-      calibration.alpha <- apply(calibration.set, 1, CalculateKNN, train = training.set, k)
+      calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
+                                 train = training.set, k)
     }
     test.alpha <- CalculateKNN(training.set, test, k)
     calibration.alpha <- calibration.alpha[-1]
     calibration.alpha[m] <- test.alpha
-    
+
     # Experimental p-value
     p.value <- sum(calibration.alpha >= test.alpha) / (m + 1)
     anomaly.score <- rbind(anomaly.score, p.value)
   }
-  
+
   n.data <- nrow(data)
-  last.data <- data[(n.data - n - m):n.data, ]
+  last.data <- data[(n.data - n - m + 1):n.data, ]
   rownames(anomaly.score) <- 1:nrow(anomaly.score)
-  
+
   return(list(anomaly.score = anomaly.score,
               is.anomaly = anomaly.score < threshold,
               calibration.alpha = calibration.alpha,

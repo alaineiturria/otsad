@@ -12,19 +12,22 @@ x[320] <- 170
 df=data.frame(timestamp=1:n,value=x)
 
 ## Calculate anomalies
-result <- IpSdEwma(
+result <- IpTsSdEwma(
   data = df$value,
   n.train = 5,
   threshold = 0.01,
-  l = 3
+  l = 3,
+  m = 20
 )
-res <- cbind(df[6:n,], result$result)
+res <- cbind(df[6:n,], rbind(result$last.data.checked, result$checked.results,
+             result$to.next.iteration$to.check[, -4]))
 rownames(res) <- 1:(n-5)
 
 ## Plot results
+res <- res[1:500,]
 y.limits <- c(-150,250)
 plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
-     xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
+     xlab = "timestamp", ylab = "value", main = "TSSD-EWMA ANOMALY DETECTOR")
 points(x = res[res$is.anomaly == 1, "timestamp"],
        y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 par(new=TRUE)
@@ -56,32 +59,46 @@ last.res <- NULL
 res <- NULL
 nread <- 100
 numIter <- n%/%nread
+m <- 20
 
 ## Calculate anomalies
 for(i in 1:numIter) {
   # read new data
   newRow <- get_points(dsd_df, n = nread, outofpoints = "ignore")
   # calculate if it's an anomaly
-  last.res <- IpSdEwma(
+  last.res <- IpTsSdEwma(
     data = newRow$value,
     n.train = 5,
     threshold = 0.01,
     l = 3,
-    last.res = last.res$last.res
+    m = m,
+    to.next.iteration = last.res$to.next.iteration
   )
-  # prepare the result
-  if(!is.null(last.res$result)){
-    res <- rbind(res, cbind(newRow[(nread-nrow(last.res$result)+1):nread,], last.res$result))
+  # prepare result
+  if(!is.null(last.res$last.data.checked)){
+    res <- rbind(res, cbind(last.timestamp, last.res$last.data.checked))
   }
+  if(!is.null(last.res$checked.results)){
+    init <- nread - (nrow(last.res$checked.results) +
+            nrow(last.res$to.next.iteration$to.check)) + 1
+    end <- init + nrow(last.res$checked.results) - 1
+    res <- rbind(res, cbind(newRow[init:end,], last.res$checked.results))
+  }
+  if(i == numIter){
+    res <- rbind(res,
+           cbind(timestamp = newRow[
+                             (nread - nrow(last.res$to.next.iteration$to.check)
+                             + 1):nread, "timestamp"],
+                 last.res$to.next.iteration$to.check))
+  }
+  last.timestamp <- newRow[(nread-m+1):nread,]
 }
-print(res)
 
 ## Plot results
-n.train <- 5
-rownames(res) <- 1:(n-n.train)
+rownames(res) <- 1:(n-5)
 y.limits <- c(-150,250)
 plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
-     xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
+     xlab = "timestamp", ylab = "value", main = "TSSD-EWMA ANOMALY DETECTOR")
 points(x = res[res$is.anomaly == 1, "timestamp"],
        y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 par(new=TRUE)
@@ -90,5 +107,3 @@ plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n",
 par(new=TRUE)
 plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n",
      ylim = y.limits, xlab = "", ylab = "")
-
-

@@ -1,7 +1,7 @@
 library(otsad)
-context("Incremental Processing Sd-Ewma")
+context("Incremental Processing Pewma")
 
-test_that("IpSdEwma gives the correct result", {
+test_that("IpPewma gives the correct result", {
 
   ## Generate data
   set.seed(100)
@@ -24,23 +24,24 @@ test_that("IpSdEwma gives the correct result", {
     # read new data
     newRow <- df[(iterador+1):(iterador+nread),]
     # calculate if it's an anomaly
-    last.res <- IpSdEwma(
+    last.res <- IpPewma(
       data = newRow$value,
       n.train = 5,
-      threshold = 0.01,
+      alpha0 = 0.8,
+      beta = 0.1,
       l = 3,
       last.res = last.res$last.res
     )
     # prepare the result
     if(!is.null(last.res$result)){
-      res <- rbind(res, cbind(newRow[(nread-nrow(last.res$result)+1):nread,], last.res$result))
+      res <- rbind(res, cbind(newRow, last.res$result))
     }
     iterador <- iterador + nread
   }
 
   ## read correct results
-  correct.results <- rep(0, 495)
-  correct.results[c(20,87,315)] <- 1
+  correct.results <- rep(0, 500)
+  correct.results[c(2,3,25,70,91,92,320)] <- 1
 
   expect_equal(as.numeric(res$is.anomaly), correct.results)
 

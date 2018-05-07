@@ -12,9 +12,9 @@ OipSdEwma(data, n.train, threshold, l = 3, last.res = NULL)
 \item{n.train}{Number of points of the data set that correspond to the
 training set.}
 
-\item{threshold}{Error threshold.}
+\item{threshold}{Error smoothing constant.}
 
-\item{l}{Sigma multiplier to calculate the control limits.}
+\item{l}{Control limit multiplier.}
 
 \item{last.res}{Last result returned by the algorithm.}
 }
@@ -32,18 +32,17 @@ A list of the following items.
  for the next one.}
 }
 \description{
-\code{OipSdEwma} is the optimized implementation of the \code{IpSdEwma}
-function using environment variables. This function  allows you to calculate
-anomalies using SD-EWMA alogrithm in an incremental processing mode. It has
-been shown that in long data sets it can reduce runtime by up to 50\%.
+\code{OipSdEwma} is the optimized implementation of the
+\code{IpSdEwma} function using environment variables. This function  allows
+you to calculate anomalies using SD-EWMA alogrithm in an incremental
+processing mode. It has been shown that in long data sets it can reduce
+runtime by up to 50\%. SD-EWMA algorithm is a novel method for covariate
+shift-detection tests based on a two-stage structure for univariate
+time-series. It works in an online mode and it uses an exponentially weighted
+moving average (EWMA) model based control chart to detect the covariate
+shift-point in non-stationary time-series.
 }
 \details{
-SD-EWMA algorithm is a novel method for covariate shift-detection tests based
-on a two-stage structure for univariate time-series. It works in an online
-mode and it uses an exponentially weighted moving average (EWMA) model based
-control chart to detect the covariate shift-point in non-stationary
-time-series.
-
 \code{data} must be numerical vectors without NA values.
 \code{threshold} must be a numeric value between 0 and 1. It is recommended
 to use low values such as 0.01 or 0.05. By default, 0.01 is used. \code{l} is

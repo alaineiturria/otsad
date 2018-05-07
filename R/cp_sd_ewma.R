@@ -1,17 +1,17 @@
 #' Classic Processing Shift-Detection based on EWMA (SD-EWMA).
 #'
-#' \code{CpSdEwma} calculates the anomalies of a data set using classical
-#' processing based on the SD-EWMA algorithm. This algorithm is a novel method
-#' for covariate shift-detection tests based on a two-stage structure for
-#' univariate time-series. It works in an online mode and it uses an
-#' exponentially weighted moving average (EWMA) model based control chart to
+#' @description \code{CpSdEwma} calculates the anomalies of a data set using
+#' classical processing based on the SD-EWMA algorithm. This algorithm is a
+#' novel method for covariate shift-detection tests based on a two-stage
+#' structure for univariate time-series. It works in an online mode and it uses
+#' an exponentially weighted moving average (EWMA) model based control chart to
 #' detect the covariate shift-point in non-stationary time-series. See also
 #' \code{\link{OcpSdEwma}} the optimized and faster function of the same.
 #'
 #' @param train.data Numerical vector that conforms the training set.
 #' @param test.data Numerical vector that conforms the test set.
-#' @param threshold Error threshold.
-#' @param l Sigma multiplier to calculate the control limits.
+#' @param threshold Error smoothing constant.
+#' @param l Control limit multiplier.
 #'
 #' @details \code{train.data} and \code{test.data} must be numerical vectors
 #' without NA values. \code{threshold} must be a numeric value between 0 and 1.

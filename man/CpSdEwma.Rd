@@ -11,9 +11,9 @@ CpSdEwma(train.data, test.data, threshold = 0.01, l = 3)
 
 \item{test.data}{Numerical vector that conforms the test set.}
 
-\item{threshold}{Error threshold.}
+\item{threshold}{Error smoothing constant.}
 
-\item{l}{Sigma multiplier to calculate the control limits.}
+\item{l}{Control limit multiplier.}
 }
 \value{
 Data set conformed by the following columns:
@@ -23,11 +23,11 @@ Data set conformed by the following columns:
   \item{lcl}{Lower control limit.}
 }
 \description{
-\code{CpSdEwma} calculates the anomalies of a data set using classical
-processing based on the SD-EWMA algorithm. This algorithm is a novel method
-for covariate shift-detection tests based on a two-stage structure for
-univariate time-series. It works in an online mode and it uses an
-exponentially weighted moving average (EWMA) model based control chart to
+\code{CpSdEwma} calculates the anomalies of a data set using
+classical processing based on the SD-EWMA algorithm. This algorithm is a
+novel method for covariate shift-detection tests based on a two-stage
+structure for univariate time-series. It works in an online mode and it uses
+an exponentially weighted moving average (EWMA) model based control chart to
 detect the covariate shift-point in non-stationary time-series. See also
 \code{\link{OcpSdEwma}} the optimized and faster function of the same.
 }

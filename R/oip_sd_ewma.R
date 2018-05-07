@@ -1,21 +1,20 @@
 #' Optimized Incremental Processing Shift-Detection based on EWMA (SD-EWMA).
 #'
-#' \code{OipSdEwma} is the optimized implementation of the \code{IpSdEwma}
-#' function using environment variables. This function  allows you to calculate
-#' anomalies using SD-EWMA alogrithm in an incremental processing mode. It has
-#' been shown that in long data sets it can reduce runtime by up to 50\%.
-#'
-#' SD-EWMA algorithm is a novel method for covariate shift-detection tests based
-#' on a two-stage structure for univariate time-series. It works in an online
-#' mode and it uses an exponentially weighted moving average (EWMA) model based
-#' control chart to detect the covariate shift-point in non-stationary
-#' time-series.
+#' @description \code{OipSdEwma} is the optimized implementation of the
+#' \code{IpSdEwma} function using environment variables. This function  allows
+#' you to calculate anomalies using SD-EWMA alogrithm in an incremental
+#' processing mode. It has been shown that in long data sets it can reduce
+#' runtime by up to 50\%. SD-EWMA algorithm is a novel method for covariate
+#' shift-detection tests based on a two-stage structure for univariate
+#' time-series. It works in an online mode and it uses an exponentially weighted
+#' moving average (EWMA) model based control chart to detect the covariate
+#' shift-point in non-stationary time-series.
 #'
 #' @param data Numerical vector that conforms the training and test data set.
 #' @param n.train Number of points of the data set that correspond to the
 #' training set.
-#' @param threshold Error threshold.
-#' @param l Sigma multiplier to calculate the control limits.
+#' @param threshold Error smoothing constant.
+#' @param l Control limit multiplier.
 #' @param last.res Last result returned by the algorithm.
 #'
 #' @details \code{data} must be numerical vectors without NA values.
@@ -63,7 +62,8 @@ OipSdEwma <- function(data, n.train, threshold, l = 3, last.res = NULL) {
     train.set$i <- train.set$i + 1
     train.set$z.ant <- train.set$z
     train.set$std.ant <- train.set$std
-    train.set$z <- train.set$lambda * train.set$x + (1 - train.set$lambda) * train.set$z.ant
+    train.set$z <-
+    train.set$lambda * train.set$x + (1 - train.set$lambda) * train.set$z.ant
     train.set$error <- train.set$x - train.set$z.ant
     train.set$error.sum <- train.set$error.sum + train.set$error ^ 2
     train.set$std <- train.set$error.sum / train.set$i
@@ -133,7 +133,8 @@ OipSdEwma <- function(data, n.train, threshold, l = 3, last.res = NULL) {
   # Testing phase
   if (!is.null(test.data)) {
     res <- as.data.frame(t(sapply(test.data, SdEwmaTest, new.enviroment)))
-    res <- data.frame(is.anomaly = unlist(res$is.anomaly), lcl = unlist(res$lcl), ucl = unlist(res$ucl))
+    res <- data.frame(is.anomaly = unlist(res$is.anomaly),
+                      lcl = unlist(res$lcl), ucl = unlist(res$ucl))
   }
 
   last.res <- get("last.res", envir = new.enviroment)

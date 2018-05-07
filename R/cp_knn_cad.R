@@ -25,8 +25,8 @@
 #'   \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
 #'   \item{anomaly.score}{Probability of anomaly.}
 #'
-#' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev, Conformal
-#' k-NN Anomaly Detector for Univariate Data Streams, ArXiv e-prints, jun. 2017.
+#' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
+#' k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
 #'
 #' @example examples/cp_knn_cad_example.R
 

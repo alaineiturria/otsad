@@ -11,9 +11,9 @@ OcpSdEwma(train.data, test.data, threshold, l = 3)
 
 \item{test.data}{Numerical vector that conforms the test set.}
 
-\item{threshold}{Error threshold.}
+\item{threshold}{Error smoothing constant.}
 
-\item{l}{Sigma multiplier to calculate the control limits.}
+\item{l}{Control limit multiplier.}
 }
 \value{
 Data set conformed by the following columns:
@@ -23,19 +23,17 @@ Data set conformed by the following columns:
   \item{lcl}{Lower control limit.}
 }
 \description{
-\code{OcpSdEwma} calculates the anomalies of a data set using optimized
-version of classical processing based on the SD-EWMA algorithm. Is an
-optimized implementation of the \code{\link{CpSdEwma}} algorithm using
+\code{OcpSdEwma} calculates the anomalies of a data set using
+optimized version of classical processing based on the SD-EWMA algorithm.
+Is an optimized implementation of the \code{\link{CpSdEwma}} algorithm using
 environment variables. It has been shown that in long data sets it can
-reduce runtime by up to 50\%.
+reduce runtime by up to 50\%. SD-EWMA algorithm is a novel method for
+covariate shift-detection tests based on a two-stage structure for univariate
+time-series. It works in an online mode and it uses an exponentially weighted
+moving average (EWMA) model based control chart to detect the covariate
+shift-point in non-stationary time-series.
 }
 \details{
-SD-EWMA algorithm is a novel method for covariate shift-detection tests based
-on a two-stage structure for univariate time-series. It works in an online
-mode and it uses an exponentially weighted moving average (EWMA) model based
-control chart to detect the covariate shift-point in non-stationary
-time-series.
-
 \code{train.data} and \code{test.data} must be numerical vecters
 without NA values. \code{threshold} must be a numeric value between 0 and 1.
 It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is

@@ -1,17 +1,28 @@
-#' Classic Processing Probabilistic-EWMA (PEWMA)
+#' Classic Processing Probabilistic-EWMA (PEWMA).
 #'
-#' \code{CpPewma} calculates the anomalies of a data set using classical
-#' processing based on the PEWMA algorithm.
+#' @description \code{CpPewma} calculates the anomalies of a data set using
+#' classical processing based on the PEWMA algorithm. This algorithm is
+#' probabilistic method of EWMA which dynamically adjusts the parameterization
+#' based on the probability of the given observation. This method produces
+#' dynamic, data-driven anomaly thresholds which are robust to abrupt transient
+#' changes, yet quickly adjust to long-term distributional shifts. See also
+#' \code{\link{OcpPewma}} the optimized and faster function of the same.
 #'
-#' @param data Numeric vector that includes train and test data to analyze.
-#' @param n.train Number of points of the data set that correspond to the training set.
-#' @param alpha0 initial alpha value
-#' @param beta beta value
-#' @param l Sigma multiplier to calculate the control limits.
+#' @param data Numerical vector that conforms the training and test data set.
+#' @param n.train Number of points of the data set that correspond to the
+#' training set.
+#' @param alpha0  Maximal weighting parameter.
+#' @param beta Weight placed on the probability of the given observation.
+#' @param l Control limit multiplier.
 #'
-#' @details \code{data} must be numerical vector without NA values. BLA BLA BLA
-#' Finally, \code{l} is the parameter that determines the control limits.
-#' By default, 3 is used.
+#' @details \code{data} must be numerical vectors without NA values.
+#' \code{alpha0} must be a numeric value where 0 < \code{alpha0} < 1. If a
+#' faster adjustment to the initial shift is desirable, simply lowering α will
+#' suffice. \code{beta} is the weight placed on the probability of the given
+#' observation. it must be a numeric value where 0 \leq \code{beta} \leq. Note
+#' that \code{beta} equals 0, PEWMA converges to a standard EWMA. Finally
+#' \code{l} is the parameter that determines the control limits. By default, 3
+#' is used.
 #'
 #' @return Data set conformed by the following columns:
 #'
@@ -19,13 +30,15 @@
 #'   \item{ucl}{Upper control limit.}
 #'   \item{lcl}{Lower control limit.}
 #'
-#' @references BLA BLA BLA
+#' @references M. Carter, Kevin y W. Streilein. Probabilistic reasoning for
+#' streaming anomaly detection. 2012 IEEE Statistical Signal Processing Workshop
+#' (SSP), pp. 377-380, Aug 2012.
 #'
 #' @example examples/cp_pewma_example.R
 
 
 # Pewma CONTROL CHART
-CpPewma <- function(data, n.train = 5, alpha0 = 0.2, beta = 0, l = 3) {
+CpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0.3, l = 3) {
 
   # Pewma
   Pewma <- function(row, x) {
@@ -35,7 +48,7 @@ CpPewma <- function(data, n.train = 5, alpha0 = 0.2, beta = 0, l = 3) {
     row$std <- row$std.next
     row$z <- ifelse(row$std == 0, 0, (row$x - row$s1) / row$std)
     row$p <- 1 / sqrt(2 * pi) * exp(-(row$z ^ 2) / 2)
-    row$alpha <- ifelse(row$i <= n.train, 1 - 1 / row$i, (1 - beta * row$p) * row$alpha)
+    row$alpha <- ifelse(row$i <= n.train, 1 - 1 / row$i, (1 - beta * row$p) * alpha0)
     row$s1 <- row$alpha * row$s1 + (1 - row$alpha) * row$x
     row$s2 <- row$alpha * row$s2 + (1 - row$alpha) * row$x ^ 2
     row$s1.next <- row$s1

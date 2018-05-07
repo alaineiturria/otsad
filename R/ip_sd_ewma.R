@@ -1,20 +1,19 @@
 #' Incremental Processing Shift-Detection based on EWMA (SD-EWMA).
 #'
-#' \code{IpSdEwma} allows you to calculate anomalies using SD-EWMA in an
-#' incremental processing mode. See also \code{\link{OipSdEwma}} the
-#' optimized and faster function of the same.
-#'
-#' SD-EWMA algorithm is a novel method for covariate shift-detection tests based
-#' on a two-stage structure for univariate time-series. It works in an online
-#' mode and it uses an exponentially weighted moving average (EWMA) model based
-#' control chart to detect the covariate shift-point in non-stationary
-#' time-series.
+#' @description \code{IpSdEwma} allows you to calculate anomalies
+#' using SD-EWMA in an incremental processing mode. See also
+#' \code{\link{OipSdEwma}} the optimized and faster function of the same.
+#' SD-EWMA algorithm is a novel method for covariate shift-detection tests
+#' based on a two-stage structure for univariate time-series. It works in an
+#' online mode and it uses an exponentially weighted moving average (EWMA)
+#' model based control chart to detect the covariate shift-point in
+#' non-stationary time-series.
 #'
 #' @param data Numerical vector that conforms the training and test data set.
 #' @param n.train Number of points of the data set that correspond to the
 #' training set.
-#' @param threshold Error threshold.
-#' @param l Sigma multiplier to calculate the control limits.
+#' @param threshold Error smoothing constant.
+#' @param l Control limit multiplier.
 #' @param last.res Last result returned by the algorithm.
 #'
 #' @details \code{data} must be numerical vectors without NA values.
