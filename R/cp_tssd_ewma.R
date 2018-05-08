@@ -36,6 +36,8 @@
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
 #' @example examples/cp_tssd_ewma_example.R
+#'
+#' @export
 
 
 CpTsSdEwma <- function(train.data, test.data, threshold, l = 3, m = 5) {

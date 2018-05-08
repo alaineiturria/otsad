@@ -58,6 +58,8 @@
 #' (SSP), pp. 377-380, Aug 2012.
 #'
 #' @example examples/oip_pewma_example.R
+#'
+#' @export
 
 
 # Pewma CONTROL CHART

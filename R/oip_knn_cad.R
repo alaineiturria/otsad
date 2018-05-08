@@ -54,6 +54,8 @@
 #' k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
 #'
 #' @example examples/oip_knn_cad_example.R
+#'
+#' @export
 
 
 OipKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL, last.data = NULL) {
@@ -91,13 +93,17 @@ OipKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL, las
                                  train = training.set, k)
     }
     test.alpha <- CalculateKNN(training.set, test, k)
+
+
+    # Experimental p-value
+    score <- sum(calibration.alpha < test.alpha) / (m + 1)
+
+    # Prepare parametres to next iteration
     calibration.alpha <- calibration.alpha[-1]
     calibration.alpha[m] <- test.alpha
     assign("calibration.alpha", calibration.alpha, env)
 
-    # Experimental p-value
-    p.value <- sum(calibration.alpha >= test.alpha) / (m + 1)
-    return(p.value)
+    return(score)
   }
 
 

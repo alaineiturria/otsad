@@ -53,6 +53,8 @@
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
 #' @example examples/oip_sd_ewma_example.R
+#'
+#' @export
 
 OipSdEwma <- function(data, n.train, threshold, l = 3, last.res = NULL) {
 

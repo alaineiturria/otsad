@@ -52,6 +52,8 @@
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
 #' @example examples/ip_sd_ewma_example.R
+#'
+#' @export
 
 
 IpSdEwma <- function(data, n.train, threshold = 0.01, l = 3, last.res = NULL) {

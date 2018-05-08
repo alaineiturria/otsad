@@ -38,6 +38,8 @@
 #' (SSP), pp. 377-380, Aug 2012.
 #'
 #' @example examples/ocp_pewma_example.R
+#'
+#' @export
 
 OcpPewma <- function(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3) {
 

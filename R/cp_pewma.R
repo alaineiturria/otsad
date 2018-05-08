@@ -35,6 +35,8 @@
 #' (SSP), pp. 377-380, Aug 2012.
 #'
 #' @example examples/cp_pewma_example.R
+#'
+#' @export
 
 CpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0.3, l = 3) {
 
