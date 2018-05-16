@@ -43,7 +43,7 @@
 CpTsSdEwma <- function(train.data, test.data, threshold, l = 3, m = 5) {
 
   ApplyKolmogorovTest <- function(pos, all.data) {
-    if ((pos - (m - 1)) > 0 | (pos + m) <= length(all.data)) {
+    if ((pos - (m - 1)) > 0 & (pos + m) <= length(all.data)) {
       part1 <- all.data[(pos - (m - 1)):pos]
       part2 <- all.data[(pos + 1):(pos + m)]
       res.test <- ks.test(part1, part2, exact = NULL)
