@@ -8,6 +8,11 @@ IpTsSdEwma(data, n.train, threshold, l = 3, m = 5,
   to.next.iteration = list(last.res = NULL, to.check = NULL, last.m = NULL))
 }
 \arguments{
+\item{data}{Numerical vector with training and test dataset.}
+
+\item{n.train}{Number of points of the dataset that correspond to the
+training set.}
+
 \item{threshold}{Error smoothing constant.}
 
 \item{l}{Control limit multiplier.}
@@ -16,50 +21,48 @@ IpTsSdEwma(data, n.train, threshold, l = 3, m = 5,
 
 \item{to.next.iteration}{list with the necessary parameters to execute in
 the next iteration}
-
-\item{train.data}{Numerical vector that conforms the training set.}
-
-\item{test.data}{Numerical vector that conforms the test set.}
 }
 \value{
 A list of the following items.
 
-  \item{last.data.checked}{Anomaly results of the last m results of the
-  previous iteration. Data set conformed by the following columns.}
+  \item{last.data.checked}{Anomaly results of the last \code{m} results of
+  the previous iteration. dataset conformed by the following columns.}
   \itemize{
      \item \code{is.anomaly} 1 if the value is anomalous 0 otherwise.
      \item \code{ucl} Upper control limit.
      \item \code{lcl} Lower control limit.
  }
- \item{checked.results}{Anomaly results of the data set excluding the
- last m values because they could not be verified. Data set conformed by the
- following columns: is.anomaly, ucl, lcl.}
- \item{to.next.iteration}{Last result returned by the algorithm. Is a list
+ \item{checked.results}{Anomaly results of the dataset excluding the
+ last \code{m} values because they could not be verified. dataset conformed
+ by the following columns: \code{is.anomaly}, \code{ucl}, \code{lcl}.}
+ \item{to.next.iteration}{Last result returned by the algorithm. It is a list
  containing the following items.}
  \itemize{
      \item \code{last.res} Last result returned by the aplicaction of
      SD-EWMA function with the calculations of the parameters of the last run
-     that are necessary for the next run.
-     \item \code{to.check} Subsecuence of the last remaining unchecked
-     values to be checked in the next iteration. Data set conformed by the
-     following columns: is.anomaly, ucl, lcl, value.
-     \item \code{last.m} Subsecuence of the m values prior to the to.check
+     . These are necessary for the next run.
+     \item \code{to.check} Subsequence of the last remaining unchecked
+     values to be checked in the next iteration. dataset conformed by the
+     following columns: \code{is.anomaly}, \code{ucl}, \code{lcl},
+     \code{value}.
+     \item \code{last.m} Subsequence of the m values prior to the to.check
      subsecuence necessary to verify the values in to.check.
  }
 }
 \description{
-\code{IpTsSdEwma} allows you to calculate anomalies using
+\code{IpTsSdEwma} allows the calculation of anomalies using
 TSSD-EWMA in an incremental processing mode. See also
-\code{\link{OipTsSdEwma}} the optimized and faster function of the same. This
-algorithm is a novel method for covariate shift-detection tests based on a
-two-stage structure for univariate time-series. TSSD-EWMA works in two
-phases. In the first phase, it detects anomalies using the SD-EWMA
-\code{\link{CpSdEwma}} algorithm. In the second phase, it checks the veracity
-of the anomalies using the Kolmogorov-Simirnov test to reduce false alarms.
+\code{\link{OipTsSdEwma}}, the optimized and faster function of this
+function. This algorithm is a novel method for covariate shift-detection
+tests based on a two-stage structure for univariate time-series. TSSD-EWMA
+works in two phases. In the first phase, it detects anomalies using the
+SD-EWMA \code{\link{CpSdEwma}} algorithm. In the second phase, it checks the
+veracity of the anomalies using the Kolmogorov-Simirnov test to reduce false
+alarms.
 }
 \details{
-\code{train.data} and \code{test.data} must be numerical vectors
-without NA values. \code{threshold} must be a numeric value between 0 and 1.
+\code{data} must be a numerical vector without NA values.
+\code{threshold} must be a numeric value between 0 and 1.
 It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
 used. Finally, \code{l} is the parameter that determines the control limits.
 By default, 3 is used. \code{m} is the length of the subsequences for
@@ -68,14 +71,14 @@ noted that the last m values have not been verified because you need other m
 values to be able to perform the verification. Finally
 \code{to.next.iteration} is the last result returned by some previous
 execution of this algorithm. The first time the algorithm is executed its
-value is NULL. However, if you want to run a new batch of data without having
-to include it in the old data set and restart the process you only need to
-add the last results returned by the last run.
+value is NULL. However, to run a new batch of data without having to include
+it in the old dataset and restart the process, the two parameters returned by
+the last run are only needed.
 }
 \examples{
 ## EXAMPLE 1: ----------------------
-## You can use it in the same way as in CpSdEwma passing the whole dataset as
-## an argument.
+## It can be used in the same way as with CpTsSdEwma passing the whole dataset
+## as an argument.
 
 ## Generate data
 set.seed(100)
@@ -113,8 +116,8 @@ plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n",
      ylim = y.limits, xlab = "", ylab = "")
 
 ## EXAMPLE 2: ----------------------
-## You can use it you can use it in an incremental way. This is an example using
-## stream library. This library allows you to simulate streaming operation.
+## You can use it in an incremental way. This is an example using the stream
+## library. This library allows the simulation of streaming operation.
 
 # install.packages("stream")
 library("stream")

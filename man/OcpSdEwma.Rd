@@ -7,26 +7,26 @@
 OcpSdEwma(train.data, test.data, threshold, l = 3)
 }
 \arguments{
-\item{train.data}{Numerical vector that conforms the training set.}
+\item{train.data}{Numerical vector with the training set.}
 
-\item{test.data}{Numerical vector that conforms the test set.}
+\item{test.data}{Numerical vector with the test set.}
 
 \item{threshold}{Error smoothing constant.}
 
 \item{l}{Control limit multiplier.}
 }
 \value{
-Data set conformed by the following columns:
+dataset conformed by the following columns:
 
-  \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+  \item{is.anomaly}{1 if the value is anomalous 0, otherwise.}
   \item{ucl}{Upper control limit.}
   \item{lcl}{Lower control limit.}
 }
 \description{
-\code{OcpSdEwma} calculates the anomalies of a data set using
+\code{OcpSdEwma} calculates the anomalies of a dataset using an
 optimized version of classical processing based on the SD-EWMA algorithm.
-Is an optimized implementation of the \code{\link{CpSdEwma}} algorithm using
-environment variables. It has been shown that in long data sets it can
+It is an optimized implementation of the \code{\link{CpSdEwma}} algorithm
+using environment variables. It has been shown that in long datasets it can
 reduce runtime by up to 50\%. SD-EWMA algorithm is a novel method for
 covariate shift-detection tests based on a two-stage structure for univariate
 time-series. It works in an online mode and it uses an exponentially weighted
@@ -34,7 +34,7 @@ moving average (EWMA) model based control chart to detect the covariate
 shift-point in non-stationary time-series.
 }
 \details{
-\code{train.data} and \code{test.data} must be numerical vecters
+\code{train.data} and \code{test.data} must be numerical vectors
 without NA values. \code{threshold} must be a numeric value between 0 and 1.
 It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
 used. Finally, \code{l} is the parameter that determines the control limits.
@@ -62,12 +62,16 @@ rownames(res) <- 1:(n-5)
 
 ## Plot results
 y.limits <- c(-150,250)
-plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits, xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
-points(x = res[res$is.anomaly == 1, "timestamp"], y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
+plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
+     xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
+points(x = res[res$is.anomaly == 1, "timestamp"],
+       y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 par(new=TRUE)
-plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 par(new=TRUE)
-plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 }
 \references{
 Raza, H., Prasad, G., & Li, Y. (03 de 2015). EWMA model based

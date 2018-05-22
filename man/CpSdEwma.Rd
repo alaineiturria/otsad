@@ -7,29 +7,29 @@
 CpSdEwma(train.data, test.data, threshold = 0.01, l = 3)
 }
 \arguments{
-\item{train.data}{Numerical vector that conforms the training set.}
+\item{train.data}{Numerical vector with the training set.}
 
-\item{test.data}{Numerical vector that conforms the test set.}
+\item{test.data}{Numerical vector with the test set.}
 
 \item{threshold}{Error smoothing constant.}
 
 \item{l}{Control limit multiplier.}
 }
 \value{
-Data set conformed by the following columns:
+dataset conformed by the following columns:
 
-  \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+  \item{is.anomaly}{1 if the value is anomalous 0, otherwise.}
   \item{ucl}{Upper control limit.}
   \item{lcl}{Lower control limit.}
 }
 \description{
-\code{CpSdEwma} calculates the anomalies of a data set using
+\code{CpSdEwma} calculates the anomalies of a dataset using
 classical processing based on the SD-EWMA algorithm. This algorithm is a
 novel method for covariate shift-detection tests based on a two-stage
 structure for univariate time-series. It works in an online mode and it uses
 an exponentially weighted moving average (EWMA) model based control chart to
 detect the covariate shift-point in non-stationary time-series. See also
-\code{\link{OcpSdEwma}} the optimized and faster function of the same.
+\code{\link{OcpSdEwma}}, the optimized and faster function of this function.
 }
 \details{
 \code{train.data} and \code{test.data} must be numerical vectors
@@ -60,12 +60,16 @@ rownames(res) <- 1:(n-5)
 
 ## Plot results
 y.limits <- c(-150,250)
-plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits, xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
-points(x = res[res$is.anomaly == 1, "timestamp"], y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
+plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
+     xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
+points(x = res[res$is.anomaly == 1, "timestamp"],
+       y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 par(new=TRUE)
-plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 par(new=TRUE)
-plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 }
 \references{
 Raza, H., Prasad, G., & Li, Y. (03 de 2015). EWMA model based

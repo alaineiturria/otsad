@@ -1,5 +1,5 @@
 ## EXAMPLE 1: ----------------------
-## You can use it in the same way as in CpSdEwma passing the whole dataset as
+## It can be used in the same way as with OcpSdEwma passing the whole dataset as
 ## an argument.
 
 ## Generate data
@@ -24,16 +24,20 @@ rownames(res) <- 1:(n-5)
 ## Plot results
 res <- res[1:500,]
 y.limits <- c(-150,250)
-plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits, xlab = "timestamp", ylab = "value", main = "PEWMA ANOMALY DETECTOR")
-points(x = res[res$is.anomaly == 1, "timestamp"], y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
+plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
+     xlab = "timestamp", ylab = "value", main = "SD-EWMA ANOMALY DETECTOR")
+points(x = res[res$is.anomaly == 1, "timestamp"],
+       y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 par(new=TRUE)
-plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 par(new=TRUE)
-plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 
 ## EXAMPLE 2: ----------------------
-## You can use it you can use it in an incremental way. This is an example using
-## stream library. This library allows you to simulate streaming operation.
+## You can use it in an incremental way. This is an example using the stream
+## library. This library allows the simulation of streaming operation.
 
 # install.packages("stream")
 library("stream")
@@ -68,7 +72,8 @@ for(i in 1:numIter) {
   )
   # prepare the result
   if(!is.null(last.res$result)){
-    res <- rbind(res, cbind(newRow[(nread-nrow(last.res$result)+1):nread,], last.res$result))
+    res <- rbind(res, cbind(newRow[(nread-nrow(last.res$result)+1):nread,],
+                 last.res$result))
   }
 }
 print(res)
@@ -77,11 +82,16 @@ n.train <- 5
 rownames(res) <- 1:(n-n.train)
 res <- res[1:500,]
 y.limits <- c(-150,250)
-plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits, xlab = "timestamp", ylab = "value", main = "PEWMA ANOMALY DETECTOR")
-points(x = res[res$is.anomaly == 1, "timestamp"], y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
+plot(x = res$timestamp, y = res$value, type = "l",
+     ylim = y.limits, xlab = "timestamp", ylab = "value",
+     main = "SD-EWMA ANOMALY DETECTOR")
+points(x = res[res$is.anomaly == 1, "timestamp"],
+       y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 par(new=TRUE)
-plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$ucl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 par(new=TRUE)
-plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n", ylim = y.limits, xlab = "", ylab = "")
+plot(x = res$timestamp, y = res$lcl, type="l", col="red", xaxt="n",
+     ylim = y.limits, xlab = "", ylab = "")
 
 

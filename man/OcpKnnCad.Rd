@@ -7,7 +7,7 @@
 OcpKnnCad(data, threshold, l, n, m, k)
 }
 \arguments{
-\item{data}{Numerical vector that conforms the training and test data set.}
+\item{data}{Numerical vector with training and test datasets.}
 
 \item{threshold}{Anomaly threshold.}
 
@@ -20,13 +20,13 @@ OcpKnnCad(data, threshold, l, n, m, k)
 \item{k}{Number of neighbours to take into account.}
 }
 \value{
-Data set conformed by the following columns:
+dataset conformed by the following columns:
 
-  \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+  \item{is.anomaly}{1 if the value is anomalous 0, otherwise.}
   \item{anomaly.score}{Probability of anomaly.}
 }
 \description{
-\code{OcpKnnCad} calculates the anomalies of a data set using optimized
+\code{OcpKnnCad} calculates the anomalies of a dataset using an optimized
 version of classical processing based on the KNN-CAD algorithm
 \code{\link{CpKnnCad}}. KNN-CAD is a model-free anomaly detection method for
 univariate time-series which adapts to non-stationarity in the data stream
@@ -34,12 +34,12 @@ and provides probabilistic abnormality scores based on the conformal
 prediction paradigm.
 }
 \details{
-\code{data} must be numerical vector without NA values.
+\code{data} must be a numerical vector without NA values.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 score obtained for an observation is less than the \code{threshold}, the
-observation will be considered abnormal. It should be noted that to determine
-whether an observation in time t is anomalous the dataset must have at least
-\code{l}+\code{n}+\code{m} values.
+observation will be considered abnormal. It should be noted that, to
+determine whether an observation in time t is anomalous, the dataset must
+have at least \code{l}+\code{n}+\code{m} values.
 }
 \examples{
 ## Generate data

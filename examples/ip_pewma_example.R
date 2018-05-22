@@ -1,5 +1,5 @@
 ## EXAMPLE 1: ----------------------
-## You can use it in the same way as in CpSdEwma passing the whole dataset as
+## It can be used in the same way as with CpPewma passing the whole dataset as
 ## an argument.
 
 ## Generate data
@@ -36,8 +36,8 @@ plot(x = res$timestamp, y = res$lcl, type="l", col="green", xaxt="n",
      ylim = y.limits, xlab = "", ylab = "")
 
 ## EXAMPLE 2: ----------------------
-## You can use it you can use it in an incremental way. This is an example using
-## stream library. This library allows you to simulate streaming operation.
+## You can use it in an incremental way. This is an example using the stream
+## library. This library allows the simulation of streaming operation.
 
 # install.packages("stream")
 library("stream")

@@ -7,9 +7,9 @@
 CpPewma(data, n.train = 5, alpha0 = 0.8, beta = 0.3, l = 3)
 }
 \arguments{
-\item{data}{Numerical vector that conforms the training and test data set.}
+\item{data}{Numerical vector with training and test dataset.}
 
-\item{n.train}{Number of points of the data set that correspond to the
+\item{n.train}{Number of points of the dataset that correspond to the
 training set.}
 
 \item{alpha0}{Maximal weighting parameter.}
@@ -19,30 +19,31 @@ training set.}
 \item{l}{Control limit multiplier.}
 }
 \value{
-Data set conformed by the following columns:
+dataset conformed by the following columns:
 
-  \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+  \item{is.anomaly}{1 if the value is anomalous 0, otherwise.}
   \item{ucl}{Upper control limit.}
   \item{lcl}{Lower control limit.}
 }
 \description{
-\code{CpPewma} calculates the anomalies of a data set using
+\code{CpPewma} calculates the anomalies of a dataset using
 classical processing based on the PEWMA algorithm. This algorithm is
-probabilistic method of EWMA which dynamically adjusts the parameterization
+a probabilistic method of EWMA which dynamically adjusts the parameterization
 based on the probability of the given observation. This method produces
 dynamic, data-driven anomaly thresholds which are robust to abrupt transient
 changes, yet quickly adjust to long-term distributional shifts. See also
-\code{\link{OcpPewma}} the optimized and faster function of the same.
+\code{\link{OcpPewma}}, the optimized and faster function of the this
+function.
 }
 \details{
-\code{data} must be numerical vectors without NA values.
+\code{data} must be a numerical vector without NA values.
 \code{alpha0} must be a numeric value where 0 < \code{alpha0} < 1. If a
-faster adjustment to the initial shift is desirable, simply lowering α will
-suffice. \code{beta} is the weight placed on the probability of the given
-observation. it must be a numeric value where 0 \leq \code{beta} \leq. Note
-that \code{beta} equals 0, PEWMA converges to a standard EWMA. Finally
-\code{l} is the parameter that determines the control limits. By default, 3
-is used.
+faster adjustment to the initial shift is desirable, simply lowering
+\code{alpha0} will suffice. \code{beta} is the weight placed on the
+probability of the given observation. It must be a numeric value where
+0 <= \code{beta} <= 1. Note that if \code{beta} equals 0, PEWMA converges to
+a standard EWMA. Finally \code{l} is the parameter that determines the
+control limits. By default, 3 is used.
 }
 \examples{
 ## Generate data

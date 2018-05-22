@@ -1,29 +1,29 @@
 #' Optimized Classic Processing Shift-Detection based on EWMA (SD-EWMA).
 #'
-#' @description \code{OcpSdEwma} calculates the anomalies of a data set using
+#' @description \code{OcpSdEwma} calculates the anomalies of a dataset using an
 #' optimized version of classical processing based on the SD-EWMA algorithm.
-#' Is an optimized implementation of the \code{\link{CpSdEwma}} algorithm using
-#' environment variables. It has been shown that in long data sets it can
+#' It is an optimized implementation of the \code{\link{CpSdEwma}} algorithm
+#' using environment variables. It has been shown that in long datasets it can
 #' reduce runtime by up to 50\%. SD-EWMA algorithm is a novel method for
 #' covariate shift-detection tests based on a two-stage structure for univariate
 #' time-series. It works in an online mode and it uses an exponentially weighted
 #' moving average (EWMA) model based control chart to detect the covariate
 #' shift-point in non-stationary time-series.
 #'
-#' @param train.data Numerical vector that conforms the training set.
-#' @param test.data Numerical vector that conforms the test set.
+#' @param train.data Numerical vector with the training set.
+#' @param test.data Numerical vector with the test set.
 #' @param threshold Error smoothing constant.
 #' @param l Control limit multiplier.
 #'
-#' @details \code{train.data} and \code{test.data} must be numerical vecters
+#' @details \code{train.data} and \code{test.data} must be numerical vectors
 #' without NA values. \code{threshold} must be a numeric value between 0 and 1.
 #' It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
 #' used. Finally, \code{l} is the parameter that determines the control limits.
 #' By default, 3 is used.
 #'
-#' @return Data set conformed by the following columns:
+#' @return dataset conformed by the following columns:
 #'
-#'   \item{is.anomaly}{1 if the value is anomalous 0 otherwise.}
+#'   \item{is.anomaly}{1 if the value is anomalous 0, otherwise.}
 #'   \item{ucl}{Upper control limit.}
 #'   \item{lcl}{Lower control limit.}
 #'
@@ -37,6 +37,21 @@
 
 OcpSdEwma <- function(train.data, test.data, threshold, l = 3) {
 
+  # validate parameters
+  if (!is.numeric(train.data) | (sum(is.na(train.data)) > 0)) {
+    stop("train.data argument must be a numeric vector and without NA values.")
+  }
+  if (!is.numeric(test.data) | (sum(is.na(test.data)) > 0)) {
+    stop("test.data argument must be a numeric vector and without NA values.")
+  }
+  if (!is.numeric(threshold) | threshold <= 0 |  threshold > 1) {
+    stop("threshold argument must be a numeric value in (0,1] range.")
+  }
+  if (!is.numeric(l)) {
+    stop("l argument must be a numeric value.")
+  }
+
+  # Auxiliar function SdEwma train phase
   SdEwmaTrain <- function(x, env) {
     train.set <- get("last.res", envir = env)
     train.set$x <- x
@@ -53,6 +68,7 @@ OcpSdEwma <- function(train.data, test.data, threshold, l = 3) {
     train.set
   }
 
+  # Auxiliar function SdEwma test phase
   SdEwmaTest <- function(x, env) {
     row <- get("last.res", envir = env)
     row$i <- row$i + 1

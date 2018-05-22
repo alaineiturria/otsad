@@ -1,5 +1,5 @@
 ## EXAMPLE 1: ----------------------
-## You can use it in the same way as in CpSdEwma passing the whole dataset as
+## It can be used in the same way as with CpKnnCad passing the whole dataset as
 ## an argument.
 
 ## Generate data
@@ -34,8 +34,8 @@ points(x = res[res$is.anomaly == 1, "timestamp"],
        y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
 
 ## EXAMPLE 2: ----------------------
-## You can use it you can use it in an incremental way. This is an example using
-## stream library. This library allows you to simulate streaming operation.
+## You can use it in an incremental way. This is an example using the stream
+## library. This library allows the simulation of streaming operation.
 
 # install.packages("stream")
 library("stream")
