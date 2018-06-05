@@ -7,12 +7,16 @@
 #' and provides probabilistic abnormality scores based on the conformal
 #' prediction paradigm.
 #'
-#' @param data Numerical vector with training and test datasets.
+#' @param data Numerical vector with training and test dataset.
+#' @param n.train Number of points of the dataset that correspond to the
+#' training set.
 #' @param threshold Anomaly threshold.
 #' @param l Window length.
 #' @param n Number of training set rows.
 #' @param m Number of calibration set rows.
 #' @param k Number of neighbours to take into account.
+#' @param ncm.type Non Conformity Measure to use \"ICAD\" or \"LDCD\"
+#' @param reducefp If TRUE reduces false positives
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
@@ -34,7 +38,8 @@
 #' @export
 
 
-OcpKnnCad <- function(data, threshold, l, n, m, k) {
+OcpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
+                      ncm.type = "ICAD", reducefp = TRUE) {
 
   # validate parameters
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
@@ -43,8 +48,11 @@ OcpKnnCad <- function(data, threshold, l, n, m, k) {
   if (!is.numeric(threshold) | threshold <= 0 |  threshold > 1) {
     stop("threshold argument must be a numeric value in (0,1] range.")
   }
-  if (!is.numeric(l)) {
-    stop("l argument must be a numeric value.")
+  if (!is.numeric(l) & (l > n.train / 2)) {
+    stop("l argument must be a numeric value and less than n.train / 2.")
+  }
+  if(l + n + m > n.train) {
+    stop("n.train must be less than l + m + n")
   }
   if (!is.numeric(n)) {
     stop("n argument must be a numeric value.")
@@ -52,51 +60,116 @@ OcpKnnCad <- function(data, threshold, l, n, m, k) {
   if (!is.numeric(m)) {
     stop("m argument must be a numeric value.")
   }
-  if (!is.numeric(k)) {
-    stop("k argument must be a numeric value.")
+  if (!is.numeric(k) & (k >= n)) {
+    stop("k argument must be a numeric value and less than n.")
+  }
+  if (ncm.type != "ICAD" & ncm.type != "LDCD") {
+    stop("ncm.type argument must be ICAD or LDCD")
   }
 
   # Reshape dataset
   data <- t(sapply(l:length(data), function(i) data[(i-l+1):i]))
 
   # Auxiliar function
-  CalculateKNN <- function(train, test, k) {
-    complete.set <- rbind(test, train)
-    cov <- cov(complete.set)
-    distances <- apply(train, 1, stats::mahalanobis, center = test, cov = cov)
+  CalculateKNN <- function(train, test, k, cov) {
+    distances <- apply(train, 1, stats::mahalanobis, center = test,
+      cov = cov, inverted = TRUE)
     nearest <- sort(distances)[1:k]
-    alpha <- mean(nearest)
+    if (ncm.type == "ICAD") {
+      alpha <- sum(nearest)
+    }
+    else {
+      alpha <- mean(nearest)
+    }
     return(alpha)
   }
 
-  # Auxiliar function
-  Test.phase <- function(index.row, env) {
-    # Select subsamples
-    trainingSet <- data[(index.row - n - m):(index.row - m - 1), ]
-    calibrationSet <- data[(index.row - m):(index.row - 1), ]
-    test <- data[index.row, ]
+  Train.phase <- function(index.row, env) {
+    training.set <- data[(index.row - n):(index.row - 1), ]
+    tryCatch({
+      cov <- cov(training.set)
+      cov <- solve(cov)
+      assign("cov", cov, env)
+    }, error = function(e) {
+      print("no tiene inversa")
+      cov <- get("cov", envir = env)
+    })
 
-    # Apply KNN to Calibration and Test
     calibration.alpha <- get("calibration.alpha", envir = env)
     if (is.null(calibration.alpha)) {
-      calibration.alpha <- apply(calibrationSet, 1, CalculateKNN, train = trainingSet, k)
+      calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
+        train = training.set, k, cov)
     }
-    test.alpha <- CalculateKNN(trainingSet, test, k)
-
-    # Experimental p-value
-    score <- sum(calibration.alpha < test.alpha) / (m + 1)
+    test.alpha <- CalculateKNN(training.set, test, k, cov)
 
     # Prepare parametres to next iteration
     calibration.alpha <- calibration.alpha[-1]
     calibration.alpha[m] <- test.alpha
     assign("calibration.alpha", calibration.alpha, env)
 
+    return("ok")
+  }
+
+  # Auxiliar function
+  Test.phase <- function(index.row, env) {
+    # Select subsamples
+    training.set <- data[(index.row - n - m):(index.row - m - 1), ]
+    calibration.set <- data[(index.row - m):(index.row - 1), ]
+    test <- data[index.row, ]
+
+    # Apply KNN to Calibration and Test
+    tryCatch({
+      cov <- cov(training.set)
+      cov <- solve(cov)
+    }, error = function(e) {
+      print("no tiene inversa")
+      cov <- get("cov", envir = env)
+    })
+
+    calibration.alpha <- get("calibration.alpha", envir = env)
+    if (is.null(calibration.alpha)) {
+      calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
+                                 train = training.set, k, cov)
+    }
+    test.alpha <- CalculateKNN(training.set, test, k, cov)
+
+    # Experimental p-value
+    if (ncm.type == "ICAD") {
+      score <- sum(calibration.alpha >= test.alpha) / m
+    } else {
+      score <- sum(calibration.alpha >= test.alpha) / (m + 1)
+    }
+
+    # Reduce false positives
+    pred <- get("pred", envir = env)
+    if (reducefp) {
+      if(pred > 0) {
+        pred <- pred - 1
+        assign("pred", pred, env)
+        score <- 0.5
+      } else if (score >= 0.9965) {
+        pred <- floor(n.train / 5)
+        assign("pred", pred, env)
+      }
+    }
+
+    # Prepare parametres to next iteration
+    calibration.alpha <- calibration.alpha[-1]
+    calibration.alpha[m] <- test.alpha
+    assign("calibration.alpha", calibration.alpha, env)
+    assign("cov", cov, env)
+
     return(score)
   }
 
   new.enviroment <- new.env()
   assign("calibration.alpha", NULL, envir = new.enviroment)
-  anomaly.score <- sapply((n + m + 1):nrow(data), Test.phase, new.enviroment)
+  assign("cov", solve(diag(l)), envir = new.enviroment)
+  assign("pred", (-1), envir = new.enviroment)
+  init <- n + 1
+  end <- n.train - (l - 1)
+  none <- sapply(init:end, Train.phase, new.enviroment)
+  anomaly.score <- sapply((end + 1):nrow(data), Test.phase, new.enviroment)
 
   return(list(anomaly.score = anomaly.score, is.anomaly = anomaly.score < threshold))
 

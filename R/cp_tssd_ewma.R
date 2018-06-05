@@ -64,7 +64,7 @@ CpTsSdEwma <- function(train.data, test.data, threshold, l = 3, m = 5) {
     if ((pos - (m - 1)) > 0 & (pos + m) <= length(all.data)) {
       part1 <- all.data[(pos - (m - 1)):pos]
       part2 <- all.data[(pos + 1):(pos + m)]
-      res.test <- stats::ks.test(part1, part2, exact = NULL)
+      res.test <- stats::ks.test(part1, part2)
       return(ifelse(res.test$p.value > 0.05, 0, 1))
     } else {
       return(1)

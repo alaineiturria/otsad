@@ -4,10 +4,14 @@
 \alias{CpKnnCad}
 \title{Classic processing KNN based Conformal Anomaly Detector (KNN-CAD)}
 \usage{
-CpKnnCad(data, threshold, l, n, m, k)
+CpKnnCad(data, n.train, threshold, l, n = l, m = l, k, ncm.type = "ICAD",
+  reducefp = TRUE)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}
+
+\item{n.train}{Number of points of the dataset that correspond to the
+training set.}
 
 \item{threshold}{Anomaly threshold.}
 
@@ -18,6 +22,8 @@ CpKnnCad(data, threshold, l, n, m, k)
 \item{m}{Number of calibration set rows.}
 
 \item{k}{Number of neighbours to take into account.}
+
+\item{ncm.type}{Non Conformity Measure to use \"ICAD\" or \"LDCD\"}
 }
 \value{
 dataset conformed by the following columns:
@@ -51,21 +57,23 @@ x[320] <- 170
 df <- data.frame(timestamp=1:n,value=x)
 
 ## Set parameters
-params.KNN <- list(threshold = 0.01, l = 20, n = 25, m = 25, k = 17)
+params.KNN <- list(threshold = 0.01, n.train = 72, l = 19, n = 25, m = 25, k = 17)
 
 ## Calculate anomalies
 result <- CpKnnCad(
   data = df$value,
+  n.train = params.KNN$n.train,
   threshold = params.KNN$threshold,
   l = params.KNN$l,
   n = params.KNN$n,
   m = params.KNN$m,
-  k = params.KNN$k
+  k = params.KNN$k,
+  ncm.type = "ICAD",
+  reducefp = TRUE
 )
 
 ## Plot results
-res <- cbind(df[(params.KNN$m+params.KNN$n+params.KNN$l):n,],
-             as.data.frame(result))
+res <- cbind(df[(params.KNN$n.train + 1):n,], as.data.frame(result))
 y.limits <- c(-150,250)
 plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
      xlab = "timestamp", ylab = "value", main = "KNN-CAD ANOMALY DETECTOR")
