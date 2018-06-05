@@ -24,6 +24,8 @@ training set.}
 \item{k}{Number of neighbours to take into account.}
 
 \item{ncm.type}{Non Conformity Measure to use \"ICAD\" or \"LDCD\"}
+
+\item{reducefp}{If TRUE reduces false positives}
 }
 \value{
 dataset conformed by the following columns:
@@ -58,7 +60,7 @@ x[320] <- 170
 df <- data.frame(timestamp=1:n,value=x)
 
 ## Set parameters
-params.KNN <- list(threshold = 0.01, n.train = 75, l = 25, n = 25, m = 25, k = 17)
+params.KNN <- list(threshold = 0.01, n.train = 75, l = 19, n = 30, m = 25, k = 17)
 
 ## Calculate anomalies
 result <- OcpKnnCad(
