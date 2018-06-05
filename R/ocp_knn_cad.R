@@ -86,6 +86,8 @@ OcpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
 
   Train.phase <- function(index.row, env) {
     training.set <- data[(index.row - n):(index.row - 1), ]
+    calibration.set <- data[(index.row - m):(index.row - 1), ]
+    test <- data[index.row, ]
     tryCatch({
       cov <- cov(training.set)
       cov <- solve(cov)
