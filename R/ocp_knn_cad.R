@@ -45,8 +45,8 @@ OcpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
     stop("data argument must be a numeric vector and without NA values.")
   }
-  if (!is.numeric(threshold) | threshold <= 0 |  threshold > 1) {
-    stop("threshold argument must be a numeric value in (0,1] range.")
+  if (!is.numeric(threshold) | threshold < 0 |  threshold > 1) {
+    stop("threshold argument must be a numeric value in [0,1] range.")
   }
   if (!is.numeric(l) & (l > n.train / 2)) {
     stop("l argument must be a numeric value and less than n.train / 2.")
