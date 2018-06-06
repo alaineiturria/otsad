@@ -137,9 +137,9 @@ OcpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
 
     # Experimental p-value
     if (ncm.type == "ICAD") {
-      score <- sum(calibration.alpha >= test.alpha) / m
+      score <- sum(calibration.alpha < test.alpha) / m
     } else {
-      score <- sum(calibration.alpha >= test.alpha) / (m + 1)
+      score <- 1 - sum(calibration.alpha >= test.alpha) / (m + 1)
     }
 
     # Reduce false positives
@@ -173,6 +173,6 @@ OcpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
   none <- sapply(init:end, Train.phase, new.enviroment)
   anomaly.score <- sapply((end + 1):nrow(data), Test.phase, new.enviroment)
 
-  return(list(anomaly.score = anomaly.score, is.anomaly = anomaly.score < threshold))
+  return(list(anomaly.score = anomaly.score, is.anomaly = anomaly.score >= threshold))
 
 }

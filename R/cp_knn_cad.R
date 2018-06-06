@@ -138,9 +138,9 @@ CpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
 
     # Experimental p-value
     if (ncm.type == "ICAD") {
-      score <- sum(calibration.alpha >= test.alpha) / m
+      score <- sum(calibration.alpha < test.alpha) / m
     } else {
-      score <- sum(calibration.alpha >= test.alpha) / (m + 1)
+      score <- 1 - sum(calibration.alpha >= test.alpha) / (m + 1)
     }
 
     # Reduce false positives
@@ -164,6 +164,6 @@ CpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
   rownames(anomaly.score) <- 1:nrow(anomaly.score)
 
   return(list(anomaly.score = anomaly.score,
-              is.anomaly = anomaly.score < threshold))
+              is.anomaly = anomaly.score >= threshold))
 
 }
