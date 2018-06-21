@@ -25,7 +25,7 @@ training set.}
 
 \item{ncm.type}{Non Conformity Measure to use \"ICAD\" or \"LDCD\"}
 
-\item{reducefp}{If TRUE reduces false positives}
+\item{reducefp}{If TRUE reduces false positives.}
 }
 \value{
 dataset conformed by the following columns:

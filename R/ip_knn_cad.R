@@ -8,27 +8,28 @@
 #' scores based on the conformal prediction paradigm.
 #'
 #' @param data Numerical vector with training and test datasets.
+#' @param n.train Number of points of the dataset that correspond to the
+#' training set.
 #' @param threshold Anomaly threshold.
 #' @param l Window length.
 #' @param n Number of training set rows.
 #' @param m Number of calibration set rows.
 #' @param k Number of neighbours to take into account.
-#' @param calibration.alpha Last calibration alpha values calculated in
-#' the previous iteration and required for the next run.
-#' @param last.data Last values of the dataset converted into a
-#' multi-dimensional vectors.
+#' @param ncm.type Non Conformity Measure to use \"ICAD\" or \"LDCD\"
+#' @param reducefp If TRUE reduces false positives.
+#' @param to.next.iteration list with the necessary parameters to execute in
+#' the next iteration.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 #' score obtained from an observation is less than the \code{threshold}, the
 #' observation will be considered abnormal. It should be noted that, to
 #' determine whether an observation in time t is anomalous, the dataset must
-#' have at least \code{l}+\code{n}+\code{m} values. \code{calibration.alpha} and
-#' \code{last.data} are the last calculations made in the last iteration of this
-#' algorithm. The first time the algorithm is executed, \code{calibration.alpha}
-#' and \code{last.data} values are NULL. However, to run a new batch
-#' of data without having to include it in the old dataset and restart the
-#' process, the two parameters returned by the last run are only needed.
+#' have at least \code{l}+\code{n}+\code{m} values. \code{to.next.iteration}
+#' is the last result returned by some previous execution of this algorithm.
+#' The first time the algorithm is executed its value is NULL. However, to run a
+#' new batch of data without having to include it in the old dataset and restart
+#' the process, this parameter returned by the last run is only needed.
 #'
 #' This algorithm can be used for both classical and incremental processing.
 #' It should be noted that in case of having a finite dataset, the
@@ -44,10 +45,22 @@
 #'
 #'   \item{is.anomaly}{1 if the value is anomalous 0, otherwise.}
 #'   \item{anomaly.score}{Probability of anomaly.}
-#'   \item{calibration.alpha}{Last calibration alpha values calculated in the
-#'   previous iteration and required for the next run.}
-#'   \item{last.data}{Last values of the dataset converted into
-#'   multi-dimensional vectors.}
+#'   \item{to.next.iteration}{Last result returned by the algorithm. It is a list
+#'   containing the following items.}
+#'   \itemize{
+#'      \item \code{calibration.alpha} Last calibration alpha values calculated
+#'      in the previous iteration and required for the next run.
+#'      \item \code{last.data} Last values of the dataset converted into
+#'      multi-dimensional vectors.
+#'      \item \code{last.cov} Last covariance matrix calculated in the previous
+#'      iteration and required for the next run.
+#'      \item \code{pred} Last covariance matrix calculated in the previous
+#'      iteration and required for the next run.
+#'      \item \code{num.instance} Number of observations that have been
+#'      processed up to the last iteration.
+#'      \item \code{pred} Parameter that is used to reduce false positives. Only
+#'      necessary in case of reducefp is TRUE.
+#'  }
 #'
 #' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
 #' k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
@@ -56,8 +69,11 @@
 #'
 #' @export
 
-IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL,
-                     last.data = NULL) {
+IpKnnCad <- function(data, n.train, threshold, l, n, m, k, ncm.type = "ICAD",
+                     reducefp = TRUE,
+                     to.next.iteration = list(calibration.alpha = NULL,
+                                        last.data = NULL, last.cov = NULL,
+                                        pred = NULL, num.instance = NULL)) {
 
   # validate parameters
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
@@ -78,38 +94,85 @@ IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL,
   if (!is.numeric(k)) {
     stop("k argument must be a numeric value.")
   }
-  if (!is.null(calibration.alpha) & !is.vector(calibration.alpha)) {
-    stop("calibration.alpha argument must be NULL or a numeric vector with las
-         execution calibration.alpha result.")
-  }
-  if (!is.null(last.data) & !is.matrix(last.data)) {
-    stop("last.data argument must be NULL or a data.frame with las execution
-          last.data result.")
-  }
 
   # Reshape dataset
-  if (is.null(last.data)) {
-    data <- t(sapply(l:length(data), function(i) data[(i-l+1):i]))
+  if (is.null(to.next.iteration$last.data)) {
+    num.data <- length(data)
+    data <- t(sapply(l:num.data, function(i) data[(i-l+1):i]))
   } else {
-    data <- c(last.data[nrow(last.data),], data)
-    data <- rbind(last.data[-nrow(last.data),], t(sapply(l:length(data), function(i) data[(i-l+1):i])))
+    num.data <- length(data)
+    data <- c(to.next.iteration$last.data[nrow(to.next.iteration$last.data),], data)
+    data <- rbind(to.next.iteration$last.data[-nrow(to.next.iteration$last.data),],
+                  t(sapply(l:length(data), function(i) data[(i-l+1):i])))
     rownames(data) <- 1:nrow(data)
   }
 
-  # Auxiliar function
-  CalculateKNN <- function(train, test, k) {
-    complete.set <- rbind(test, train)
-    cov <- cov(complete.set)
-    distances <- apply(train, 1, stats::mahalanobis, center = test, cov = cov)
+  CalculateKNN <- function(train, test, k, cov) {
+    distances <- apply(train, 1, stats::mahalanobis, center = test,
+      cov = cov, inverted = TRUE)
     nearest <- sort(distances)[1:k]
-    alpha <- mean(nearest)
+    if (ncm.type == "ICAD") {
+      alpha <- sum(nearest)
+    }
+    else {
+      alpha <- mean(nearest)
+    }
     return(alpha)
   }
 
+  # Train Phase
+  if(is.null(to.next.iteration$last.cov)) {
+    cov <- solve(diag(l))
+  } else {
+    cov <- to.next.iteration$last.cov
+  }
+
+  num.instance <- to.next.iteration$num.instance
+  pred <- to.next.iteration$pred
+  calibration.alpha <- to.next.iteration$calibration.alpha
+
+  if(is.null(num.instance)) {
+    num.instance <- 0
+  }
+  if(num.instance <= n.train) {
+    init <- n + m + 1
+    end <- n.train - (l - 1)
+    for (index.row in init:end) {
+      training.set <- data[(index.row - n):(index.row - 1), ]
+      calibration.set <- data[(index.row - m):(index.row - 1), ]
+      test <- data[index.row, ]
+      tryCatch({
+        cov <- cov(training.set)
+        cov <- solve(cov)
+      }, error = function(e) {
+        print("no tiene inversa")
+        cov <- cov
+      })
+
+      if (is.null(calibration.alpha)) {
+        calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
+          train = training.set, k, cov)
+      }
+      test.alpha <- CalculateKNN(training.set, test, k, cov)
+
+      # Prepare parametres to next iteration
+      calibration.alpha <- calibration.alpha[-1]
+      calibration.alpha[m] <- test.alpha
+    }
+  }
+
+
   # Test Phase
-  init <- n + m + 1
+  if (num.instance <= n.train) {
+    init <- end + 1
+  } else {
+    init <- n + m + 1
+  }
   end <- nrow(data)
   anomaly.score <- NULL
+  if (is.null(pred)) {
+    pred <- -1
+  }
   for (index.row in init:end) {
     # Select subsamples
     training.set <- data[(index.row - n - m):(index.row - m - 1), ]
@@ -117,19 +180,44 @@ IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL,
     test <- data[index.row, ]
 
     # Apply KNN to Calibration and Test
+    tryCatch({
+      cov <- cov(training.set)
+      cov <- solve(cov)
+    }, error = function(e) {
+      print("no tiene inversa")
+      cov <- cov
+    })
+
+    # Apply KNN to Calibration and Test
     if (is.null(calibration.alpha)) {
       calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
-                                 train = training.set, k)
+                                 train = training.set, k, cov)
     }
-    test.alpha <- CalculateKNN(training.set, test, k)
+    test.alpha <- CalculateKNN(training.set, test, k, cov)
 
     # Experimental p-value
-    score <- sum(calibration.alpha < test.alpha) / (m + 1)
+    if (ncm.type == "ICAD") {
+      score <- sum(calibration.alpha < test.alpha) / m
+    } else {
+      score <- 1 - sum(calibration.alpha >= test.alpha) / (m + 1)
+    }
+
+    # Reduce false positives
+    if (reducefp) {
+      if(pred > 0) {
+        pred <- pred - 1
+        score <- 0.5
+      } else if (score >= 0.9965) {
+        pred <- floor(n.train / 5)
+      }
+    }
+
     anomaly.score <- rbind(anomaly.score, score)
 
     # Prepare parametres to next iteration
     calibration.alpha <- calibration.alpha[-1]
     calibration.alpha[m] <- test.alpha
+
   }
 
   n.data <- nrow(data)
@@ -137,7 +225,11 @@ IpKnnCad <- function(data, threshold, l, n, m, k, calibration.alpha = NULL,
   rownames(anomaly.score) <- 1:nrow(anomaly.score)
 
   return(list(anomaly.score = anomaly.score,
-              is.anomaly = anomaly.score < threshold,
-              calibration.alpha = calibration.alpha,
-              last.data = as.matrix(last.data)))
+              is.anomaly = anomaly.score >= threshold,
+              to.next.iteration = list(
+                calibration.alpha = calibration.alpha,
+                last.data = as.matrix(last.data),
+                last.cov = cov, pred = pred,
+                num.instance =  num.instance + num.data
+              )))
 }

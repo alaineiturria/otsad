@@ -15,7 +15,7 @@
 #' @param m Number of calibration set rows.
 #' @param k Number of neighbours to take into account.
 #' @param ncm.type Non Conformity Measure to use \"ICAD\" or \"LDCD\"
-#' @param reducefp If TRUE reduces false positives
+#' @param reducefp If TRUE reduces false positives.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
