@@ -60,7 +60,7 @@ x[320] <- 170
 df <- data.frame(timestamp=1:n,value=x)
 
 ## Set parameters
-params.KNN <- list(threshold = 0.99, n.train = 75, l = 19, k = 17)
+params.KNN <- list(threshold = 1, n.train = 50, l = 19, k = 17)
 
 ## Calculate anomalies
 result <- CpKnnCad(
@@ -74,12 +74,13 @@ result <- CpKnnCad(
 )
 
 ## Plot results
-res <- cbind(df[(params.KNN$n.train + 1):n,], as.data.frame(result))
+res <- cbind(df[(params.KNN$n.train + 1):n,],
+             is.anomaly = result$is.anomaly[(params.KNN$n.train + 1):n])
 y.limits <- c(-150,250)
 plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
      xlab = "timestamp", ylab = "value", main = "KNN-CAD ANOMALY DETECTOR")
-points(x = res[res$is.anomaly == 1, "timestamp"],
-       y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
+points(x = res[res$is.anomaly == TRUE, "timestamp"],
+       y = res[res$is.anomaly == TRUE, "value"], pch=4, col="red", lwd = 2)
 
 }
 \references{

@@ -4,12 +4,11 @@
 \alias{IpKnnCad}
 \title{Incremental processing KNN based Conformal Anomaly Detector (KNN-CAD).}
 \usage{
-IpKnnCad(data, n.train, threshold, l, n, m, k, ncm.type = "ICAD",
-  reducefp = TRUE, to.next.iteration = list(calibration.alpha = NULL,
-  last.data = NULL, last.cov = NULL, pred = NULL, num.instance = NULL))
+IpKnnCad(data, n.train, threshold = 1, l = 19, k = 27,
+  ncm.type = "ICAD", reducefp = TRUE, to.next.iteration = NULL)
 }
 \arguments{
-\item{data}{Numerical vector with training and test datasets.}
+\item{data}{Numerical vector with training and test dataset.}
 
 \item{n.train}{Number of points of the dataset that correspond to the
 training set.}
@@ -18,13 +17,9 @@ training set.}
 
 \item{l}{Window length.}
 
-\item{n}{Number of training set rows.}
-
-\item{m}{Number of calibration set rows.}
-
 \item{k}{Number of neighbours to take into account.}
 
-\item{ncm.type}{Non Conformity Measure to use \"ICAD\" or \"LDCD\"}
+\item{ncm.type}{Non Conformity Measure to use "ICAD" or "LDCD"}
 
 \item{reducefp}{If TRUE reduces false positives.}
 
@@ -39,18 +34,20 @@ dataset conformed by the following columns:
   \item{to.next.iteration}{Last result returned by the algorithm. It is a list
   containing the following items.}
   \itemize{
-     \item \code{calibration.alpha} Last calibration alpha values calculated
+     \item \code{training.set} Last training set values used
+     in the previous iteration and required for the next run.
+     \item \code{calibration.set} Last calibration set values used
+     in the previous iteration and required for the next run.
+     \item \code{sigma} Last covariance matrix calculated in the previous
+     iteration and required for the next run.
+     \item \code{alphas} Last calibration alpha values calculated
      in the previous iteration and required for the next run.
      \item \code{last.data} Last values of the dataset converted into
-     multi-dimensional vectors.
-     \item \code{last.cov} Last covariance matrix calculated in the previous
-     iteration and required for the next run.
-     \item \code{pred} Last covariance matrix calculated in the previous
-     iteration and required for the next run.
-     \item \code{num.instance} Number of observations that have been
-     processed up to the last iteration.
+     multi-dimensional vectors..
      \item \code{pred} Parameter that is used to reduce false positives. Only
      necessary in case of reducefp is TRUE.
+     \item \code{record.count} Number of observations that have been
+     processed up to the last iteration.
  }
 }
 \description{
@@ -64,10 +61,15 @@ scores based on the conformal prediction paradigm.
 \details{
 \code{data} must be a numerical vector without NA values.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
-score obtained from an observation is less than the \code{threshold}, the
-observation will be considered abnormal. It should be noted that, to
-determine whether an observation in time t is anomalous, the dataset must
-have at least \code{l}+\code{n}+\code{m} values. \code{to.next.iteration}
+score obtained for an observation is greater than the \code{threshold}, the
+observation will be considered abnormal. \code{l} must be a numerical value
+between 1 and 1/\code{n}; \code{n} being the length of the training data.
+Take into account that the value of l has a direct impact on the
+computational cost, so very high values will make the execution time longer.
+\code{k} parameter must be a numerical value less than the \code{n.train}
+value. \code{ncm.type} determines the non-conformity measurement to be used.
+ICAD calculates dissimilarity as the sum of the distances of the nearest k
+neighbours and LDCD as the average. \code{to.next.iteration}
 is the last result returned by some previous execution of this algorithm.
 The first time the algorithm is executed its value is NULL. However, to run a
 new batch of data without having to include it in the old dataset and restart
@@ -75,7 +77,7 @@ the process, this parameter returned by the last run is only needed.
 
 This algorithm can be used for both classical and incremental processing.
 It should be noted that in case of having a finite dataset, the
-\code{\link{CpKnnCad}} or \code{\link{OcpKnnCad}} algorithms are faster.
+\code{\link{CpKnnCad}} algorithm is faster.
 Incremental processing can be used in two ways. 1) Processing all available
 data and saving \code{calibration.alpha} and \code{last.data} for future runs
 with new data. 2) Using the
@@ -98,28 +100,27 @@ x[320] <- 170
 df <- data.frame(timestamp=1:n,value=x)
 
 ## Set parameters
-params.KNN <- list(threshold = 0.99, n.train = 75, l = 19, n = 30, m = 25, k = 17)
+params.KNN <- list(threshold = 1, n.train = 50, l = 19, k = 17)
 
 ## Calculate anomalies
 result <- IpKnnCad(
-  data = df$value,
+  data = df$value[1:200],
   n.train = params.KNN$n.train,
   threshold = params.KNN$threshold,
   l = params.KNN$l,
-  n = params.KNN$n,
-  m = params.KNN$m,
   k = params.KNN$k,
   ncm.type = "ICAD",
   reducefp = TRUE
 )
 
 ## Plot results
-res <- cbind(df[(params.KNN$n.train + 1):n,], is.anomaly = result$is.anomaly)
+res <- cbind(df[(params.KNN$n.train + 1):n,],
+  is.anomaly = result$is.anomaly[(params.KNN$n.train + 1):n])
 y.limits <- c(-150,250)
 plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
   xlab = "timestamp", ylab = "value", main = "KNN-CAD ANOMALY DETECTOR")
-points(x = res[res$is.anomaly == 1, "timestamp"],
-  y = res[res$is.anomaly == 1, "value"], pch=4, col="red", lwd = 2)
+points(x = res[res$is.anomaly == TRUE, "timestamp"],
+  y = res[res$is.anomaly == TRUE, "value"], pch=4, col="red", lwd = 2)
 
 ## EXAMPLE 2: ----------------------
 ## You can use it in an incremental way. This is an example using the stream
@@ -145,7 +146,7 @@ nread <- 100
 numIter <- n\%/\%nread
 
 ## Set parameters
-params.KNN <- list(threshold = 0.99, n.train = 75, l = 19, n = 30, m = 25, k = 17)
+params.KNN <- list(threshold = 1, n.train = 50, l = 19, k = 17)
 
 ## Calculate anomalies
 for(i in 1:numIter) {
@@ -157,8 +158,6 @@ for(i in 1:numIter) {
     n.train = params.KNN$n.train,
     threshold = params.KNN$threshold,
     l = params.KNN$l,
-    n = params.KNN$n,
-    m = params.KNN$m,
     k = params.KNN$k,
     ncm.type = "ICAD",
     reducefp = TRUE,
@@ -166,12 +165,12 @@ for(i in 1:numIter) {
   )
   # prepare the result
   if(!is.null(last.res$is.anomaly)){
-    res <- rbind(res, cbind(newRow[(nread-nrow(last.res$is.anomaly)+1):nread,],
-                 is.anomaly = last.res$is.anomaly))
+    res <- rbind(res, cbind(newRow, is.anomaly = last.res$is.anomaly))
   }
 }
 
 ## Plot results
+res <- res[(params.KNN$n.train + 1):n,]
 y.limits <- c(-150,250)
 plot(x = res$timestamp, y = res$value, type = "l", ylim = y.limits,
   xlab = "timestamp", ylab = "value", main = "KNN-CAD ANOMALY DETECTOR")

@@ -7,25 +7,28 @@
 #' non-stationarity in the data stream and provides probabilistic abnormality
 #' scores based on the conformal prediction paradigm.
 #'
-#' @param data Numerical vector with training and test datasets.
+#' @param data Numerical vector with training and test dataset.
 #' @param n.train Number of points of the dataset that correspond to the
 #' training set.
 #' @param threshold Anomaly threshold.
 #' @param l Window length.
-#' @param n Number of training set rows.
-#' @param m Number of calibration set rows.
 #' @param k Number of neighbours to take into account.
-#' @param ncm.type Non Conformity Measure to use \"ICAD\" or \"LDCD\"
+#' @param ncm.type Non Conformity Measure to use "ICAD" or "LDCD"
 #' @param reducefp If TRUE reduces false positives.
 #' @param to.next.iteration list with the necessary parameters to execute in
 #' the next iteration.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
-#' score obtained from an observation is less than the \code{threshold}, the
-#' observation will be considered abnormal. It should be noted that, to
-#' determine whether an observation in time t is anomalous, the dataset must
-#' have at least \code{l}+\code{n}+\code{m} values. \code{to.next.iteration}
+#' score obtained for an observation is greater than the \code{threshold}, the
+#' observation will be considered abnormal. \code{l} must be a numerical value
+#' between 1 and 1/\code{n}; \code{n} being the length of the training data.
+#' Take into account that the value of l has a direct impact on the
+#' computational cost, so very high values will make the execution time longer.
+#' \code{k} parameter must be a numerical value less than the \code{n.train}
+#' value. \code{ncm.type} determines the non-conformity measurement to be used.
+#' ICAD calculates dissimilarity as the sum of the distances of the nearest k
+#' neighbours and LDCD as the average. \code{to.next.iteration}
 #' is the last result returned by some previous execution of this algorithm.
 #' The first time the algorithm is executed its value is NULL. However, to run a
 #' new batch of data without having to include it in the old dataset and restart
@@ -33,7 +36,7 @@
 #'
 #' This algorithm can be used for both classical and incremental processing.
 #' It should be noted that in case of having a finite dataset, the
-#' \code{\link{CpKnnCad}} or \code{\link{OcpKnnCad}} algorithms are faster.
+#' \code{\link{CpKnnCad}} algorithm is faster.
 #' Incremental processing can be used in two ways. 1) Processing all available
 #' data and saving \code{calibration.alpha} and \code{last.data} for future runs
 #' with new data. 2) Using the
@@ -48,18 +51,20 @@
 #'   \item{to.next.iteration}{Last result returned by the algorithm. It is a list
 #'   containing the following items.}
 #'   \itemize{
-#'      \item \code{calibration.alpha} Last calibration alpha values calculated
+#'      \item \code{training.set} Last training set values used
+#'      in the previous iteration and required for the next run.
+#'      \item \code{calibration.set} Last calibration set values used
+#'      in the previous iteration and required for the next run.
+#'      \item \code{sigma} Last covariance matrix calculated in the previous
+#'      iteration and required for the next run.
+#'      \item \code{alphas} Last calibration alpha values calculated
 #'      in the previous iteration and required for the next run.
 #'      \item \code{last.data} Last values of the dataset converted into
-#'      multi-dimensional vectors.
-#'      \item \code{last.cov} Last covariance matrix calculated in the previous
-#'      iteration and required for the next run.
-#'      \item \code{pred} Last covariance matrix calculated in the previous
-#'      iteration and required for the next run.
-#'      \item \code{num.instance} Number of observations that have been
-#'      processed up to the last iteration.
+#'      multi-dimensional vectors..
 #'      \item \code{pred} Parameter that is used to reduce false positives. Only
 #'      necessary in case of reducefp is TRUE.
+#'      \item \code{record.count} Number of observations that have been
+#'      processed up to the last iteration.
 #'  }
 #'
 #' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
@@ -69,11 +74,8 @@
 #'
 #' @export
 
-IpKnnCad <- function(data, n.train, threshold, l, n, m, k, ncm.type = "ICAD",
-                     reducefp = TRUE,
-                     to.next.iteration = list(calibration.alpha = NULL,
-                                        last.data = NULL, last.cov = NULL,
-                                        pred = NULL, num.instance = NULL)) {
+IpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27, ncm.type = "ICAD",
+                     reducefp = TRUE, to.next.iteration = NULL) {
 
   # validate parameters
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
@@ -85,151 +87,114 @@ IpKnnCad <- function(data, n.train, threshold, l, n, m, k, ncm.type = "ICAD",
   if (!is.numeric(l)) {
     stop("l argument must be a numeric value.")
   }
-  if (!is.numeric(n)) {
-    stop("n argument must be a numeric value.")
-  }
-  if (!is.numeric(m)) {
-    stop("m argument must be a numeric value.")
-  }
   if (!is.numeric(k)) {
     stop("k argument must be a numeric value.")
   }
 
-  # Reshape dataset
-  if (is.null(to.next.iteration$last.data)) {
-    num.data <- length(data)
-    data <- t(sapply(l:num.data, function(i) data[(i-l+1):i]))
-  } else {
-    num.data <- length(data)
-    data <- c(to.next.iteration$last.data[nrow(to.next.iteration$last.data),], data)
-    data <- rbind(to.next.iteration$last.data[-nrow(to.next.iteration$last.data),],
-                  t(sapply(l:length(data), function(i) data[(i-l+1):i])))
-    rownames(data) <- 1:nrow(data)
-  }
+  # auxiliar function
+  Calcular.knn <- function(test, training.set, sigma) {
+    metric <- function(a, b) {
+      diff <- a - b
+      return((diff %*% sigma) %*% t(t(diff)))
+    }
 
-  CalculateKNN <- function(train, test, k, cov) {
-    distances <- apply(train, 1, stats::mahalanobis, center = test,
-      cov = cov, inverted = TRUE)
-    nearest <- sort(distances)[1:k]
+    arr <- apply(training.set, 1, metric, test)
     if (ncm.type == "ICAD") {
-      alpha <- sum(nearest)
-    }
-    else {
-      alpha <- mean(nearest)
-    }
-    return(alpha)
-  }
-
-  # Train Phase
-  if(is.null(to.next.iteration$last.cov)) {
-    cov <- solve(diag(l))
-  } else {
-    cov <- to.next.iteration$last.cov
-  }
-
-  num.instance <- to.next.iteration$num.instance
-  pred <- to.next.iteration$pred
-  calibration.alpha <- to.next.iteration$calibration.alpha
-
-  if(is.null(num.instance)) {
-    num.instance <- 0
-  }
-  if(num.instance <= n.train) {
-    init <- n + m + 1
-    end <- n.train - (l - 1)
-    for (index.row in init:end) {
-      training.set <- data[(index.row - n):(index.row - 1), ]
-      calibration.set <- data[(index.row - m):(index.row - 1), ]
-      test <- data[index.row, ]
-      tryCatch({
-        cov <- cov(training.set)
-        cov <- solve(cov)
-      }, error = function(e) {
-        print("no tiene inversa")
-        cov <- cov
-      })
-
-      if (is.null(calibration.alpha)) {
-        calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
-          train = training.set, k, cov)
-      }
-      test.alpha <- CalculateKNN(training.set, test, k, cov)
-
-      # Prepare parametres to next iteration
-      calibration.alpha <- calibration.alpha[-1]
-      calibration.alpha[m] <- test.alpha
-    }
-  }
-
-
-  # Test Phase
-  if (num.instance <= n.train) {
-    init <- end + 1
-  } else {
-    init <- n + m + 1
-  }
-  end <- nrow(data)
-  anomaly.score <- NULL
-  if (is.null(pred)) {
-    pred <- -1
-  }
-  for (index.row in init:end) {
-    # Select subsamples
-    training.set <- data[(index.row - n - m):(index.row - m - 1), ]
-    calibration.set <- data[(index.row - m):(index.row - 1), ]
-    test <- data[index.row, ]
-
-    # Apply KNN to Calibration and Test
-    tryCatch({
-      cov <- cov(training.set)
-      cov <- solve(cov)
-    }, error = function(e) {
-      print("no tiene inversa")
-      cov <- cov
-    })
-
-    # Apply KNN to Calibration and Test
-    if (is.null(calibration.alpha)) {
-      calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
-                                 train = training.set, k, cov)
-    }
-    test.alpha <- CalculateKNN(training.set, test, k, cov)
-
-    # Experimental p-value
-    if (ncm.type == "ICAD") {
-      score <- sum(calibration.alpha < test.alpha) / m
+      return(sum(sort(as.vector(arr))[1:k]))
     } else {
-      score <- 1 - sum(calibration.alpha >= test.alpha) / (m + 1)
+      return(mean(sort(as.vector(arr))[1:k]))
     }
+  }
 
-    # Reduce false positives
-    if (reducefp) {
-      if(pred > 0) {
-        pred <- pred - 1
-        score <- 0.5
-      } else if (score >= 0.9965) {
-        pred <- floor(n.train / 5)
+  if (is.null(to.next.iteration)) {
+    training.set <- NULL
+    calibration.set <- NULL
+    sigma <- diag(l)
+    results <- NULL
+    alphas <- NULL
+    pred <- -1
+    record.count <- 0
+    init <- 1
+  } else {
+    training.set <- to.next.iteration$training.set
+    calibration.set <- to.next.iteration$calibration.set
+    sigma <- to.next.iteration$sigma
+    alphas <- to.next.iteration$alphas
+    pred <- to.next.iteration$pred
+    record.count <- to.next.iteration$record.count
+    data <- c(calibration.set[nrow(calibration.set), 2:l], data)
+    init <- l
+  }
+
+  results <- NULL
+
+  for (index.row in init:length(data)) {
+    record.count <- record.count + 1
+    if (record.count < l) {
+      result <- 0
+    } else {
+      new.item <- data[(index.row - l + 1):index.row]
+      if (record.count < n.train) {
+        training.set <- rbind(training.set, new.item)
+        result <- 0
+      } else {
+        ost <- record.count %% n.train
+        if (ost == 0 | ost == floor(n.train / 2)) {
+          tryCatch({
+            sigma <- solve(t(training.set) %*% training.set)
+          }, error = function(e) {
+            print(paste0("Singular Matrix at record", record.count))
+          })
+        }
+        if (length(alphas) == 0) {
+          alphas <- sapply(1:nrow(training.set), function(j) {
+            Calcular.knn(training.set[j,], training.set[-j,], sigma)
+          })
+        }
+
+        alpha <- Calcular.knn(new.item, training.set, sigma)
+
+        if (ncm.type == "ICAD") {
+          result <- sum(alphas < alpha) / length(alphas)
+        } else {
+          result <- 1 - sum(alphas >= alpha) / (length(alphas) + 1)
+        }
+
+
+        if (record.count >= 2 * n.train) {
+          training.set <- training.set[-1,]
+          training.set <- rbind(training.set, calibration.set[1,])
+          calibration.set <- calibration.set[-1,]
+        }
+
+        alphas <- alphas[-1]
+        calibration.set <- rbind(calibration.set, new.item)
+        alphas <- c(alphas, alpha)
+
+        if (reducefp) {
+          if (pred > 0) {
+            pred <- pred - 1
+            result <- 0.5
+          } else if (result >= 0.9965) {
+            pred <- floor(n.train / 5)
+          }
+        }
+
       }
     }
 
-    anomaly.score <- rbind(anomaly.score, score)
-
-    # Prepare parametres to next iteration
-    calibration.alpha <- calibration.alpha[-1]
-    calibration.alpha[m] <- test.alpha
+    results <- c(results, result)
 
   }
 
-  n.data <- nrow(data)
-  last.data <- data[(n.data - n - m + 1):n.data, ]
-  rownames(anomaly.score) <- 1:nrow(anomaly.score)
-
-  return(list(anomaly.score = anomaly.score,
-              is.anomaly = anomaly.score >= threshold,
+  return(list(anomaly.score = results, is.anomaly = results >= threshold,
               to.next.iteration = list(
-                calibration.alpha = calibration.alpha,
-                last.data = as.matrix(last.data),
-                last.cov = cov, pred = pred,
-                num.instance =  num.instance + num.data
+                training.set = training.set,
+                calibration.set = calibration.set,
+                sigma = sigma,
+                alphas = alphas,
+                pred = pred,
+                record.count = record.count
               )))
+
 }

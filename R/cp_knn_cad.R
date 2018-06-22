@@ -115,7 +115,7 @@ CpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27,
         if (ncm.type == "ICAD") {
           result <- sum(alphas < alpha) / length(alphas)
         } else {
-          result <- sum(alphas < alpha) / (length(alphas) + 1)
+          result <- 1 - sum(alphas >= alpha) / (length(alphas) + 1)
         }
 
 

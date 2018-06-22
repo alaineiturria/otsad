@@ -8,7 +8,7 @@ x[320] <- 170
 df <- data.frame(timestamp=1:n,value=x)
 
 ## Set parameters
-params.KNN <- list(threshold = 0.99, n.train = 75, l = 19, k = 17)
+params.KNN <- list(threshold = 1, n.train = 50, l = 19, k = 17)
 
 ## Calculate anomalies
 result <- CpKnnCad(
