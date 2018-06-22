@@ -11,18 +11,21 @@
 #' training set.
 #' @param threshold Anomaly threshold.
 #' @param l Window length.
-#' @param n Number of training set rows.
-#' @param m Number of calibration set rows.
 #' @param k Number of neighbours to take into account.
-#' @param ncm.type Non Conformity Measure to use \"ICAD\" or \"LDCD\"
+#' @param ncm.type Non Conformity Measure to use "ICAD" or "LDCD"
 #' @param reducefp If TRUE reduces false positives.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
-#' score obtained for an observation is less than the \code{threshold}, the
-#' observation will be considered abnormal. It should be noted that, to
-#' determine whether an observation in time t is anomalous, the dataset must
-#' have at least \code{l}+\code{n}+\code{m} values.
+#' score obtained for an observation is greater than the \code{threshold}, the
+#' observation will be considered abnormal. \code{l} must be a numerical value
+#' between 1 and 1/\code{n}; \code{n} being the length of the training data.
+#' Take into account that the value of l has a direct impact on the
+#' computational cost, so very high values will make the execution time longer.
+#' \code{k} parameter must be a numerical value less than the \code{n.train}
+#' value. \code{ncm.type} determines the non-conformity measurement to be used.
+#' ICAD calculates dissimilarity as the sum of the distances of the nearest k
+#' neighbours and LDCD as the average.
 #'
 #' @return dataset conformed by the following columns:
 #'
@@ -36,134 +39,112 @@
 #'
 #' @export
 
-CpKnnCad <- function(data, n.train, threshold, l, n = l, m = l, k,
+CpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27,
                      ncm.type = "ICAD", reducefp = TRUE) {
 
   # validate parameters
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
     stop("data argument must be a numeric vector and without NA values.")
   }
+  if (!is.numeric(n.train) | n.train > length(data)) {
+    stop("n.train argument must be a numeric value greater then datal length.")
+  }
   if (!is.numeric(threshold) | threshold < 0 |  threshold > 1) {
     stop("threshold argument must be a numeric value in [0,1] range.")
   }
-  if (!is.numeric(l) & (l > n.train / 2)) {
+  if (!is.numeric(l) | (l > n.train / 2)) {
     stop("l argument must be a numeric value and less than n.train / 2.")
   }
-  if(l + n + m > n.train) {
-    stop("n.train must be less than l + m + n")
-  }
-  if (!is.numeric(n)) {
-    stop("n argument must be a numeric value.")
-  }
-  if (!is.numeric(m)) {
-    stop("m argument must be a numeric value.")
-  }
-  if (!is.numeric(k) & (k >= n)) {
+  if (!is.numeric(k) | (k >= n.train)) {
     stop("k argument must be a numeric value and less than n.")
   }
   if (ncm.type != "ICAD" & ncm.type != "LDCD") {
     stop("ncm.type argument must be ICAD or LDCD")
   }
 
-  # Reshape dataset
-  data <- t(sapply(l:length(data), function(i) data[(i-l+1):i]))
-
-  # Auxiliar function
-  CalculateKNN <- function(train, test, k, cov) {
-    distances <- apply(train, 1, stats::mahalanobis, center = test,
-                       cov = cov, inverted = TRUE)
-    nearest <- sort(distances)[1:k]
-    if (ncm.type == "ICAD") {
-      alpha <- sum(nearest)
-    }
-    else {
-      alpha <- mean(nearest)
-    }
-    return(alpha)
-  }
-
-  # Train Phase
-  cov <- solve(diag(l))
-  init <- n + m + 1
-  end <- n.train - (l - 1)
-  calibration.alpha <- NULL
-  for (index.row in init:end) {
-    training.set <- data[(index.row - n):(index.row - 1), ]
-    calibration.set <- data[(index.row - m):(index.row - 1), ]
-    test <- data[index.row, ]
-    tryCatch({
-      cov <- cov(training.set)
-      cov <- solve(cov)
-    }, error = function(e) {
-      print("no tiene inversa")
-      cov <- cov
-    })
-
-    if (is.null(calibration.alpha)) {
-      calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
-        train = training.set, k, cov)
-    }
-    test.alpha <- CalculateKNN(training.set, test, k, cov)
-
-    # Prepare parametres to next iteration
-    calibration.alpha <- calibration.alpha[-1]
-    calibration.alpha[m] <- test.alpha
-  }
-
-  # Test Phase
-  init <- end + 1
-  end <- nrow(data)
-  anomaly.score <- NULL
+  training.set <- NULL
+  calibration.set <- NULL
+  sigma <- diag(l)
+  end <- length(data)
+  results <- NULL
+  alphas <- NULL
   pred <- -1
-  for (index.row in init:end) {
-    # Select subsamples
-    training.set <- data[(index.row - n - m):(index.row - m - 1), ]
-    calibration.set <- data[(index.row - m):(index.row - 1), ]
-    test <- data[index.row, ]
 
-    # Apply KNN to Calibration and Test
-    tryCatch({
-      cov <- cov(training.set)
-      cov <- solve(cov)
-    }, error = function(e) {
-      print("no tiene inversa")
-      cov <- cov
-    })
-
-    if (is.null(calibration.alpha)) {
-      calibration.alpha <- apply(calibration.set, 1, CalculateKNN,
-                                 train = training.set, k, cov)
+  # auxiliar function
+  Calcular.knn <- function(test, training.set, sigma) {
+    metric <- function(a, b) {
+      diff <- a - b
+      return((diff %*% sigma) %*% t(t(diff)))
     }
-    test.alpha <- CalculateKNN(training.set, test, k, cov)
 
-    # Experimental p-value
+    arr <- apply(training.set, 1, metric, test)
     if (ncm.type == "ICAD") {
-      score <- sum(calibration.alpha < test.alpha) / m
+      return(sum(sort(as.vector(arr))[1:k]))
     } else {
-      score <- 1 - sum(calibration.alpha >= test.alpha) / (m + 1)
+      return(mean(sort(as.vector(arr))[1:k]))
     }
 
-    # Reduce false positives
-    if (reducefp) {
-      if(pred > 0) {
-        pred <- pred - 1
-        score <- 0.5
-      } else if (score >= 0.9965) {
-        pred <- floor(n.train / 5)
+  }
+
+  for (index.row in 1:end) {
+    record.count <- index.row
+    if (record.count < l) {
+      result <- 0
+    } else {
+      new.item <- data[(index.row - l + 1): index.row]
+      if (record.count < n.train) {
+        training.set <- rbind(training.set, new.item)
+        result <- 0
+      } else {
+        ost <- record.count %% n.train
+        if (ost == 0 | ost == floor(n.train / 2)) {
+          tryCatch({
+            sigma <- solve(t(training.set) %*% training.set)
+          }, error = function(e) {
+            print(paste0("Singular Matrix at record", record.count))
+          })
+        }
+        if (length(alphas) == 0) {
+          alphas <- sapply(1:nrow(training.set), function(j) {
+            Calcular.knn(training.set[j,], training.set[-j,], sigma)
+          })
+        }
+
+        alpha <- Calcular.knn(new.item, training.set, sigma)
+
+        if (ncm.type == "ICAD") {
+          result <- sum(alphas < alpha) / length(alphas)
+        } else {
+          result <- sum(alphas < alpha) / (length(alphas) + 1)
+        }
+
+
+        if (record.count >= 2 * n.train) {
+          training.set <- training.set[-1,]
+          training.set <- rbind(training.set, calibration.set[1,])
+          calibration.set <- calibration.set[-1,]
+        }
+
+        alphas <- alphas[-1]
+        calibration.set <- rbind(calibration.set, new.item)
+        alphas <- c(alphas, alpha)
+
+        if (reducefp) {
+          if (pred > 0) {
+            pred <- pred - 1
+            result <- 0.5
+          } else if (result >= 0.9965) {
+            pred <- floor(n.train / 5)
+          }
+        }
+
       }
     }
 
-    anomaly.score <- rbind(anomaly.score, score)
-
-    # Prepare parametres to next iteration
-    calibration.alpha <- calibration.alpha[-1]
-    calibration.alpha[m] <- test.alpha
+    results <- c(results, result)
 
   }
 
-  rownames(anomaly.score) <- 1:nrow(anomaly.score)
-
-  return(list(anomaly.score = anomaly.score,
-              is.anomaly = anomaly.score >= threshold))
+  return(list(anomaly.score = results, is.anomaly = results >= threshold))
 
 }

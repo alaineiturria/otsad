@@ -4,8 +4,8 @@
 \alias{CpKnnCad}
 \title{Classic processing KNN based Conformal Anomaly Detector (KNN-CAD)}
 \usage{
-CpKnnCad(data, n.train, threshold, l, n = l, m = l, k, ncm.type = "ICAD",
-  reducefp = TRUE)
+CpKnnCad(data, n.train, threshold = 1, l = 19, k = 27,
+  ncm.type = "ICAD", reducefp = TRUE)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}
@@ -17,13 +17,9 @@ training set.}
 
 \item{l}{Window length.}
 
-\item{n}{Number of training set rows.}
-
-\item{m}{Number of calibration set rows.}
-
 \item{k}{Number of neighbours to take into account.}
 
-\item{ncm.type}{Non Conformity Measure to use \"ICAD\" or \"LDCD\"}
+\item{ncm.type}{Non Conformity Measure to use "ICAD" or "LDCD"}
 
 \item{reducefp}{If TRUE reduces false positives.}
 }
@@ -43,10 +39,15 @@ scores based on the conformal prediction paradigm.
 \details{
 \code{data} must be a numerical vector without NA values.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
-score obtained for an observation is less than the \code{threshold}, the
-observation will be considered abnormal. It should be noted that, to
-determine whether an observation in time t is anomalous, the dataset must
-have at least \code{l}+\code{n}+\code{m} values.
+score obtained for an observation is greater than the \code{threshold}, the
+observation will be considered abnormal. \code{l} must be a numerical value
+between 1 and 1/\code{n}; \code{n} being the length of the training data.
+Take into account that the value of l has a direct impact on the
+computational cost, so very high values will make the execution time longer.
+\code{k} parameter must be a numerical value less than the \code{n.train}
+value. \code{ncm.type} determines the non-conformity measurement to be used.
+ICAD calculates dissimilarity as the sum of the distances of the nearest k
+neighbours and LDCD as the average.
 }
 \examples{
 ## Generate data
@@ -59,7 +60,7 @@ x[320] <- 170
 df <- data.frame(timestamp=1:n,value=x)
 
 ## Set parameters
-params.KNN <- list(threshold = 0.99, n.train = 75, l = 19, n = 30, m = 25, k = 17)
+params.KNN <- list(threshold = 0.99, n.train = 75, l = 19, k = 17)
 
 ## Calculate anomalies
 result <- CpKnnCad(
@@ -67,8 +68,6 @@ result <- CpKnnCad(
   n.train = params.KNN$n.train,
   threshold = params.KNN$threshold,
   l = params.KNN$l,
-  n = params.KNN$n,
-  m = params.KNN$m,
   k = params.KNN$k,
   ncm.type = "ICAD",
   reducefp = TRUE
