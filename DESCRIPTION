@@ -2,13 +2,12 @@ Package: otsad
 Type: Package
 Title: Online Time Serie Anomaly Detectors
 Version: 0.1.0
-Author: c(
-          person("Alaiñe", "Iturria", email = "alaineiturria@hotmail.es", role = c("aut", "cre"))),
-          person("Jacinto", "Carrasco", email = "jacintocc@decsai.ugr.es", role = "aut"))),
-          person("Francisco", "Herrera", email = "herrera@decsai.ugr.es", role = "aut"))),
-          person("Santiago", "Charramendieta", email = "scharramendieta@ikerlan.es", role = "aut"))),
-          person("Karmele", "Intxausti", email = "kintxausti@ikerlan.es", role = "aut"))))
-Maintainer: Alaiñe Iturria <alaineiturria@hotmail.es>
+Authors@R: c(
+    person("Alaiñe", "Iturria", email = "alaineiturria@hotmail.es", role = c("aut","cre")),
+    person("Jacinto", "Carrasco", email = "jacintocc@decsai.ugr.es", role = c("aut")),
+    person("Francisco", "Herrera", email = "herrera@decsai.ugr.es", role = c("aut")),
+    person("Santiago", "Charramendieta", email = "scharramendieta@ikerlan.es", role = c("aut")),
+    person("Karmele", "Intxausti", email = "kintxausti@ikerlan.es", role = c("aut")))
 Description: Implements a set of online fault detector detectors 
              for time-series, called: EWMA, TSSD-EWMA, PEWMA and KNN-CAD and 
              KNN-LDCD. The first three algorithms belong to prediction-based 
