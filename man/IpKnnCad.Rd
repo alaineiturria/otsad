@@ -52,8 +52,7 @@ dataset conformed by the following columns:
 }
 \description{
 \code{IpKnnCad} allows the calculation of anomalies using SD-EWMA in an
-incremental processing mode. See also \code{\link{OipKnnCad}} the optimized
-and faster function of this function. KNN-CAD is a model-free anomaly
+incremental processing mode. KNN-CAD is a model-free anomaly
 detection method for univariate time-series which adapts itself to
 non-stationarity in the data stream and provides probabilistic abnormality
 scores based on the conformal prediction paradigm.
@@ -104,7 +103,7 @@ params.KNN <- list(threshold = 1, n.train = 50, l = 19, k = 17)
 
 ## Calculate anomalies
 result <- IpKnnCad(
-  data = df$value[1:200],
+  data = df$value,
   n.train = params.KNN$n.train,
   threshold = params.KNN$threshold,
   l = params.KNN$l,

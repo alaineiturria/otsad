@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2018.5.18)  21 JUN 2018 09:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2018.5.18)  2 JUL 2018 11:33
 entering extended mode
 **./otsad.tex
 (otsad.tex
@@ -868,123 +868,122 @@ LaTeX Font Info:    ... okay on input line 78.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-[1
+LaTeX Font Info:    Try loading font information for U+msa on input line 101.
+
+("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsa.f
+d"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 101.
+
+("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsb.f
+d"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+stmry on input line 101.
+
+
+("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\stmaryrd\ustmry
+.fd") [1
 
 {C:/Users/aiturria/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-Overfull \hbox (3.85834pt too wide) in paragraph at lines 140--141
+Overfull \hbox (3.85834pt too wide) in paragraph at lines 147--148
 \T1/cmr/m/n/9 stream and pro-vides prob-a-bilis-tic ab-nor-mal-ity scores based
  on the con-for-mal pre-dic-tion paradigm. 
  []
 
-<features.PNG, id=13, 398.08725pt x 179.4705pt>
+<features.PNG, id=15, 398.08725pt x 179.4705pt>
 File: features.PNG Graphic file (type png)
 <use features.PNG>
-Package pdftex.def Info: features.PNG  used on input line 147.
+Package pdftex.def Info: features.PNG  used on input line 154.
 (pdftex.def)             Requested size: 318.66946pt x 143.67242pt.
-Package color Info: Redefining color shadecolor on input line 161.
 [2]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 162.
+Package color Info: Redefining color shadecolor on input line 168.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 169.
 
 
 ("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\t1cmtt.fd"
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <9> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 163.
-Package color Info: Redefining color shadecolor on input line 172.
-Package color Info: Redefining color shadecolor on input line 196.
-<documentationExample.png, id=20, 433.62pt x 445.06274pt>
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 170.
+Package color Info: Redefining color shadecolor on input line 179.
+Package color Info: Redefining color shadecolor on input line 203.
+<documentationExample.png, id=21, 433.62pt x 445.06274pt>
 File: documentationExample.png Graphic file (type png)
 <use documentationExample.png>
-Package pdftex.def Info: documentationExample.png  used on input line 208.
+Package pdftex.def Info: documentationExample.png  used on input line 215.
 (pdftex.def)             Requested size: 227.62204pt x 233.62747pt.
  [3 <./features.PNG>]
-Package color Info: Redefining color shadecolor on input line 220.
-Package color Info: Redefining color shadecolor on input line 236.
-<timeSerie.PNG, id=27, 671.50874pt x 500.62032pt>
+Package color Info: Redefining color shadecolor on input line 227.
+Package color Info: Redefining color shadecolor on input line 243.
+<timeSerie.PNG, id=29, 671.50874pt x 500.62032pt>
 File: timeSerie.PNG Graphic file (type png)
 <use timeSerie.PNG>
-Package pdftex.def Info: timeSerie.PNG  used on input line 246.
+Package pdftex.def Info: timeSerie.PNG  used on input line 253.
 (pdftex.def)             Requested size: 227.62204pt x 169.69685pt.
-Package color Info: Redefining color shadecolor on input line 255.
+Package color Info: Redefining color shadecolor on input line 262.
  [4 <./documentationExample.png> <./timeSerie.PNG>]
-<acf.PNG, id=34, 671.50874pt x 500.62032pt>
+<acf.PNG, id=36, 671.50874pt x 500.62032pt>
 File: acf.PNG Graphic file (type png)
 <use acf.PNG>
-Package pdftex.def Info: acf.PNG  used on input line 265.
+Package pdftex.def Info: acf.PNG  used on input line 272.
 (pdftex.def)             Requested size: 227.62204pt x 169.69685pt.
-Package color Info: Redefining color shadecolor on input line 273.
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 276
+Package color Info: Redefining color shadecolor on input line 280.
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 283
 .
 
 ("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ts1cmtt.fd
 "
 File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 282.
+Package color Info: Redefining color shadecolor on input line 292.
+Package color Info: Redefining color shadecolor on input line 304.
+Package color Info: Redefining color shadecolor on input line 327.
 
-("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsa.f
-d"
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 282.
-
-("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsb.f
-d"
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Try loading font information for U+stmry on input line 282.
-
-
-("C:\Users\aiturria\AppData\Local\Programs\MiKTeX 2.9\tex\latex\stmaryrd\ustmry
-.fd")
-Package color Info: Redefining color shadecolor on input line 285.
-Package color Info: Redefining color shadecolor on input line 297.
-Package color Info: Redefining color shadecolor on input line 320.
-
-Overfull \hbox (10.45447pt too wide) in paragraph at lines 332--332
+Overfull \hbox (10.45447pt too wide) in paragraph at lines 339--339
 []      []\T1/cmtt/m/n/9 geom_point[][]([][]data[] []= res[res[][]$[][]is.anoma
 ly[] []==[] []TRUE[][],],[][]aes[][]([][]colour[] []=[] []factor[][](is.anomaly
 )))[] []+[][] 
  []
 
 [5 <./acf.PNG>]
-<sdEwmaresult.PNG, id=41, 671.50874pt x 500.62032pt>
+<sdEwmaresult.PNG, id=43, 671.50874pt x 500.62032pt>
 File: sdEwmaresult.PNG Graphic file (type png)
 <use sdEwmaresult.PNG>
-Package pdftex.def Info: sdEwmaresult.PNG  used on input line 340.
+Package pdftex.def Info: sdEwmaresult.PNG  used on input line 347.
 (pdftex.def)             Requested size: 227.62204pt x 169.69685pt.
-Package color Info: Redefining color shadecolor on input line 350.
+Package color Info: Redefining color shadecolor on input line 357.
 
-Overfull \hbox (52.96909pt too wide) in paragraph at lines 373--373
+Overfull \hbox (52.96909pt too wide) in paragraph at lines 380--380
 []    []\T1/cmtt/m/n/9 res[] []<-[] []rbind[][](res,[] []cbind[][](newRow[(nrea
 d[] []-[] []nrow[][](last.res[][]$[][]result)[] []+[] []1[][])[][]:[][]nread,],
  last.res[][]$[][]result))[][] 
  []
 
-Package color Info: Redefining color shadecolor on input line 383.
+Package color Info: Redefining color shadecolor on input line 390.
 
-Overfull \hbox (10.45447pt too wide) in paragraph at lines 393--393
+Overfull \hbox (10.45447pt too wide) in paragraph at lines 400--400
 []      []\T1/cmtt/m/n/9 geom_point[][]([][]data[] []= res[res[][]$[][]is.anoma
 ly[] []==[] []TRUE[][],],[][]aes[][]([][]colour[] []=[] []factor[][](is.anomaly
 )))[] []+[][] 
  []
 
 [6 <./sdEwmaresult.PNG>]
-<onlineSdEwma.PNG, id=47, 671.50874pt x 500.62032pt>
+<onlineSdEwma.PNG, id=49, 671.50874pt x 500.62032pt>
 File: onlineSdEwma.PNG Graphic file (type png)
 <use onlineSdEwma.PNG>
-Package pdftex.def Info: onlineSdEwma.PNG  used on input line 401.
+Package pdftex.def Info: onlineSdEwma.PNG  used on input line 408.
 (pdftex.def)             Requested size: 227.62204pt x 169.69685pt.
  (otsad.bbl [7 <./onlineSdEwma.PNG>]) [8] (otsad.aux) ) 
 Here is how much of TeX's memory you used:
- 4837 strings out of 493308
- 65719 string characters out of 3128343
+ 4867 strings out of 493308
+ 66026 string characters out of 3128343
  127258 words of memory out of 3000000
- 8242 multiletter control sequences out of 15000+200000
- 17953 words of font info for 48 fonts, out of 3000000 for 9000
+ 8262 multiletter control sequences out of 15000+200000
+ 22550 words of font info for 64 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,6n,31p,888b,275s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,6n,31p,887b,275s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/aiturria/AppDa
 ta/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-ts1.enc}{C:/User
 s/aiturria/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-
@@ -997,16 +996,17 @@ turria/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx1440.p
 fb><C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/cm-s
 uper/sfbx1728.pfb><C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
 pe1/public/cm-super/sfit0900.pfb><C:/Users/aiturria/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/public/cm-super/sfrm0900.pfb><C:/Users/aiturria/AppData/Loca
-l/Programs/MiKTeX 2.9/fonts/type1/public/cm-super/sfrm1000.pfb><C:/Users/aiturr
-ia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/cm-super/sfrm1200.pfb><
+eX 2.9/fonts/type1/public/cm-super/sfrm0800.pfb><C:/Users/aiturria/AppData/Loca
+l/Programs/MiKTeX 2.9/fonts/type1/public/cm-super/sfrm0900.pfb><C:/Users/aiturr
+ia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/cm-super/sfrm1000.pfb><
 C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/cm-super
-/sfrm1728.pfb><C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/
-public/cm-super/sfti0900.pfb><C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/public/cm-super/sftt0900.pfb>
-Output written on otsad.pdf (8 pages, 467264 bytes).
+/sfrm1200.pfb><C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/
+public/cm-super/sfrm1728.pfb><C:/Users/aiturria/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/public/cm-super/sfti0900.pfb><C:/Users/aiturria/AppData/Local/Pr
+ograms/MiKTeX 2.9/fonts/type1/public/cm-super/sftt0900.pfb>
+Output written on otsad.pdf (8 pages, 487018 bytes).
 PDF statistics:
- 102 PDF objects out of 1000 (max. 8388607)
+ 108 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

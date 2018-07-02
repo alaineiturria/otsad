@@ -47,7 +47,7 @@ CpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27,
     stop("data argument must be a numeric vector and without NA values.")
   }
   if (!is.numeric(n.train) | n.train > length(data)) {
-    stop("n.train argument must be a numeric value greater then datal length.")
+    stop("n.train argument must be a numeric value greater then data length.")
   }
   if (!is.numeric(threshold) | threshold < 0 |  threshold > 1) {
     stop("threshold argument must be a numeric value in [0,1] range.")

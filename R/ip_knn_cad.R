@@ -1,8 +1,7 @@
 #' Incremental processing KNN based Conformal Anomaly Detector (KNN-CAD).
 #'
 #' \code{IpKnnCad} allows the calculation of anomalies using SD-EWMA in an
-#' incremental processing mode. See also \code{\link{OipKnnCad}} the optimized
-#' and faster function of this function. KNN-CAD is a model-free anomaly
+#' incremental processing mode. KNN-CAD is a model-free anomaly
 #' detection method for univariate time-series which adapts itself to
 #' non-stationarity in the data stream and provides probabilistic abnormality
 #' scores based on the conformal prediction paradigm.
