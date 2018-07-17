@@ -27,5 +27,6 @@ Suggests:
     knitr,
     rmarkdown
 Imports: 
-    stats
+    stats,
+    digest
 VignetteBuilder: knitr
