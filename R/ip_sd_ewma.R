@@ -51,7 +51,7 @@
 #' shift-detection methods for detecting covariate shifts in non-stationary
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
-#' @example examples/ip_sd_ewma_example.R
+#' @example tests/examples/ip_sd_ewma_example.R
 #'
 #' @export
 

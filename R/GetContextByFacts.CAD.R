@@ -123,5 +123,5 @@ GetContextByFacts.CAD <- function(context.list, context.operator, zero.level = 0
         }
     }
     
-    return(num.added.contexts)
+    return(num.added.context)
 }

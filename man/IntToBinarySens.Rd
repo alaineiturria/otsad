@@ -12,16 +12,13 @@ IntToBinarySens(x, num.norm.value.bits)
 \item{num.norm.value.bits}{Expected number of binary bins}
 }
 \value{
-
+Vector with activated numeric bits.
 }
 \description{
 \code{IntToBinarySens} Auxiliar function that transforms
 integer to binary bins.
 }
-\details{
-
-}
 \examples{
-IntToBinarySens(2, 3)
-IntToBinarySens(10, 5)
+otsad:::IntToBinarySens(2, 3)
+otsad:::IntToBinarySens(10, 5)
 }

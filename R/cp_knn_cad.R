@@ -35,7 +35,7 @@
 #' @references V. Ishimtsev, I. Nazarov, A. Bernstein and E. Burnaev. Conformal
 #' k-NN Anomaly Detector for Univariate Data Streams. ArXiv e-prints, jun. 2017.
 #'
-#' @example examples/cp_knn_cad_example.R
+#' @example tests/examples/cp_knn_cad_example.R
 #'
 #' @export
 

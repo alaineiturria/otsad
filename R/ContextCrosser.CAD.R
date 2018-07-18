@@ -11,6 +11,8 @@
 #' @param fact.list New fact list.
 #' @param new.ctxt.flag Flag that indicates if a new context is required.
 #' @param potential.new.contexts Potential new contexts that might be added.
+#' @param context.operator Environment with the current status for the
+#'     context operator.
 #'
 #' @details \code{left.or.right} must be 0 or 1 to indicate left or
 #'     right respectively.
@@ -28,7 +30,8 @@ ContextCrosser.CAD <- function(left.or.right,
                                         # Get current number of new contexts
     if (left.or.right == 0){
         num.new.contexts <- ifelse(length(potential.new.contexts) > 0,
-                                  getContextByFacts(potential.new.contexts, context.operator),
+                                  GetContextByFacts.CAD(potential.new.contexts, 
+                                                        context.operator),
                                   0)
     }
     
@@ -72,7 +75,7 @@ ContextCrosser.CAD <- function(left.or.right,
     }
     
     if (left.or.right) {
-        return(UpdateContextsAndGetActive.CAD(new.context.flag, context.operator))
+        return(UpdateContextsAndGetActive.CAD(new.ctxt.flag, context.operator))
     } else {
         return(num.new.contexts)
     }

@@ -20,7 +20,7 @@ GetAnomalyScore.CAD <- function(datum, local.environment){
   anomaly.values <- Step.CAD(datum, local.environment)
   current.anomaly.score <- (1 - anomaly.values[1] + anomaly.values[2]) / 2
   
-  max.historic <- max(tail(local.environment$result.values.history,
+  max.historic <- max(utils::tail(local.environment$result.values.history,
                           local.environment$rest.period))
   returned.anomaly.score <- ifelse(max.historic < local.environment$base.threshold,
                                    current.anomaly.score, 0)

@@ -56,7 +56,7 @@
 #' streaming anomaly detection. 2012 IEEE Statistical Signal Processing Workshop
 #' (SSP), pp. 377-380, Aug 2012.
 #'
-#' @example examples/oip_pewma_example.R
+#' @example tests/examples/oip_pewma_example.R
 #'
 #' @export
 

@@ -16,7 +16,7 @@ Description: Implements a set of online fault detector detectors
              designed to work in stationary environments, while the other three 
              are algorithms designed to work in non-stationary environments.
 Depends:
-    R (>= 3.4.3)
+    R (>= 3.4.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

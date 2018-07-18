@@ -63,7 +63,7 @@
 #' shift-detection methods for detecting covariate shifts in non-stationary
 #' environments. Pattern Recognition, 48(3), 659-669.
 #'
-#' @example examples/ip_tssd_ewma_example.R
+#' @example tests/examples/ip_tssd_ewma_example.R
 #'
 #' @export
 
@@ -99,7 +99,7 @@ IpTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
     if ((pos - (m - 1)) > 0 & (pos + m) <= length(all.data)) {
       part1 <- all.data[( pos - (m - 1)):pos]
       part2 <- all.data[(pos + 1):(pos + m)]
-      res.test <- stats::ks.test(part1, part2, exact = NULL)
+      res.test <- suppressWarnings(stats::ks.test(part1, part2, exact = NULL))
       return(ifelse(res.test$p.value > 0.05, 0, 1))
     } else {
       return(1)

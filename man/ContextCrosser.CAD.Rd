@@ -17,6 +17,9 @@ completely new.}
 \item{new.ctxt.flag}{Flag that indicates if a new context is required.}
 
 \item{potential.new.contexts}{Potential new contexts that might be added.}
+
+\item{context.operator}{Environment with the current status for the
+context operator.}
 }
 \value{
 If \code{left.or.right}, number of new contex added tho the

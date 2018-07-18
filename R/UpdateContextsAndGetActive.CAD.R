@@ -24,17 +24,14 @@ UpdateContextsAndGetActive.CAD <- function(new.ctxt.flag, context.operator){
   active.ctxt <- list()
   num.selected.context <- 0
   potential.new.context.list <- list()
-  crossed.sctxt.list <- get("crossed.sctxt.list", 
-                            envir = context.operator)
-  new.ctxt.id <- get("new.ctxt.id", envir = context.operator)
 
-  for(left.semicontext.values in crossed.sctxt.list$left){
+  for(left.semicontext.values in context.operator$crossed.sctxt.list$left){
     for(element in left.semicontext.values[[3]]){
-      right.semicontext.value <- element[[1]]
-      context.id <- 
+      right.semicontext.id <- element[[1]]
+      context.id <- element[[2]]
       if (new.context.id != context.id) {
-        context.values <- context.values.list[context.id]
-        results.sc.values <- semi.context.values.list[[1]][right.semicontext.id]
+        context.values <- context.operator$ctxt.value.list[context.id]
+        results.sc.values <- context.operator$sctxt.values.list$right[right.semicontext.id]
 
         if (left.semicontext.values[[1]] == left.semicontext.values[[2]]) {
           num.selected.context <- num.selected.context + 1
@@ -49,17 +46,17 @@ UpdateContextsAndGetActive.CAD <- function(new.ctxt.flag, context.operator){
                                             context.values[4]))
             }
             else if (context.values[2] && new.ctxt.flag && 
-                     left.semicontext.values[3] <= max.left.semicontexts) {
-              potential.new.context.list <- append(potential.new.context.list,
-                                                   list(list(left.semicontext.values[1]), 
-                                                        list(results.sc.values[1])))
+                     left.semicontext.values[3] <= context.operator$max.left.semicontexts) {
+                potential.new.context.list <- append(potential.new.context.list,
+                                                    list(list(left.semicontext.values[1]), 
+                                                         list(results.sc.values[1])))
             }
           }
         }
         else if (context.values[2] &&
-                 new.context.flag &&
+                 new.ctxt.flag &&
                  results.sc.values[3] > 0 &&
-                 left.semicontext.values[3] <= max.left.semicontexts.length){
+                 left.semicontext.values[3] <= context.operator$max.left.semicontexts){
           potential.new.context.list <- append(potential.new.context.list,
                                                left.semicontext.values,
                                                results.sc.values[1])
