@@ -2,18 +2,18 @@
 % Please edit documentation in R/GetContextByFacts.CAD.R
 \name{GetContextByFacts.CAD}
 \alias{GetContextByFacts.CAD}
-\title{The function which determines by the complete facts list whether the context
-is already saved to the memory. If the context is not found the function
-immediately creates such. To optimize speed and volume of the occupied memory
-the contexts are divided into semi-contexts as several contexts can contain
-the same facts set in its left and right parts.}
+\title{Get Context By Facts for Contextual Anomaly Detector}
 \usage{
 GetContextByFacts.CAD(context.list, context.operator, zero.level = 0)
 }
 \arguments{
-\item{newContextsList}{list of potentially new contexts}
+\item{context.list}{List of potentially new contexts}
 
-\item{zerolevel}{flag indicating the context type in transmitted list}
+\item{context.operator}{Environment with the current status for the
+context operator.}
+
+\item{zero.level}{Flag indicating the context type in transmitted
+list}
 }
 \value{
 Depending on the type of  potentially new context transmitted as
@@ -25,9 +25,14 @@ or:
 context memory.
 }
 \description{
-The function which determines by the complete facts list whether the context
-is already saved to the memory. If the context is not found the function
-immediately creates such. To optimize speed and volume of the occupied memory
-the contexts are divided into semi-contexts as several contexts can contain
-the same facts set in its left and right parts.
+\code{GetContextByFacts.CAD} is an auxiliary method that determine
+by the complete facts list whether the context is already saved to
+the memory. If the context is not found the function immediately
+creates such. To optimize speed and volume of the occupied memory
+the contexts are divided into semi-contexts as several contexts can
+contain the same facts set in its left and right parts.
+}
+\references{
+Smirnov, M. (2018). CAD: Contextual Anomaly
+    Detector. https://github.com/smirmik/CAD
 }

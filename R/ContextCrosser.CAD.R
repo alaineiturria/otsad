@@ -1,3 +1,25 @@
+#' Context Crosser for Contextual Anomaly Detector (ContextualAD)
+#'
+#' \code{ContextCrosser.CAD} is an auxiliar method that makes the necessary
+#' changes in the \code{context.operator} environment, including in
+#' the \code{fact.list} and the corresponding dictionary of facts the
+#' new facts.
+#'
+#' @param left.or.right Situation from which the method have been
+#'     called. It says if the new facts have been seen or if they are
+#'     completely new.
+#' @param fact.list New fact list.
+#' @param new.ctxt.flag Flag that indicates if a new context is required.
+#' @param potential.new.contexts Potential new contexts that might be added.
+#'
+#' @details \code{left.or.right} must be 0 or 1 to indicate left or
+#'     right respectively.
+#'
+#' @return If \code{left.or.right}, number of new contex added tho the
+#'     \code{context.operator}. Otherwise, the output from
+#'     \code{UpdateContextsAndGetActive.CAD}.
+#' @references Smirnov, M. (2018). CAD: Contextual Anomaly
+#'     Detector. https://github.com/smirmik/CAD
 ContextCrosser.CAD <- function(left.or.right, 
                               fact.list,
                               new.ctxt.flag = FALSE,

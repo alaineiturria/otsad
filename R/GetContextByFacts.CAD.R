@@ -1,11 +1,18 @@
-#' The function which determines by the complete facts list whether the context
-#' is already saved to the memory. If the context is not found the function
-#' immediately creates such. To optimize speed and volume of the occupied memory
-#' the contexts are divided into semi-contexts as several contexts can contain
-#' the same facts set in its left and right parts.
+#' Get Context By Facts for Contextual Anomaly Detector
+#'
+#' \code{GetContextByFacts.CAD} is an auxiliary method that determine
+#' by the complete facts list whether the context is already saved to
+#' the memory. If the context is not found the function immediately
+#' creates such. To optimize speed and volume of the occupied memory
+#' the contexts are divided into semi-contexts as several contexts can
+#' contain the same facts set in its left and right parts.
 #' 
-#' @param newContextsList list of potentially new contexts 
-#' @param zerolevel flag indicating the context type in transmitted list
+#' @param context.list List of potentially new contexts
+#' @param context.operator Environment with the current status for the
+#'     context operator.
+#' @param zero.level Flag indicating the context type in transmitted
+#'     list
+#' 
 #' 
 #' @return Depending on the type of  potentially new context transmitted as
 #' an input parameters the function returns either:
@@ -14,6 +21,8 @@
 #' or:
 #'   b) number of the really new contexts that have been saved to the
 #' context memory.
+#' @references Smirnov, M. (2018). CAD: Contextual Anomaly
+#'     Detector. https://github.com/smirmik/CAD
 GetContextByFacts.CAD <- function(context.list, context.operator, zero.level = 0){
     num.added.context <- 0
     for(i in 1:length(context.list$left)){
@@ -24,7 +33,7 @@ GetContextByFacts.CAD <- function(context.list, context.operator, zero.level = 0
         left.hash <- digest::sha1(left.facts)
         right.hash <- digest::sha1(right.facts)
         
-    # Add left hash
+        # Add left hash
         next.left.sctxt.number <- length(context.operator$sctxt.dict$left) + 1
         if(!(left.hash %in% names(context.operator$sctxt.dict$left))) {
             assign(left.hash, next.left.sctxt.number, 
@@ -82,7 +91,7 @@ GetContextByFacts.CAD <- function(context.list, context.operator, zero.level = 0
             }
         }
         
-    # Count new context
+                                        # Count new context
         next.free.context.id.number <- length(context.operator$ctxt.value.list)
         selected.ctxt.dict <- context.operator$sctxt.value.list$left[[left.sctxt.id]][[4]]
         if(right.sctxt.id %in% names(selected.ctxt.dict)) {

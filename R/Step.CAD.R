@@ -1,3 +1,20 @@
+#' Step operator for Contextual Anomaly Detector (ContextualAD)
+#'
+#' \code{Step.CAD} is an auxiliar method that makes the necessary
+#' changes in the local environment of the anomaly detector
+#'
+#' @param datum New datum in form of numeric vector corresponding to
+#'     the bits that have been activated.
+#' @param local.environment Local environment with the variables of
+#'     the Contextual Anomaly Detector.
+#'
+#' @details \code{datum} must be a numeric vector.
+#'
+#' @return If \code{left.or.right}, number of new contex added tho the
+#'     \code{context.operator}. Otherwise, the output from
+#'     \code{UpdateContextsAndGetActive.CAD}.
+#' @references Smirnov, M. (2018). CAD: Contextual Anomaly
+#'     Detector. https://github.com/smirmik/CAD
 Step.CAD <- function(datum, local.environment){
     if(length(local.environment$left.facts) > 0 && length(datum) > 0) {
         pot.new.zero.level.context <- list(left=list(local.environment$left.facts),

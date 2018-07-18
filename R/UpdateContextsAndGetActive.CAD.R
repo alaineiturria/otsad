@@ -1,23 +1,25 @@
-#' This function reviews the list of previously selected left semi-contexts,
-#' creates the list of potentially new contexts resulted from intersection
-#' between zero-level contexts, determines the contexts that coincide with
-#' the input data and require activation.
-#' @param newContextFlag:         flag indicating that a new zero-level
-#' context is not recorded at the current
-#' step, which means that all contexts
-#' already exist and there is no need to
-#' create new ones.
+#' Update Contexts and Get Active - Contextual Anomaly Detector
 #' 
-#' @return activeContexts:         list of identifiers of the contexts which
-#' completely coincide with the input stream,
-#' should be considered active and be 
-#' recorded to the input stream of “neurons”
-#' @return potentialNewContextList:  list of contexts based on intersection
-#' between the left and the right zero-level
-#' semi-contexts, which are potentially new
-#' contexts requiring saving to the context
-#' memory
-
+#' \code{UpdateContextsAndGetActive.CAD} is an auxiliar method for the
+#' Contextual Anomaly Detector that reviews the list of previously
+#' selected left semi-contexts, creates the list of potentially new
+#' contexts resulted from intersection between zero-level contexts,
+#' determines the contexts that coincide with the input data and
+#' require activation.
+#' @param new.ctxt.flag flag indicating that a new zero-level context
+#'     is not recorded at the current step, which means that all
+#'     contexts already exist and there is no need to create new ones.
+#' @param context.operator Environment with the current status for the
+#'     context operator.
+#'
+#' 
+#' @return List of:
+#'
+#' \item{activeContexts}{List of identifiers of the contexts which completely coincide with the input stream, should be considered active and be recorded to the input stream of “neurons”}
+#' \item{potentialNewContextList}{List of contexts based on intersection between the left and the right zero-level semi-contexts, which are potentially new contexts requiring saving to the context memory}
+#'
+#' @references Smirnov, M. (2018). CAD: Contextual Anomaly
+#'     Detector. https://github.com/smirmik/CAD
 UpdateContextsAndGetActive.CAD <- function(new.ctxt.flag, context.operator){
   active.ctxt <- list()
   num.selected.context <- 0
