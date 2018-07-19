@@ -18,7 +18,7 @@ list}
 \value{
 Depending on the type of  potentially new context transmitted as
 an input parameters the function returns either:
-  а) flag indicating that the transmitted zero-level context is
+  a) flag indicating that the transmitted zero-level context is
 a new/existing one;
 or:
   b) number of the really new contexts that have been saved to the
