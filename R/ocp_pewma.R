@@ -98,6 +98,7 @@ OcpPewma <- function(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3) {
 
   assign("last.res", last.res, envir = new.enviroment)
   res <- as.data.frame(t(sapply(data, Pewma, new.enviroment)))
+  res <- as.data.frame(lapply(res, unlist))
 
   return(res)
 }
