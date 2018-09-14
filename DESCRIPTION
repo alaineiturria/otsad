@@ -30,5 +30,6 @@ Imports:
     stats,
     digest,
     ggplot2,
-    plotly
+    plotly,
+    sigmoid
 VignetteBuilder: knitr

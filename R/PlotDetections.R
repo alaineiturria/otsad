@@ -24,6 +24,10 @@
 #'
 #' @return plotly object.
 #'
+#' @references A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
+#' Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
+#' Applications (IEEE ICMLA’15), 2015.
+#'
 #' @export
 
 PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window = FALSE, title = "",
@@ -53,7 +57,7 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
   if (print.time.window) {
     if ("is.real.anomaly" %in% column.names) {
 
-      data <- getLimits(data, all.data = TRUE)
+      data <- GetWindowsLimits(data)
       data[data$is.real.anomaly == 1,"start.limit"] <-
         as.character(data[data[data$is.real.anomaly == 1,"start.limit"],"timestamp"])
       data[data$is.real.anomaly == 1,"end.limit"] <-
@@ -132,60 +136,4 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
     return(myPlot)
   }
 
-}
-
-getWindowLength <- function(data) {
-  dataLength <- nrow(data)
-  windowLength <- floor((dataLength*0.1)/sum(data$is.real.anomaly))
-  if (windowLength %% 2 != 0) windowLength <- windowLength - 1
-  return(windowLength)
-}
-
-# get.limits auxiliar function
-getLimits <- function(data, all.data = FALSE) {
-
-  calculate.limits <- function(index){
-    start <- index - floor(windowLength/2)
-    end <- index + floor(windowLength/2)
-    if (start <= 0) {
-      start <- index
-    }
-    if (end > nrow(data)) {
-      end <- nrow(data)
-    }
-    c(start, end)
-  }
-
-  windowLength <- getWindowLength(data)
-  anomaly.index <- which(data$is.real.anomaly == 1)
-  data$start.limit <- 0
-  data$end.limit <- 0
-  data[anomaly.index, c("start.limit", "end.limit")] <- t(sapply(anomaly.index,calculate.limits))
-
-  if (length(anomaly.index) > 1) {
-    for (i in 2:length(anomaly.index)) {
-      if (data[anomaly.index[i], "start.limit"] < data[(anomaly.index[i - 1]), "end.limit"]) {
-        start <- data[anomaly.index[i - 1], "start.limit"]
-        end <- data[anomaly.index[i], "end.limit"]
-        data[anomaly.index[i-1], c("start.limit", "end.limit")] <- c(start, end)
-        data[anomaly.index[i], c("start.limit", "end.limit")] <- 0
-      }
-    }
-  }
-
-  if(all.data) {
-    return(data)
-  } else {
-    anomaly.index <- which(data$is.real.anomaly == 1 & data$start.limit != 0)
-    windows <- data[anomaly.index, c("start.limit", "end.limit")]
-    windows$start.limit <- data[windows$start.limit, "timestamp"]
-    windows$end.limit <- data[windows$end.limit, "timestamp"]
-    return(windows)
-  }
-
-}
-
-getNumTrainingValues <- function(n.row) {
-  prob.percent <- 0.15
-  return(min(floor(n.row * prob.percent), floor(prob.percent * 5000)))
 }

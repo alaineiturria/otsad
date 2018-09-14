@@ -145,6 +145,7 @@ CpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27,
 
   }
 
-  return(list(anomaly.score = results, is.anomaly = results >= threshold))
+  return(data.frame(anomaly.score = results, is.anomaly = results >= threshold,
+                    stringsAsFactors = FALSE))
 
 }
