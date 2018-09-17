@@ -109,8 +109,7 @@ IpTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
   # get anomalous rows
   result <- IpSdEwma(data, n.train, threshold, l, to.next.iteration$last.res)
   # merge result and to.check data and check anomalous rows
-  result$result$value <-
-  data[(length(data) - nrow(result$result) + 1):length(data)]
+  result$result$value <- data
   all.data <- rbind(to.next.iteration$to.check, result$result)
   rownames(all.data) <- 1:nrow(all.data)
   anomaly.pos <- which(all.data$is.anomaly == 1)

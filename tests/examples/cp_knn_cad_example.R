@@ -22,8 +22,6 @@ result <- CpKnnCad(
 )
 
 ## Plot results
-res <- cbind(df[(params.KNN$n.train + 1):nrow(df),],
-             is.anomaly = result$is.anomaly[(params.KNN$n.train + 1):nrow(df)],
-             anomaly.score = result$anomaly.score[(params.KNN$n.train + 1):nrow(df)])
+res <- cbind(df, result)
 PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
 

@@ -33,14 +33,14 @@ test_that("IpSdEwma gives the correct result", {
     )
     # prepare the result
     if(!is.null(last.res$result)){
-      res <- rbind(res, cbind(newRow[(nread-nrow(last.res$result)+1):nread,], last.res$result))
+      res <- rbind(res, cbind(newRow, last.res$result))
     }
     iterador <- iterador + nread
   }
 
   ## read correct results
-  correct.results <- rep(0, 495)
-  correct.results[c(20,87,315)] <- 1
+  correct.results <- rep(0, 500)
+  correct.results[c(25,92,320)] <- 1
 
   expect_equal(as.numeric(res$is.anomaly), correct.results)
 

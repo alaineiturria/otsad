@@ -53,11 +53,10 @@ test_that("IpTsSdEwma gives the correct result", {
     last.timestamp <- newRow[(nread-m+1):nread,]
     iterador <- iterador + nread
   }
-  rownames(res) <- 1:(n-5)
 
   ## read correct results
-  correct.results <- rep(0, 495)
-  correct.results[87] <- 1
+  correct.results <- rep(0, 500)
+  correct.results[92] <- 1
 
   expect_equal(as.numeric(res$is.anomaly), correct.results)
 

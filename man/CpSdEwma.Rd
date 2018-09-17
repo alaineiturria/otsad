@@ -4,12 +4,12 @@
 \alias{CpSdEwma}
 \title{Classic Processing Shift-Detection based on EWMA (SD-EWMA).}
 \usage{
-CpSdEwma(train.data, test.data, threshold = 0.01, l = 3)
+CpSdEwma(data, n.train, threshold = 0.01, l = 3)
 }
 \arguments{
-\item{train.data}{Numerical vector with the training set.}
+\item{data}{Numerical vector with training and test dataset.}
 
-\item{test.data}{Numerical vector with the test set.}
+\item{n.train}{Number of points of the dataset that correspond to the training set.}
 
 \item{threshold}{Error smoothing constant.}
 
@@ -32,8 +32,8 @@ detect the covariate shift-point in non-stationary time-series. See also
 \code{\link{OcpSdEwma}}, the optimized and faster function of this function.
 }
 \details{
-\code{train.data} and \code{test.data} must be numerical vectors
-without NA values. \code{threshold} must be a numeric value between 0 and 1.
+\code{data} must be a numerical vector without NA values.
+\code{threshold} must be a numeric value between 0 and 1.
 It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
 used. Finally, \code{l} is the parameter that determines the control limits.
 By default, 3 is used.
@@ -50,16 +50,15 @@ df <- data.frame(timestamp = 1:n, value = x)
 
 ## Calculate anomalies
 result <- CpSdEwma(
-  train.data = df[1:5,"value"],
-  test.data = df[6:n,"value"],
+  data = df$value,
+  n.train = 5,
   threshold = 0.01,
   l = 3
 )
-res <- cbind(df[6:n,], result)
-rownames(res) <- 1:(n-5)
+res <- cbind(df, result)
 
 ## Plot results
-PlotDetections(res, print.time.window = FALSE, title = "KNN-CAD ANOMALY DETECTOR")
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
 }
 \references{
 Raza, H., Prasad, G., & Li, Y. (03 de 2015). EWMA model based

@@ -18,11 +18,10 @@ result <- IpSdEwma(
   threshold = 0.01,
   l = 3
 )
-res <- cbind(df[6:n,], result$result)
-rownames(res) <- 1:(n-5)
+res <- cbind(df, result$result)
 
 ## Plot results
-PlotDetections(res, print.time.window = FALSE, title = "SD-EWMA ANOMALY DETECTOR")
+PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 
 ## EXAMPLE 2: ----------------------
 ## You can use it in an incremental way. This is an example using the stream
@@ -61,14 +60,11 @@ for(i in 1:numIter) {
   )
   # prepare the result
   if(!is.null(last.res$result)){
-    res <- rbind(res, cbind(newRow[(nread-nrow(last.res$result)+1):nread,],
-                            last.res$result))
+    res <- rbind(res, cbind(newRow, last.res$result))
   }
 }
 
 ## Plot results
-n.train <- 5
-rownames(res) <- 1:(n-n.train)
-PlotDetections(res, print.time.window = FALSE, title = "SD-EWMA ANOMALY DETECTOR")
+PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 
 

@@ -98,12 +98,10 @@ result <- IpTsSdEwma(
   l = 3,
   m = 20
 )
-res <- cbind(df[6:n,], rbind(result$last.data.checked, result$checked.results,
+res <- cbind(df, rbind(result$last.data.checked, result$checked.results,
                              result$to.next.iteration$to.check[, -4]))
-rownames(res) <- 1:(n-5)
 
 ## Plot results
-res <- res[1:500,]
 PlotDetections(res, print.time.window = FALSE, title = "TSSD-EWMA ANOMALY DETECTOR")
 
 ## EXAMPLE 2: ----------------------
@@ -155,17 +153,14 @@ for(i in 1:numIter) {
   }
   if(i == numIter){
     res <- rbind(res,
-           cbind(timestamp = newRow[
-                             (nread - nrow(last.res$to.next.iteration$to.check)
-                             + 1):nread, "timestamp"],
-                 last.res$to.next.iteration$to.check))
+           cbind(timestamp = newRow[(nread - nrow(last.res$to.next.iteration$to.check) + 1):nread,
+                                    "timestamp"], last.res$to.next.iteration$to.check))
   }
   last.timestamp <- newRow[(nread-m+1):nread,]
 }
 
 ## Plot results
-rownames(res) <- 1:(n-5)
-PlotDetections(res, print.time.window = FALSE, title = "TSSD-EWMA ANOMALY DETECTOR")
+PlotDetections(res, title = "TSSD-EWMA ANOMALY DETECTOR")
 }
 \references{
 Raza, H., Prasad, G., & Li, Y. (03 de 2015). EWMA model based

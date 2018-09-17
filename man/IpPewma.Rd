@@ -92,7 +92,7 @@ result <- IpPewma(
 res <- cbind(df, result$result)
 
 ## Plot results
-PlotDetections(res, print.time.window = FALSE, title = "PEWMA ANOMALY DETECTOR")
+PlotDetections(res, title = "PEWMA ANOMALY DETECTOR")
 
 ## EXAMPLE 2: ----------------------
 ## You can use it in an incremental way. This is an example using the stream
@@ -137,8 +137,7 @@ for(i in 1:numIter) {
 }
 
 ## Plot results
-res <- res[6:500,]
-PlotDetections(res, print.time.window = FALSE, title = "PEWMA ANOMALY DETECTOR")
+PlotDetections(res, title = "PEWMA ANOMALY DETECTOR")
 
 
 

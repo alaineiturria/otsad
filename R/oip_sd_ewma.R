@@ -158,6 +158,12 @@ OipSdEwma <- function(data, n.train, threshold, l = 3, last.res = NULL) {
                       lcl = unlist(res$lcl), ucl = unlist(res$ucl))
   }
 
+  if (!is.null(train.data)) {
+    v <- rep(0, length(train.data))
+    tra <- data.frame(is.anomaly = v, lcl = train.data, ucl = train.data, stringsAsFactors = FALSE)
+    res <- rbind(tra, res)
+  }
+
   last.res <- get("last.res", envir = new.enviroment)
   return(list(result = res, last.res = last.res))
 }

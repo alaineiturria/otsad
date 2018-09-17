@@ -211,32 +211,20 @@ kpss.test(df$value)
 On the recommendation of the algorithm authors, also indicated in the details section of this function, we set \code{threshold} to 0.01.One of the usual values for the $\sigma$ multiplier \code{l} is usually 3. Next, we apply the SD-EWMA anomaly detector, as the example is simple we use the classical processing algorithm. Note that the optimized algorithm could be used in the same way. Finally, we separate the training and test sets, using the first five values for training and the rest values for testing.
 
 <<detector>>=
-train <- df[1:5,"value"]
-test <- df[6:n,"value"]
-result <- CpSdEwma(train, test, threshold = 0.01, l = 3)
+result <- CpSdEwma(data = df$value, n.train = 5, threshold = 0.01, l = 3)
 @
 
 If we print the results we can observe that the results are of data.frame type and have three columns: \emph{is.anomaly} indicating whether or not the test observation is anomalous and the columns \emph{ucl} and \emph{lcl} with the upper and lower control limits, used to determine whether or not the observation is anomalous.
 
 <<printResult>>=
-head(result, n = 10)
+head(result, n = 15)
 @
 
 Finally, we can see the results (Figure \ref{fig:result}) by writing the following code:
 
 <<plotResult, eval = FALSE>>=
-library(ggplot2)
-res <- cbind(df[6:n,], result)
-rownames(res) <- 1:length(test)
-
-ggplot(res, aes(timestamp, value)) +
-      geom_line(na.rm=TRUE, color = "blue") +
-      ggtitle("SD-EWMA Anomaly Detector") +
-      xlab("Time") + ylab("Value") +
-      theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
-      theme(text = element_text(size=18)) +
-      geom_point(data = res[res$is.anomaly == TRUE,],aes(colour = factor(is.anomaly))) +
-      theme(legend.position="none")
+res <- cbind(df, result)
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
 @
 
 \begin{figure}[htbp]
@@ -272,7 +260,7 @@ for(i in iter) {
   )
   # prepare the result
   if(!is.null(last.res$result)){
-    res <- rbind(res, cbind(newRow[(nread - nrow(last.res$result) + 1):nread,], last.res$result))
+    res <- rbind(res, cbind(newRow, last.res$result))
   }
 }
 @
@@ -280,16 +268,7 @@ for(i in iter) {
 In the same way we can view the results (Figure ref{fig:result2}) by writing:
 
 <<plotResult2, eval = FALSE>>=
-library(ggplot2)
-
-ggplot(res, aes(timestamp, value)) +
-      geom_line(na.rm=TRUE, color = "blue") +
-      ggtitle("Online SD-EWMA Anomaly Detector") +
-      xlab("Time") + ylab("Value") +
-      theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
-      theme(text = element_text(size=18)) +
-      geom_point(data = res[res$is.anomaly == TRUE,],aes(colour = factor(is.anomaly))) +
-      theme(legend.position="none")
+PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 @
 
 \begin{figure}[htbp]

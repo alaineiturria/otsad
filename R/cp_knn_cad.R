@@ -7,8 +7,7 @@
 #' scores based on the conformal prediction paradigm.
 #'
 #' @param data Numerical vector with training and test dataset.
-#' @param n.train Number of points of the dataset that correspond to the
-#' training set.
+#' @param n.train Number of points of the dataset that correspond to the training set.
 #' @param threshold Anomaly threshold.
 #' @param l Window length.
 #' @param k Number of neighbours to take into account.

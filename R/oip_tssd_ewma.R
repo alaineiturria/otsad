@@ -70,9 +70,7 @@
 
 
 OipTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
-                        to.next.iteration = list(last.res = NULL,
-                                                 to.check = NULL,
-                                                 last.m = NULL)) {
+                        to.next.iteration = list(last.res = NULL, to.check = NULL, last.m = NULL)) {
 
   # validate parameters
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
@@ -88,12 +86,10 @@ OipTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
     stop("l argument must be a numeric value.")
   }
   if (!is.numeric(m)) {
-    stop("m argument must be a numeric value and smaller than all dataset
-          length.")
+    stop("m argument must be a numeric value and smaller than all dataset length.")
   }
   if (!is.null(to.next.iteration) & !is.list(to.next.iteration)) {
-    stop("to.next.iteration argument must be NULL or a list with las execution
-          result.")
+    stop("to.next.iteration argument must be NULL or a list with las execution result.")
   }
 
   ApplyKolmogorovTest <- function(pos, all.data) {
@@ -110,8 +106,7 @@ OipTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
   # get anomalous rows
   result <- OipSdEwma(data, n.train, threshold, l, to.next.iteration$last.res)
   # merge result and to.check data and check anomalous rows
-  result$result$value <-
-  data[(length(data) - nrow(result$result) + 1):length(data)]
+  result$result$value <- data
   all.data <- rbind(to.next.iteration$to.check, result$result)
   rownames(all.data) <- 1:nrow(all.data)
   anomaly.pos <- which(all.data$is.anomaly == 1)
@@ -135,7 +130,6 @@ OipTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
   to.next.iteration$to.check <- all.data[(n - m + 1):n,]
   to.next.iteration$last.m <- all.data[(n - 2 * m + 1):(n - m), "value"]
   to.next.iteration$last.res <- result$last.res
-
 
   return(list(last.data.checked = last.data.checked,
               checked.results = checked.results,

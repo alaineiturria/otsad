@@ -10,13 +10,13 @@
 #' moving average (EWMA) model based control chart to detect the covariate
 #' shift-point in non-stationary time-series.
 #'
-#' @param train.data Numerical vector with the training set.
-#' @param test.data Numerical vector with the test set.
+#' @param data Numerical vector with training and test dataset.
+#' @param n.train Number of points of the dataset that correspond to the training set.
 #' @param threshold Error smoothing constant.
 #' @param l Control limit multiplier.
 #'
-#' @details \code{train.data} and \code{test.data} must be numerical vectors
-#' without NA values. \code{threshold} must be a numeric value between 0 and 1.
+#' @details \code{data} must be a numerical vector without NA values.
+#' \code{threshold} must be a numeric value between 0 and 1.
 #' It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
 #' used. Finally, \code{l} is the parameter that determines the control limits.
 #' By default, 3 is used.
@@ -35,14 +35,14 @@
 #'
 #' @export
 
-OcpSdEwma <- function(train.data, test.data, threshold, l = 3) {
+OcpSdEwma <- function(data, n.train, threshold, l = 3) {
 
   # validate parameters
-  if (!is.numeric(train.data) | (sum(is.na(train.data)) > 0)) {
-    stop("train.data argument must be a numeric vector and without NA values.")
+  if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
+    stop("data argument must be a numeric vector and without NA values.")
   }
-  if (!is.numeric(test.data) | (sum(is.na(test.data)) > 0)) {
-    stop("test.data argument must be a numeric vector and without NA values.")
+  if (!is.numeric(n.train) | n.train > length(data)) {
+    stop("n.train argument must be a numeric value greater then data length.")
   }
   if (!is.numeric(threshold) | threshold <= 0 |  threshold > 1) {
     stop("threshold argument must be a numeric value in (0,1] range.")
@@ -88,6 +88,8 @@ OcpSdEwma <- function(train.data, test.data, threshold, l = 3) {
   # Initialize the parameters
   new.enviroment <- new.env()
   lambdas <- seq(0.1, 1, 0.1)
+  train.data <- data[1:n.train]
+  test.data <- data[(n.train + 1):length(data)]
   last.res <- data.frame(lambda = lambdas,
                         i = 1,
                         x = train.data[1],
@@ -108,6 +110,10 @@ OcpSdEwma <- function(train.data, test.data, threshold, l = 3) {
   # Testing phase
   res <- as.data.frame(t(sapply(test.data, SdEwmaTest, new.enviroment)))
   res <- as.data.frame(lapply(res, unlist))
+
+  v <- rep(0, n.train)
+  tra <- data.frame(is.anomaly = v, lcl = train.data, ucl = train.data, stringsAsFactors = FALSE)
+  res <- rbind(tra, res)
 
   return(res)
 }

@@ -9,14 +9,13 @@ df <- data.frame(timestamp = 1:n, value = x)
 
 ## Calculate anomalies
 result <- OcpTsSdEwma(
-  train.data = df[1:5,"value"],
-  test.data = df[6:n,"value"],
+  data = df$value,
+  n.train = 5,
   threshold = 0.01,
   l = 3,
   m = 20
 )
-res <- cbind(df[6:n,], result)
-rownames(res) <- 1:(n-5)
+res <- cbind(df, result)
 
 ## Plot results
-PlotDetections(res, print.time.window = FALSE, title = "TSSD-EWMA ANOMALY DETECTOR")
+PlotDetections(res, title = "TSSD-EWMA ANOMALY DETECTOR")

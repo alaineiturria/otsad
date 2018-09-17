@@ -11,14 +11,14 @@
 #' \code{\link{CpSdEwma}} algorithm. In the second phase, it checks the veracity
 #' of the anomalies using the Kolmogorov-Simirnov test to reduce false alarms.
 #'
-#' @param train.data Numerical vector with the training set.
-#' @param test.data Numerical vector with the test set.
+#' @param data Numerical vector with training and test dataset.
+#' @param n.train Number of points of the dataset that correspond to the training set.
 #' @param threshold Error smoothing constant.
 #' @param l Control limit multiplier.
 #' @param m Length of the subsequences for applying the Kolmogorov-Smirnov test.
 #'
-#' @details \code{train.data} and \code{test.data} must be numerical vectors
-#' without NA values. \code{threshold} must be a numeric value between 0 and 1.
+#' @details \code{data} must be a numerical vector without NA values.
+#' \code{threshold} must be a numeric value between 0 and 1.
 #' It is recommended to use low values such as 0.01 or 0.05. By default, 0.01 is
 #' used. Finally, \code{l} is the parameter that determines the control limits.
 #' By default, 3 is used. \code{m} is the length of the subsequences for
@@ -42,14 +42,14 @@
 
 
 
-OcpTsSdEwma <- function(train.data, test.data, threshold, l = 3, m = 5) {
+OcpTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5) {
 
   # validate parameters
-  if (!is.numeric(train.data) | (sum(is.na(train.data)) > 0)) {
-    stop("train.data argument must be a numeric vector and without NA values.")
+  if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
+    stop("data argument must be a numeric vector and without NA values.")
   }
-  if (!is.numeric(test.data) | (sum(is.na(test.data)) > 0)) {
-    stop("test.data argument must be a numeric vector and without NA values.")
+  if (!is.numeric(n.train) | n.train > length(data)) {
+    stop("n.train argument must be a numeric value greater then data length.")
   }
   if (!is.numeric(threshold) | threshold <= 0 |  threshold > 1) {
     stop("threshold argument must be a numeric value in (0,1] range.")
@@ -57,15 +57,15 @@ OcpTsSdEwma <- function(train.data, test.data, threshold, l = 3, m = 5) {
   if (!is.numeric(l)) {
     stop("l argument must be a numeric value.")
   }
-  if (!is.numeric(m) | m > (length(train.data)+length(test.data))) {
+  if (!is.numeric(m) | m > length(data)) {
     stop("m argument must be a numeric value and smaller than all dataset length.")
   }
 
   # Auxiliar function to apply Kolmogorov Test
-  ApplyKolmogorovTest <- function(pos, all.data) {
-    if ((pos - (m - 1)) > 0 & (pos + m) <= length(all.data)){
-      part1 <- all.data[(pos - (m - 1)):pos]
-      part2 <- all.data[(pos + 1):(pos + m)]
+  ApplyKolmogorovTest <- function(pos) {
+    if ((pos - (m - 1)) > 0 & (pos + m) <= length(data)) {
+      part1 <- data[(pos - (m - 1)):pos]
+      part2 <- data[(pos + 1):(pos + m)]
       res.test <- suppressWarnings(stats::ks.test(part1, part2, exact = FALSE))
       return(ifelse(res.test$p.value > 0.05, 0, 1))
     } else {
@@ -73,10 +73,8 @@ OcpTsSdEwma <- function(train.data, test.data, threshold, l = 3, m = 5) {
     }
   }
 
-  result <- OcpSdEwma(train.data, test.data, threshold, l)
-  all.data <- c(train.data, test.data)
+  result <- OcpSdEwma(data, n.train, threshold, l)
   anomaly.pos <- which(result$is.anomaly == 1)
-  result[anomaly.pos, "is.anomaly"] <-
-  sapply((anomaly.pos+length(train.data)), ApplyKolmogorovTest, all.data)
+  result[anomaly.pos, "is.anomaly"] <- sapply(anomaly.pos, ApplyKolmogorovTest)
   return(result)
 }

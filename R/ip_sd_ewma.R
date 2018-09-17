@@ -151,5 +151,11 @@ IpSdEwma <- function(data, n.train, threshold = 0.01, l = 3, last.res = NULL) {
     }
   }
 
+  if (!is.null(train.data)) {
+    v <- rep(0, length(train.data))
+    tra <- data.frame(is.anomaly = v, lcl = train.data, ucl = train.data, stringsAsFactors = FALSE)
+    res <- rbind(tra, res)
+  }
+
   return(list(result = res, last.res = last.res))
 }

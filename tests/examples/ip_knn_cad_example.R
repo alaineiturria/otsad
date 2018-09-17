@@ -26,8 +26,7 @@ result <- IpKnnCad(
 )
 
 ## Plot results
-res <- cbind(df[(params.KNN$n.train + 1):n,],
-             is.anomaly = result$is.anomaly[(params.KNN$n.train + 1):n])
+res <- cbind(df, is.anomaly = result$is.anomaly)
 PlotDetections(res, print.time.window = FALSE, title = "KNN-CAD ANOMALY DETECTOR")
 
 ## EXAMPLE 2: ----------------------
@@ -78,8 +77,7 @@ for(i in 1:numIter) {
 }
 
 ## Plot results
-res <- res[(params.KNN$n.train + 1):n,]
-PlotDetections(res, print.time.window = FALSE, title = "KNN-CAD ANOMALY DETECTOR")
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
 
 
 

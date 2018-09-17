@@ -13,16 +13,16 @@ test_that("OcpTsSdEwma gives the correct result", {
 
   ## Calculate anomalies
   result <- OcpTsSdEwma(
-    train.data = df[1:5,"value"],
-    test.data = df[6:n,"value"],
+    data = df$value,
+    n.train = 5,
     threshold = 0.01,
     l = 3,
     m = 20
   )
 
   ## read correct results
-  correct.results <- rep(0, 495)
-  correct.results[87] <- 1
+  correct.results <- rep(0, 500)
+  correct.results[92] <- 1
 
   expect_equal(as.numeric(result$is.anomaly), correct.results)
 
