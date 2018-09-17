@@ -18,11 +18,11 @@ GetDetectorScore(data, print = FALSE, title = "")
 List conformed by the following items:
   \item{data}{Same data set with additional columns such as \code{label}, \code{start.limit},
   \code{end.limit}, \code{standard.score} and etc.}
-  \item{all.score.standard}{Total score obtained by the detector using the weights of the
+  \item{standard}{Total score obtained by the detector using the weights of the
   standard profile.}
-  \item{all.score.low_FP_rate}{Total score obtained by the detector using the weights of the
+  \item{low_FP_rate}{Total score obtained by the detector using the weights of the
   reward_low_FP_rate profile.}
-  \item{all.score.low_FN_rate}{Total score obtained by the detector using the weights of the
+  \item{low_FN_rate}{Total score obtained by the detector using the weights of the
   reward_low_FN_rate profile.}
   \item{tp}{Number of true positives}
   \item{tn}{Number of true negatives}

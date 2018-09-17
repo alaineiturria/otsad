@@ -22,11 +22,11 @@
 #' @return List conformed by the following items:
 #'   \item{data}{Same data set with additional columns such as \code{label}, \code{start.limit},
 #'   \code{end.limit}, \code{standard.score} and etc.}
-#'   \item{all.score.standard}{Total score obtained by the detector using the weights of the
+#'   \item{standard}{Total score obtained by the detector using the weights of the
 #'   standard profile.}
-#'   \item{all.score.low_FP_rate}{Total score obtained by the detector using the weights of the
+#'   \item{low_FP_rate}{Total score obtained by the detector using the weights of the
 #'   reward_low_FP_rate profile.}
-#'   \item{all.score.low_FN_rate}{Total score obtained by the detector using the weights of the
+#'   \item{low_FN_rate}{Total score obtained by the detector using the weights of the
 #'   reward_low_FN_rate profile.}
 #'   \item{tp}{Number of true positives}
 #'   \item{tn}{Number of true negatives}
@@ -171,9 +171,9 @@ GetDetectorScore <- function(data, print = FALSE, title = ""){
   }
 
   return(list(data = data,
-              all.score.standard = sum(data$standard.score),
-              all.score.low_FP_rate = sum(data$low_FP_rate.score),
-              all.score.low_FN_rate = sum(data$low_FN_rate.score),
+              standard = sum(data$standard.score),
+              low_FP_rate = sum(data$low_FP_rate.score),
+              low_FN_rate = sum(data$low_FN_rate.score),
               tp = sum(data$label == "tp" & data$is.real.anomaly == 1),
               tn = sum(data$label == "tn"),
               fp = sum(data$label == "fp"),
