@@ -10,6 +10,8 @@
 #' @param max.active.neurons Number of neurons of the model.
 #' @param num.norm.value.bits Granularity of the transformation into discrete values
 #' @param base.threshold Threshold to be considered an anomaly.
+#' @param min.value Minimum expected value.
+#' @param max.value Maximum expected value.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
@@ -23,22 +25,17 @@
 #'
 #' @export
 ContextualAnomalyDetector <- function(data,
-                                     rest.period = max(min(150, round(nrow(data) * 0.03), 1)),
+                                     rest.period = max(min(150, round(length(data) * 0.03), 1)),
                                      max.left.semicontexts = 7,
                                      max.active.neurons = 15,
                                      num.norm.value.bits = 3,
                                      base.threshold = 0.75,
-                                     max.value = max(data, na.rm = T),
-                                     min.value = min(data, na.rm = T)){
-
-    # Load Python modules
-    reticulate::source_python("inst/CAD/contextOperator.py")
-    reticulate::source_python("inst/CAD/CAD_OSE.py")
-
-    python.object <- CAD_OSE(min.value, max.value, base.threshold, rest.period,
-                            max.left.semicontexts, max.active.neurons,
-                            num.norm.value.bits)
-
+                                     min.value = min(data, na.rm = T),
+                                     max.value = max(data, na.rm = T)){
+  python.object <- CAD_OSE$CAD_OSE(min.value, max.value, base.threshold, rest.period,
+                                   max.left.semicontexts, max.active.neurons,
+                                   num.norm.value.bits)
+  
     anomaly.score <- numeric(length = length(data))
 
     for(i in 1:length(data)){

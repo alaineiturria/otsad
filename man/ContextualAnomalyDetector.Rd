@@ -7,8 +7,8 @@
 ContextualAnomalyDetector(data, rest.period = max(min(150,
   round(nrow(data) * 0.03), 1)), max.left.semicontexts = 7,
   max.active.neurons = 15, num.norm.value.bits = 3,
-  base.threshold = 0.75, max.value = max(data, na.rm = T),
-  min.value = min(data, na.rm = T))
+  base.threshold = 0.75, min.value = min(data, na.rm = T),
+  max.value = max(data, na.rm = T))
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}
@@ -22,6 +22,10 @@ ContextualAnomalyDetector(data, rest.period = max(min(150,
 \item{num.norm.value.bits}{Granularity of the transformation into discrete values}
 
 \item{base.threshold}{Threshold to be considered an anomaly.}
+
+\item{min.value}{Minimum expected value.}
+
+\item{max.value}{Maximum expected value.}
 }
 \value{
 Anomaly score of \code{data}.
