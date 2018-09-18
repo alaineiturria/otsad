@@ -31,5 +31,6 @@ Imports:
     digest,
     ggplot2,
     plotly,
-    sigmoid
+    sigmoid,
+    reticulate
 VignetteBuilder: knitr

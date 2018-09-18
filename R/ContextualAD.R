@@ -27,67 +27,24 @@ ContextualAnomalyDetector <- function(data,
                                      max.left.semicontexts = 7,
                                      max.active.neurons = 15,
                                      num.norm.value.bits = 3,
-                                     base.threshold = 0.75){
-    
-                                        # Operational parameters
-    min.value <- min(data, na.rm = T)
-    max.value <- max(data, na.rm = T)
-    
-    max.bin.value <- 2^num.norm.value.bits - 1
-    full.value.range <- ifelse(max.value == min.value,
-                              max.bin.value,
-                              max.value - min.value)
-    
-    min.value.step <- full.value.range / max.bin.value
-    
-                                        # Operational memory
-    left.fact.group <-  list()
-    potential.new.context <- list()
-    last.predicted.facts <- list()
-    result.values.history <- 1.0
-    n <- nrow(data)
-    
-    
-                                        # Creation of Context operator
-    context.operator <-  new.env()
-    assign("max.left.semicontexts", max.left.semicontexts, envir = context.operator)
-    assign("fact.dict", list(left = new.env(), right = new.env()), 
-           envir = context.operator)
-    assign("sctxt.dict", list(left = new.env(), right = new.env()), 
-           envir = context.operator)
-    assign("sctxt.value.list", list(left = list(), right = list()), 
-           envir = context.operator)
-    assign("crossed.sctxt.list", list(left = list(), right = list()), 
-           envir = context.operator)
-    assign("ctxt.value.list", list, envir = context.operator)
-    assign("new.ctxt.id", FALSE, envir = context.operator)
-    
-    
-                                        # Adjust data globally
-    adjusted.data <- sapply(data, function(x){
-        round((x - min.value) / min.value.step)
-    })
-    bits <- lapply(adjusted.data, IntToBinarySens, num.norm.value.bits)
-    
-                                        # Create environment for iterated anomaly score computation
-    local.environment <- new.env()
-    assign("value", bits[[1]], envir = local.environment)
-    assign("i", 1, envir = local.environment)
-    assign("rest.period", rest.period, envir = local.environment)
-    assign("result.values.history", result.values.history, 
-           envir = local.environment)
-    assign("max.active.neurons.num", max.active.neurons, 
-           envir = local.environment)
-    assign("context.operator", context.operator, 
-           envir = local.environment)
-    assign("potential.new.ctxt", list(), 
-           envir = local.environment)
-    assign("left.facts", list(), 
-           envir = local.environment)
-    assign("base.threshold", base.threshold,
-           envir = local.environment)
-    
-    results <- lapply(bits, GetAnomalyScore.CAD,
-                     local.environment = local.environment)
-    return(unlist(results))
+                                     base.threshold = 0.75,
+                                     max.value = max(data, na.rm = T),
+                                     min.value = min(data, na.rm = T)){
+
+    # Load Python modules
+    reticulate::source_python("inst/CAD/contextOperator.py")
+    reticulate::source_python("inst/CAD/CAD_OSE.py")
+
+    python.object <- CAD_OSE(min.value, max.value, base.threshold, rest.period,
+                            max.left.semicontexts, max.active.neurons,
+                            num.norm.value.bits)
+
+    anomaly.score <- numeric(length = length(data))
+
+    for(i in 1:length(data)){
+        anomaly.score[i] <- python.object$getAnomalyScore(data[i])
+    }
+
+    return(list("Anomaly.Score" = anomaly.score,
+                "Python.Object" = python.object))
 }
