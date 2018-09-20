@@ -5,3 +5,8 @@ otsad.Rproj
 .Rproj.user/
 .Rproj.user
 inst/doc
+**/__pycache__/
+**.aux
+**.bbl
+**.blg
+**.log
