@@ -32,6 +32,10 @@ ContextualAnomalyDetector <- function(data,
                                      base.threshold = 0.75,
                                      min.value = min(data, na.rm = T),
                                      max.value = max(data, na.rm = T)){
+  CAD_OSE <<- reticulate::import_from_path("CAD_OSE", 
+                                           system.file("python", "CAD", 
+                                                       package = utils::packageName(), 
+                                                       mustWork = TRUE))
   python.object <- CAD_OSE$CAD_OSE(min.value, max.value, base.threshold, rest.period,
                                    max.left.semicontexts, max.active.neurons,
                                    num.norm.value.bits)
