@@ -71,19 +71,19 @@ CpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0.3, l = 3) {
     row$s2 <- row$alpha * row$s2 + (1 - row$alpha) * row$x ^ 2
     row$s1.next <- row$s1
     row$std.next <- sqrt(abs(row$s2 - row$s1^2))
-    row$ucl <- row$s1 + l[1] * row$std
-    row$lcl <- row$s1 - l[1] * row$std
+    row$ucl <- row$s1 + l[1] * row$std.next
+    row$lcl <- row$s1 - l[1] * row$std.next
     row$is.anomaly <- row$x < row$lcl | row$x > row$ucl
+    print(row)
     row
   }
 
   # inicializamos las variables
   n <- length(data)
   res <- NULL
-  last.res <- data.frame(value = data[1],
-                         i = 0,
-                         s1 = data[1],
-                         s2 = data[1] ^ 2,
+  last.res <- data.frame(i = 0,
+                         s1 = mean(data[1:n.train]),
+                         s2 = mean(data[1:n.train]) ^ 2,
                          s1.next = data[1],
                          std.next = 0,
                          std = 0,
@@ -98,6 +98,10 @@ CpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0.3, l = 3) {
     last.res <- Pewma(last.res, data[i])
     res <- rbind(res, last.res[,c("is.anomaly", "lcl", "ucl")])
   }
+
+  res[1:n.train, "is.anomaly"] <- 0
+  res[1:n.train, "lcl"] <- data[1:n.train]
+  res[1:n.train, "ucl"] <- data[1:n.train]
 
   return(res)
 }

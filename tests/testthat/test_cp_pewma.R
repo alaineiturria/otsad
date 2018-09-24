@@ -15,14 +15,14 @@ test_that("CpPewma gives the correct result", {
   result <- CpPewma(
     data = df$value,
     n.train = 5,
-    alpha0 = 0.8,
-    beta = 0.1,
+    alpha0 = 0.95,
+    beta = 0.6,
     l = 3
   )
 
   ## read correct results
   correct.results <- rep(0, 500)
-  correct.results[c(2,3,25,70,91,92,320)] <- 1
+  correct.results[c(25, 70, 92, 320)] <- 1
 
   expect_equal(as.numeric(result$is.anomaly), correct.results)
 

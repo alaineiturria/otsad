@@ -98,8 +98,8 @@ OipPewma <- function(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3, last.res 
     row$s2 <- row$alpha * row$s2 + (1 - row$alpha) * row$x^2
     row$s1.next <- row$s1
     row$std.next <- sqrt(abs(row$s2 - row$s1 ^ 2))
-    row$ucl <- row$s1 + l[1] * row$std
-    row$lcl <- row$s1 - l[1] * row$std
+    row$ucl <- row$s1 + l[1] * row$std.next
+    row$lcl <- row$s1 - l[1] * row$std.next
     row$is.anomaly <- row$x < row$lcl | row$x > row$ucl
     row$is.supAnomaly <- row$x > row$ucl
     row$is.infAnomaly <- row$x < row$lcl
