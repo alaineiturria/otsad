@@ -5,7 +5,7 @@
 \title{Contextual Anomaly Detector - Open Source (CAD)}
 \usage{
 ContextualAnomalyDetector(data, rest.period = max(min(150,
-  round(nrow(data) * 0.03), 1)), max.left.semicontexts = 7,
+  round(length(data) * 0.03), 1)), max.left.semicontexts = 7,
   max.active.neurons = 15, num.norm.value.bits = 3,
   base.threshold = 0.75, min.value = min(data, na.rm = T),
   max.value = max(data, na.rm = T))

@@ -291,9 +291,7 @@ On the recommendation of the algorithm authors, also indicated in the details se
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{train} \hlkwb{<-} \hlstd{df[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,}\hlstr{"value"}\hlstd{]}
-\hlstd{test} \hlkwb{<-} \hlstd{df[}\hlnum{6}\hlopt{:}\hlstd{n,}\hlstr{"value"}\hlstd{]}
-\hlstd{result} \hlkwb{<-} \hlkwd{CpSdEwma}\hlstd{(train, test,} \hlkwc{threshold} \hlstd{=} \hlnum{0.01}\hlstd{,} \hlkwc{l} \hlstd{=} \hlnum{3}\hlstd{)}
+\hlstd{result} \hlkwb{<-} \hlkwd{CpSdEwma}\hlstd{(}\hlkwc{data} \hlstd{= df}\hlopt{$}\hlstd{value,} \hlkwc{n.train} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{threshold} \hlstd{=} \hlnum{0.01}\hlstd{,} \hlkwc{l} \hlstd{=} \hlnum{3}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -303,20 +301,25 @@ If we print the results we can observe that the results are of data.frame type a
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{head}\hlstd{(result,} \hlkwc{n} \hlstd{=} \hlnum{10}\hlstd{)}
+\hlkwd{head}\hlstd{(result,} \hlkwc{n} \hlstd{=} \hlnum{15}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 ##    is.anomaly        lcl      ucl
-## 1       FALSE -16.718459 83.33762
-## 2       FALSE -15.120715 84.87796
-## 3       FALSE -12.127443 91.30896
-## 4       FALSE -12.029491 90.89286
-## 5       FALSE -10.427275 92.40430
-## 6       FALSE -12.931167 90.31049
-## 7       FALSE -10.756584 92.99798
-## 8       FALSE  -7.669897 99.48715
-## 9       FALSE  -9.332986 97.76851
-## 10      FALSE  -9.501358 97.09333
+## 1           0  31.000000 31.00000
+## 2           0  26.000000 26.00000
+## 3           0  56.000000 56.00000
+## 4           0   6.000000  6.00000
+## 5           0  47.000000 47.00000
+## 6           0 -16.718459 83.33762
+## 7           0 -15.120715 84.87796
+## 8           0 -12.127443 91.30896
+## 9           0 -12.029491 90.89286
+## 10          0 -10.427275 92.40430
+## 11          0 -12.931167 90.31049
+## 12          0 -10.756584 92.99798
+## 13          0  -7.669897 99.48715
+## 14          0  -9.332986 97.76851
+## 15          0  -9.501358 97.09333
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -326,18 +329,8 @@ Finally, we can see the results (Figure \ref{fig:result}) by writing the followi
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(ggplot2)}
-\hlstd{res} \hlkwb{<-} \hlkwd{cbind}\hlstd{(df[}\hlnum{6}\hlopt{:}\hlstd{n,], result)}
-\hlkwd{rownames}\hlstd{(res)} \hlkwb{<-} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(test)}
-
-\hlkwd{ggplot}\hlstd{(res,} \hlkwd{aes}\hlstd{(timestamp, value))} \hlopt{+}
-      \hlkwd{geom_line}\hlstd{(}\hlkwc{na.rm}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{color} \hlstd{=} \hlstr{"blue"}\hlstd{)} \hlopt{+}
-      \hlkwd{ggtitle}\hlstd{(}\hlstr{"SD-EWMA Anomaly Detector"}\hlstd{)} \hlopt{+}
-      \hlkwd{xlab}\hlstd{(}\hlstr{"Time"}\hlstd{)} \hlopt{+} \hlkwd{ylab}\hlstd{(}\hlstr{"Value"}\hlstd{)} \hlopt{+}
-      \hlkwd{theme}\hlstd{(}\hlkwc{plot.title} \hlstd{=} \hlkwd{element_text}\hlstd{(}\hlkwc{lineheight}\hlstd{=}\hlnum{.8}\hlstd{,} \hlkwc{face}\hlstd{=}\hlstr{"bold"}\hlstd{,} \hlkwc{size} \hlstd{=} \hlnum{20}\hlstd{))} \hlopt{+}
-      \hlkwd{theme}\hlstd{(}\hlkwc{text} \hlstd{=} \hlkwd{element_text}\hlstd{(}\hlkwc{size}\hlstd{=}\hlnum{18}\hlstd{))} \hlopt{+}
-      \hlkwd{geom_point}\hlstd{(}\hlkwc{data} \hlstd{= res[res}\hlopt{$}\hlstd{is.anomaly} \hlopt{==} \hlnum{TRUE}\hlstd{,],}\hlkwd{aes}\hlstd{(}\hlkwc{colour} \hlstd{=} \hlkwd{factor}\hlstd{(is.anomaly)))} \hlopt{+}
-      \hlkwd{theme}\hlstd{(}\hlkwc{legend.position}\hlstd{=}\hlstr{"none"}\hlstd{)}
+\hlstd{res} \hlkwb{<-} \hlkwd{cbind}\hlstd{(df, result)}
+\hlkwd{PlotDetections}\hlstd{(res,} \hlkwc{title} \hlstd{=} \hlstr{"KNN-CAD ANOMALY DETECTOR"}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -377,7 +370,7 @@ This example has used classical processing, but by using the incremental functio
   \hlstd{)}
   \hlcom{# prepare the result}
   \hlkwa{if}\hlstd{(}\hlopt{!}\hlkwd{is.null}\hlstd{(last.res}\hlopt{$}\hlstd{result))\{}
-    \hlstd{res} \hlkwb{<-} \hlkwd{rbind}\hlstd{(res,} \hlkwd{cbind}\hlstd{(newRow[(nread} \hlopt{-} \hlkwd{nrow}\hlstd{(last.res}\hlopt{$}\hlstd{result)} \hlopt{+} \hlnum{1}\hlstd{)}\hlopt{:}\hlstd{nread,], last.res}\hlopt{$}\hlstd{result))}
+    \hlstd{res} \hlkwb{<-} \hlkwd{rbind}\hlstd{(res,} \hlkwd{cbind}\hlstd{(newRow, last.res}\hlopt{$}\hlstd{result))}
   \hlstd{\}}
 \hlstd{\}}
 \end{alltt}
@@ -389,16 +382,7 @@ In the same way we can view the results (Figure ref{fig:result2}) by writing:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(ggplot2)}
-
-\hlkwd{ggplot}\hlstd{(res,} \hlkwd{aes}\hlstd{(timestamp, value))} \hlopt{+}
-      \hlkwd{geom_line}\hlstd{(}\hlkwc{na.rm}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{color} \hlstd{=} \hlstr{"blue"}\hlstd{)} \hlopt{+}
-      \hlkwd{ggtitle}\hlstd{(}\hlstr{"Online SD-EWMA Anomaly Detector"}\hlstd{)} \hlopt{+}
-      \hlkwd{xlab}\hlstd{(}\hlstr{"Time"}\hlstd{)} \hlopt{+} \hlkwd{ylab}\hlstd{(}\hlstr{"Value"}\hlstd{)} \hlopt{+}
-      \hlkwd{theme}\hlstd{(}\hlkwc{plot.title} \hlstd{=} \hlkwd{element_text}\hlstd{(}\hlkwc{lineheight}\hlstd{=}\hlnum{.8}\hlstd{,} \hlkwc{face}\hlstd{=}\hlstr{"bold"}\hlstd{,} \hlkwc{size} \hlstd{=} \hlnum{20}\hlstd{))} \hlopt{+}
-      \hlkwd{theme}\hlstd{(}\hlkwc{text} \hlstd{=} \hlkwd{element_text}\hlstd{(}\hlkwc{size}\hlstd{=}\hlnum{18}\hlstd{))} \hlopt{+}
-      \hlkwd{geom_point}\hlstd{(}\hlkwc{data} \hlstd{= res[res}\hlopt{$}\hlstd{is.anomaly} \hlopt{==} \hlnum{TRUE}\hlstd{,],}\hlkwd{aes}\hlstd{(}\hlkwc{colour} \hlstd{=} \hlkwd{factor}\hlstd{(is.anomaly)))} \hlopt{+}
-      \hlkwd{theme}\hlstd{(}\hlkwc{legend.position}\hlstd{=}\hlstr{"none"}\hlstd{)}
+\hlkwd{PlotDetections}\hlstd{(res,} \hlkwc{title} \hlstd{=} \hlstr{"SD-EWMA ANOMALY DETECTOR"}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
