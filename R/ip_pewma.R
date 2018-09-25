@@ -95,8 +95,8 @@ IpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0, l = 3, last.res =
     row$s2 <- row$alpha*row$s2 + (1 - row$alpha) * row$x ^ 2
     row$s1.next <- row$s1
     row$std.next <- sqrt(abs(row$s2 - row$s1 ^ 2))
-    row$ucl <- row$s1 + l[1] * row$std.next
-    row$lcl <- row$s1 - l[1] * row$std.next
+    row$ucl <- row$s1 + l[1] * row$std
+    row$lcl <- row$s1 - l[1] * row$std
     row$is.anomaly <- row$x < row$lcl | row$x > row$ucl
     row
   }
@@ -122,11 +122,15 @@ IpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0, l = 3, last.res =
 
   for (i in 1:n) {
     last.res <- Pewma(last.res, data[i])
-    res <- rbind(res, last.res[,c("is.anomaly", "lcl", "ucl")])
+    res <- rbind(res, last.res[,c("is.anomaly", "lcl", "ucl", "i")])
   }
 
   res <- data.frame(is.anomaly = unlist(res$is.anomaly),
-    lcl = unlist(res$lcl), ucl = unlist(res$ucl))
+    lcl = unlist(res$lcl), ucl = unlist(res$ucl), i = unlist(res$i))
 
-  return(list(result = res, last.res = last.res))
+  res[res$i <= n.train, "is.anomaly"] <- 0
+  res[res$i <= n.train, "lcl"] <- data[res[res$i <= n.train, "i"]]
+  res[res$i <= n.train, "ucl"] <- data[res[res$i <= n.train, "i"]]
+
+  return(list(result = res[, c("is.anomaly", "ucl", "lcl")], last.res = last.res))
 }

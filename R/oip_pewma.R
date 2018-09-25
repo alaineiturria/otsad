@@ -98,13 +98,13 @@ OipPewma <- function(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3, last.res 
     row$s2 <- row$alpha * row$s2 + (1 - row$alpha) * row$x^2
     row$s1.next <- row$s1
     row$std.next <- sqrt(abs(row$s2 - row$s1 ^ 2))
-    row$ucl <- row$s1 + l[1] * row$std.next
-    row$lcl <- row$s1 - l[1] * row$std.next
+    row$ucl <- row$s1 + l[1] * row$std
+    row$lcl <- row$s1 - l[1] * row$std
     row$is.anomaly <- row$x < row$lcl | row$x > row$ucl
     row$is.supAnomaly <- row$x > row$ucl
     row$is.infAnomaly <- row$x < row$lcl
     assign("last.res", row, env)
-    return(row[c("is.anomaly", "ucl", "lcl")])
+    return(row[c("is.anomaly", "ucl", "lcl", "i")])
   }
 
   # inicializamos las variables
@@ -128,8 +128,12 @@ OipPewma <- function(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3, last.res 
   assign("last.res", last.res, envir = new.enviroment)
   res <- as.data.frame(t(sapply(data, Pewma, new.enviroment)))
   res <- data.frame(is.anomaly = unlist(res$is.anomaly),
-    lcl = unlist(res$lcl), ucl = unlist(res$ucl))
+    lcl = unlist(res$lcl), ucl = unlist(res$ucl), i = unlist(res$i))
   last.res <- get("last.res", envir = new.enviroment)
 
-  return(list(result = res, last.res = last.res))
+  res[res$i <= n.train, "is.anomaly"] <- 0
+  res[res$i <= n.train, "lcl"] <- data[res[res$i <= n.train, "i"]]
+  res[res$i <= n.train, "ucl"] <- data[res[res$i <= n.train, "i"]]
+
+  return(list(result = res[, c("is.anomaly", "ucl", "lcl")], last.res = last.res))
 }

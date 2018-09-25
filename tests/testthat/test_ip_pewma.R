@@ -27,8 +27,8 @@ test_that("IpPewma gives the correct result", {
     last.res <- IpPewma(
       data = newRow$value,
       n.train = 5,
-      alpha0 = 0.95,
-      beta = 0.6,
+      alpha0 = 0.8,
+      beta = 0.1,
       l = 3,
       last.res = last.res$last.res
     )
@@ -41,7 +41,7 @@ test_that("IpPewma gives the correct result", {
 
   ## read correct results
   correct.results <- rep(0, 500)
-  correct.results[c(25, 70, 92, 320)] <- 1
+  correct.results[c(25,70,91,92,320)] <- 1
 
   expect_equal(as.numeric(res$is.anomaly), correct.results)
 

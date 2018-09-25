@@ -59,8 +59,8 @@ df <- data.frame(timestamp = 1:n, value = x)
 result <- CpPewma(
   data = df$value,
   n.train = 5,
-  alpha0 = 0.95,
-  beta = 0.6,
+  alpha0 = 0.8,
+  beta = 0.1,
   l = 3
 )
 
