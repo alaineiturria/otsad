@@ -8,7 +8,7 @@ ContextualAnomalyDetector(data, rest.period = max(min(150,
   round(length(data) * 0.03), 1)), max.left.semicontexts = 7,
   max.active.neurons = 15, num.norm.value.bits = 3,
   base.threshold = 0.75, min.value = min(data, na.rm = T),
-  max.value = max(data, na.rm = T))
+  max.value = max(data, na.rm = T), python.object = NULL)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}
@@ -26,9 +26,13 @@ ContextualAnomalyDetector(data, rest.period = max(min(150,
 \item{min.value}{Minimum expected value.}
 
 \item{max.value}{Maximum expected value.}
+
+\item{python.object}{Python object for incremental processing.}
 }
 \value{
-Anomaly score of \code{data}.
+List
+   \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly score with \code{base.threshold}.}
+   \item{python.object}{ContextualAnomalyDetector Python object used in online anomaly detection}
 }
 \description{
 \code{ContextualAnomalyDetector} calculates the anomaly score of a
@@ -40,6 +44,24 @@ probabilistic abnormality scores.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 score obtained for an observation is greater than the \code{threshold}, the
 observation will be considered abnormal.
+}
+\examples{
+## Generate data
+set.seed(100)
+n <- 500
+x <- sample(1:100, n, replace = TRUE)
+x[70:90] <- sample(110:115, 21, replace = TRUE)
+x[25] <- 200
+x[320] <- 170
+df <- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result <- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.threshold = 0.9)
+
+## Plot results
+res <- cbind(df, result$result)
+PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
+
 }
 \references{
 Smirnov, M. (2018). CAD: Contextual Anomaly

@@ -4,12 +4,14 @@
 \alias{GetWindowLength}
 \title{Get Window Length}
 \usage{
-GetWindowLength(data.length, num.real.anomaly)
+GetWindowLength(data.length, num.real.anomaly, window.length.perc = 0.1)
 }
 \arguments{
 \item{data.length}{Dataset length.}
 
 \item{num.real.anomaly}{Number of real anomalies contained in the data set.}
+
+\item{window.length.perc}{Window length in percentage of the total data}
 }
 \value{
 Window length as numeric.
@@ -20,8 +22,8 @@ the real anomaly and it can be used to know if the detected anomaly is a true po
 }
 \details{
 \code{nrow.data} and \code{num.real.anomaly} must be numeric. Window length is
-calculated as 10% of the length of the data set divided by the number of real anomalies
-contained in it.
+calculated by default as 10% of the length of the data set divided by the number of real 
+anomalies contained in it.
 }
 \references{
 A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the

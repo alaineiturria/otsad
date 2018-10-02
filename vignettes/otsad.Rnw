@@ -25,6 +25,9 @@
 \usepackage{authblk}
 \usepackage{epstopdf}
 
+\usepackage{booktabs}
+\usepackage{multirow}
+
 \begin{document}
 
 \providecommand{\pkg}[1]{\textbf{#1}}
@@ -54,7 +57,7 @@
 
 
 \abstract{
-Anomalies in time-series data give essential and often actionable information to be extracted from critical situations. Although this field has been widely studied, due to the continuous evolution of technology, new challenges arise that require further improvement and evolution of anomaly detection techniques. In this paper we present the \pkg{ostad} package that implements five of the most recent detection algorithms capable of dealing with various challenges, such as online and non-stationary time-series anomaly detection.
+Anomalies in time-series data give essential and often actionable information to be extracted from critical situations. Although this field has been widely studied, due to the continuous evolution of technology, new challenges arise that require further improvement and evolution of anomaly detection techniques. In this paper we present the \pkg{ostad} package that implements six of the most recent detection algorithms capable of dealing with various challenges, such as online and non-stationary time-series anomaly detection.
 }
 
 \section{Introduction}
@@ -67,7 +70,7 @@ Due to the evolution of new technologies, the amount of data is increasing and i
 
 In R statistical software, there are few packages available from \emph{Comprehensive R Archive Network (CRAN)} to address the problem of time-series anomaly detection. The first and most popular is the \CRANpkg{tsoutliers} package. There is also the \CRANpkg{qicharts} package that implements basic control chart algorithms. Finally, another package that is becoming increasingly popular is \pkg{Twitter's AnomalyDetection} package (only available on GitHub). One of the main disadvantages of these three packages is that the implemented algorithms are not suitable to work online. In addition to the aforementioned, there are two other packages, \CRANpkg{SmartSifter} and \CRANpkg{EnergyOnlineCPM} available for online time-series anomaly detection.
 
-In conclusion, there are only a few packages for online anomaly detection available in CRAN. For this reason, we propose the \pkg{otsad} pacakge that implements 5 recent and powerful algorithms for the detection of anomalies in univariate time-series able to work online.
+In conclusion, there are only a few packages for online anomaly detection available in CRAN. For this reason, we propose the \pkg{otsad} pacakge that implements 6 recent and powerful algorithms for the detection of anomalies in univariate time-series able to work online.
 
 In the following section \ref{sec:online} we briefly introduce what online time-series anomaly detection is all about. In in the following section \ref{sec:package} we show how to use the \pkg{otsad} package using two easy examples. Finally, in section \ref{sec:summary}, we present an overview of this work.
 
@@ -79,13 +82,13 @@ Predictive techniques are models in which the parameters or components of the mo
 
 Another major challenge with the introduction of online processing is that time-series can be stationary and non-stationary. A time-series is said to be stationary when the mean and variance remain constant over time. In addition, they must be neither seasonal nor trendy. Most statistical or predictive techniques assume that time-series are stationary, when in most real cases they never are. It is true that there are techniques to turn a non-stationary time-series into a stationary one, however, this is not a simple task and there are cases this can not be done stationary.
 
-With the \pkg{ostad} package we provide five algorithms that address these three challenges. All algorithms can be used online. Furthermore, two of the five algorithms can be used in stationary environments and the other three in non-stationary environments. Finally, three of the techniques are based on predictive methods while the other two use moving windows based on techniques.
+With the \pkg{ostad} package we provide six algorithms that address these three challenges. All algorithms can be used online. Furthermore, two of the six algorithms can be used in stationary environments and the other four in non-stationary environments. Finally, three of the techniques are based on predictive methods while the other three are based on moving windows techniques.
 
 \section{The \pkg{otsad} package}\label{sec:package}
 
 The package provided implements, documents, explains and provides references for a set of detectors listed below. In our opinion, this is the first review and package for R that develops a set of current and powerful anomaly detectors for the online detection of anomalies in time-series.
 
-The \pkg{otsad} package implements five anomaly detection algorithms: PEWMA, SD-EWMA, TSSD-EWMA, KNNN-CAD and KNN-LDCD. The first three algorithms belong to prediction-based techniques and the last two belong to window-based techniques. Figure \ref{fig:features} shows a table with the most important characteristics of each algorithm.
+The \pkg{otsad} package implements six anomaly detection algorithms: PEWMA, SD-EWMA, TSSD-EWMA, KNNN-CAD, KNN-LDCD and CAD-OSE. The first three algorithms belong to prediction-based techniques and the last three belong to window-based techniques. Table \ref{tab:features} shows a table with the most important characteristics of each algorithm.
 
 \begin{itemize}
 \item \emph{PEWMA} or \emph{Probabilistic reasoning for streaming anomaly detection} \cite{pewma}. Probabilistic reasoning for streaming anomaly detection. This algorithm is a probabilistic method of EWMA which dynamically adjusts the parameterization based on the probability of the given observation. This method produces dynamic, data-driven anomaly thresholds which are robust to abrupt transient changes, yet quickly adjust to long-term distributional shifts.
@@ -97,14 +100,31 @@ The \pkg{otsad} package implements five anomaly detection algorithms: PEWMA, SD-
 \item \emph{KNN-CAD} or \emph{Conformal k-NN Anomaly Detector} \cite{2016arXiv160804585B}. This algorithm is a model-free anomaly detection method for univariate time-series which adapts itself to non-stationarity in the data stream and provides probabilistic abnormality scores based on the conformal prediction paradigm.
 
 \item \emph{KNN-LDCD} or \emph{KNN - Lazy Drifting Conformal Detector}  \cite{2017arXiv170603412I}. This algorithm is a variant of the KNN-CAD algorithm. The difference between the two, lies in the calculation of the measure of dissimilarity and in the calculation of the conformity function. The KNN-CAD and KNN-LDCD algorithms use both distance-based techniques, KNN, and statistical techniques to determine the degree of anomaly.
+
+\item \emph{CAD-OSE} or \emph{Contextual Anomaly Detector} \cite{2018-Smirnov-ContextualAnomalyDetector}. This algorithm discretizes the search space and creates contexts with aggrupations of observations. When a new instance arrives, the algorithm searches in the previous storaged contexts if the instance has been seen and creates a new context if it has not. The creation of new contexts and the storaged ones determine if the instance is an anomaly.
+
 \end{itemize}
 
-\begin{figure}[htbp]
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+\begin{table}[]
 \centering
-\includegraphics[width=0.7\linewidth]{features.PNG}
-\caption{Features of the anomaly detectors available in the \pkg{otsad} package.}
-\label{fig:features}
-\end{figure}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Online anomaly\\  detectors\end{tabular}} & \multicolumn{2}{c}{Features}  \\ \cmidrule(l){2-3} 
+                                                                                     & Stationarity   & Technique    \\ \midrule
+PEWMA                                                                                & Stationary     & Prediction   \\
+SD-EWMA                                                                              & Stationary     & Prediction   \\
+TSSD-EWMA                                                                            & Non-stationary & Prediction   \\
+KNN-CAD                                                                              & Non-stationary & Window-based \\
+KNN-LDCD                                                                             & Non-stationary & Window-based  \\
+CAD-OSE                                                                              & Non-stationary & Window-based \\ \bottomrule
+\end{tabular}
+\caption{Features of the algorithms}
+\label{tab:features}
+
+\end{table}
 
 Each of these algorithms has been implemented to work in two different scenarios. On the one hand, classical processing, used when the complete data set (train and test) is available. On the other hand, the incremental processing used when no data set is available. It allows you to calculate the abnormality of the new observation(s) with the parameters updated in the last run performed.
 
@@ -277,6 +297,25 @@ PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 \caption{Online Sd-Ewma Anomaly detector results}
 \label{fig:result2}
 \end{figure}
+
+The use of the Contextual Anomaly detector is similar to the combined use of the Classic and Incremental use of the previous algorithms. 
+
+<<contextual.ad, eval = FALSE>>=
+cad.results <- ContextualAnomalyDetector(df$value[1:250], base.threshold = 0.75, rest.period = 5, 
+                                         max.value = 200, min.value = 0)
+cad.results.online <- ContextualAnomalyDetector(df$value[251:500], python.object = cad.results$python.Object)
+
+res <- cbind(df, rbind(cad.results$result, cad.results.online$result))
+PlotDetections(res, title = "CONTEXTUAL ANOMALY DETECTOR")
+@
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\linewidth]{cadose.PNG}
+\caption{Contextual Anomaly Detector results}
+\label{fig:cad}
+\end{figure}
+
 
 \section{Summary}\label{sec:summary}
 

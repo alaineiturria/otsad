@@ -4,10 +4,12 @@
 \alias{GetNumTrainingValues}
 \title{Get Number of Training Values}
 \usage{
-GetNumTrainingValues(n.row)
+GetNumTrainingValues(n.row, prob.percent = 0.15)
 }
 \arguments{
 \item{n.row}{Number of rows of the all dataset with training and test values.}
+
+\item{prob.percent}{Percentage of training values}
 }
 \value{
 Number of training values.

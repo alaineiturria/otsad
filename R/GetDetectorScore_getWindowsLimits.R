@@ -20,8 +20,6 @@
 #' @references A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
 #' Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
 #' Applications (IEEE ICMLA’15), 2015.
-#'
-#' @export
 
 GetWindowsLimits <- function(data, windowLength = NULL) {
 

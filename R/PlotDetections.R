@@ -101,11 +101,11 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
 
   if ("is.anomaly" %in% column.names) {
     if ("anomaly.score" %in% column.names) {
-      myPlot <- myPlot + ggplot2::geom_point(
-        data = data[data$is.anomaly == 1,],
-        ggplot2::aes(text = paste("Score:", data = data[data$is.anomaly == 1, "anomaly.score"])),
-        colour = "red", size = 3, alpha = 0.5
-      )
+      myPlot <- myPlot + 
+        ggplot2::geom_point(data = data[data$is.anomaly == 1, ],
+                            colour = "red", size = 3, alpha = 0.5) +
+        ggplot2::geom_text(data = data[data$is.anomaly == 1, ],
+                           ggplot2::aes(label = paste("Score:", data[data$is.anomaly == 1, "anomaly.score"])))
     } else {
       myPlot <- myPlot + ggplot2::geom_point(
         data = data[data$is.anomaly == 1,],

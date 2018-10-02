@@ -12,40 +12,48 @@
 #' @param base.threshold Threshold to be considered an anomaly.
 #' @param min.value Minimum expected value.
 #' @param max.value Maximum expected value.
+#' @param python.object Python object for incremental processing.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 #' score obtained for an observation is greater than the \code{threshold}, the
 #' observation will be considered abnormal.
 #'
-#' @return Anomaly score of \code{data}.
+#' @return List
+#'    \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly score with \code{base.threshold}.}
+#'    \item{python.object}{ContextualAnomalyDetector Python object used in online anomaly detection}
 #'
 #' @references Smirnov, M. (2018). CAD: Contextual Anomaly
 #'     Detector. https://github.com/smirmik/CAD
+#'     
+#' @example tests/examples/contextual_ad_example.R
 #'
 #' @export
 ContextualAnomalyDetector <- function(data,
-                                     rest.period = max(min(150, round(length(data) * 0.03), 1)),
-                                     max.left.semicontexts = 7,
-                                     max.active.neurons = 15,
-                                     num.norm.value.bits = 3,
-                                     base.threshold = 0.75,
-                                     min.value = min(data, na.rm = T),
-                                     max.value = max(data, na.rm = T)){
-  CAD_OSE <- reticulate::import_from_path("CAD_OSE", 
-                                           system.file("python", "CAD", 
-                                                       package = utils::packageName(), 
-                                                       mustWork = TRUE))
-  python.object <- CAD_OSE$CAD_OSE(min.value, max.value, base.threshold, rest.period,
-                                   max.left.semicontexts, max.active.neurons,
-                                   num.norm.value.bits)
+                                      rest.period = max(min(150, round(length(data) * 0.03), 1)),
+                                      max.left.semicontexts = 7,
+                                      max.active.neurons = 15,
+                                      num.norm.value.bits = 3,
+                                      base.threshold = 0.75,
+                                      min.value = min(data, na.rm = T),
+                                      max.value = max(data, na.rm = T),
+                                      python.object = NULL){
+  if (is.null(python.object)){
+    CAD_OSE <- reticulate::import_from_path("CAD_OSE", 
+                                            system.file("python", "CAD", 
+                                                        package = utils::packageName(), 
+                                                        mustWork = TRUE))
+    python.object <- CAD_OSE$CAD_OSE(min.value, max.value, base.threshold, rest.period,
+                                     max.left.semicontexts, max.active.neurons,
+                                     num.norm.value.bits)
+  }
   
-    anomaly.score <- numeric(length = length(data))
-
-    for(i in 1:length(data)){
-        anomaly.score[i] <- python.object$getAnomalyScore(data[i])
-    }
-
-    return(list("Anomaly.Score" = anomaly.score,
-                "Python.Object" = python.object))
+  anomaly.score <- numeric(length = length(data))
+  
+  for(i in 1:length(data)){
+    anomaly.score[i] <- python.object$getAnomalyScore(data[i])
+  }
+  
+  return(list("result" = cbind(anomaly.score = anomaly.score, is.anomaly = anomaly.score > base.threshold),
+              "python.Object" = python.object))
 }
