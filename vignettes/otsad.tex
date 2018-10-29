@@ -136,20 +136,27 @@ With the \pkg{ostad} package we provide six algorithms that address these three 
 
 \section{The \pkg{otsad} package}\label{sec:package}
 
-The package provided implements, documents, explains and provides references for a set of detectors listed below. In our opinion, this is the first review and package for R that develops a set of current and powerful anomaly detectors for the online detection of anomalies in time-series.
+In our opinion, this is the first review and package for R that develops a set of current and powerful anomaly detectors for the online detection of anomalies in a univariate time series. The \textbf{otsad} package implements six anomaly detection algorithms. But also other functionalities and contents that can be interesting.
 
-The \pkg{otsad} package implements six anomaly detection algorithms: PEWMA, SD-EWMA, TSSD-EWMA, KNNN-CAD, KNN-LDCD and CAD-OSE. The first three algorithms belong to prediction-based techniques and the last three belong to window-based techniques. Table \ref{tab:features} shows a table with the most important characteristics of each algorithm.
+\subsection{package contents} \label{S:3.1}
+
+For an easier understanding of this section, we divided it into four subsections. Subsection \ref{S:3.1.1} describes each of the implemented algorithms. In subsection \ref{S:3.1.2} we present a novel detector evaluation technique. In Subsection \ref{S:3.1.3} we introduce included data sets and the function to visualize the results. Finally, in subsection \ref{S:3.1.4} we describe a simple but effective technique for reducing false positives.
+
+\subsubsection{Anomaly detection algorithms} \label{S:3.1.1}
+
+This package implements, documents, explains and provides references for a set of detectors listed below.  \textcolor{red}{The first four algorithms belong to prediction based techniques and the last two belong to the window-based ones. The first two algorithms are for stationary environments and the other four for non-stationary environments. Table \ref{tab:features} shows the most important characteristics of each algorithm.}
 
 \begin{itemize}
-\item \emph{PEWMA} or \emph{Probabilistic reasoning for streaming anomaly detection} \cite{pewma}. Probabilistic reasoning for streaming anomaly detection. This algorithm is a probabilistic method of EWMA which dynamically adjusts the parameterization based on the probability of the given observation. This method produces dynamic, data-driven anomaly thresholds which are robust to abrupt transient changes, yet quickly adjust to long-term distributional shifts.
 
-\item \emph{SD-EWMA} or \emph{Shift-Detection based on EWMA} \cite{Raza}. This algorithm is a novel method for covariate shift-detection tests for univariate time-series. It works in an online mode and it uses an exponentially weighted moving average (EWMA) model based control chart to detect the covariate shift-point in stationary time-series.
+\item \emph{PEWMA} or \emph{Probabilistic reasoning for streaming anomaly detection} \cite{pewma}. The probabilistic reasoning for streaming anomaly detection. This algorithm is a probabilistic method of EWMA which dynamically adjusts the parameterization based on the probability of the given observation. This method produces dynamic, data-driven anomaly thresholds which are robust to abrupt transient changes, yet quickly adjust to long-term distributional shifts.
 
-\item \emph{TSSD-EWMA} or \emph{Two-Stage Shift-Detection based on EWMA} \cite{Raza}. This algorithm is a novel method for covariate shift-detection tests based on a two-stage structure for univariate time-series. It works in an online mode and it uses an exponentially weighted moving average (EWMA) model based control chart to detect the covariate shift-point in non-stationary time-series. This algorithm works in two phases. In the first phase, it detects anomalies using the SD-EWMA algorithm. In the second phase, it checks the veracity of the anomalies using the Kolmogorov-Simirnov test to reduce false alarms.
+\item \emph{SD-EWMA} or \emph{Shift-Detection based on EWMA} \cite{Raza}. This algorithm is a novel method for covariate shift-detection tests for univariate time-series. It works in an online mode. It uses an exponentially weighted moving average (EWMA) model based control chart to detect the covariate shift-point in stationary time-series.
+
+\item \emph{TSSD-EWMA} or \emph{Two-Stage Shift-Detection based on EWMA} \cite{Raza}. This algorithm is a novel method for covariate shift-detection tests based on a two-stage structure for univariate time-series. It works in an online mode. It uses an exponentially weighted moving average (EWMA) model based control chart to detect the covariate shift-point in non-stationary time-series. It works in two phases. In the first phase, it applies SD-EWMA. In the second phase, it checks the authenticity of the anomalies using the Kolmogorov-Simirnov test to reduce false alarms.
 
 \item \emph{KNN-CAD} or \emph{Conformal k-NN Anomaly Detector} \cite{2016arXiv160804585B}. This algorithm is a model-free anomaly detection method for univariate time-series which adapts itself to non-stationarity in the data stream and provides probabilistic abnormality scores based on the conformal prediction paradigm.
 
-\item \emph{KNN-LDCD} or \emph{KNN - Lazy Drifting Conformal Detector}  \cite{2017arXiv170603412I}. This algorithm is a variant of the KNN-CAD algorithm. The difference between the two, lies in the calculation of the measure of dissimilarity and in the calculation of the conformity function. The KNN-CAD and KNN-LDCD algorithms use both distance-based techniques, KNN, and statistical techniques to determine the degree of anomaly.
+\item \emph{KNN-LDCD} or \emph{KNN - Lazy Drifting Conformal Detector} \cite{2017arXiv170603412I}. This algorithm is a variant of the KNN-CAD algorithm. The differences between both rely on the dissimilarity measure calculation and conformity measure calculation methods. The KNN-CAD and KNN-LDCD algorithms use both distance-based techniques, KNN, and statistical techniques to determine the degree of anomaly.
 
 \item \emph{CAD-OSE} or \emph{Contextual Anomaly Detector} \cite{2018-Smirnov-ContextualAnomalyDetector}. This algorithm discretizes the search space and creates contexts with aggrupations of observations. When a new instance arrives, the algorithm searches in the previous storaged contexts if the instance has been seen and creates a new context if it has not. The creation of new contexts and the storaged ones determine if the instance is an anomaly.
 
@@ -176,9 +183,57 @@ CAD-OSE                                                                         
 
 \end{table}
 
-Each of these algorithms has been implemented to work in two different scenarios. On the one hand, classical processing, used when the complete data set (train and test) is available. On the other hand, the incremental processing used when no data set is available. It allows you to calculate the abnormality of the new observation(s) with the parameters updated in the last run performed.
+Each of these algorithms was implemented to work in two different scenarios. On the one hand, classical processing used when the complete data set (train and test) is available. On the other hand, the incremental processing used when no dataset is available. It allows calculating the abnormality of the new observation(s) with the parameters updated in the last run performed.
 
-The rest of the section is organized as follows. Section \ref{sec:installation} is devoted to the installation process. In section \ref{sec:documentation} we present the documentation. Finally, in Section \ref{sec:example}, we show how to use the algorithms using two simple examples.
+\subsubsection{Detector measurement technique} \label{S:3.1.2}
+
+The \textbf{Otsad} package implements the method used in NAB \cite{7424283} to measure the detector. This method considers the time elapsed until the anomalies are detected.
+
+This metric uses windows to determine the label of the detected anomaly, i.e. True Positive (TP), False Positive (FP), True Negative (TN), and False Negative (FN). To determine this label, it is centered a window on the real anomaly, so if the detected anomaly falls inside, it is considered as a TP, if it falls outside as a FP and if there are no anomalies inside the window as a FN.  The window size is calculated as the division between 10\% of the number of observations and the number of real anomalies in the time series. The package includes three functions to perform these tasks. On the one hand, \textbf{GetWindowLength} and \textbf{GetWindowsLimits} that gets the size of the window and the start and end limits of each of them after being focused on the real anomalies. On the other hand, \textbf{GetLabels} to get the TP, FP, TN and FN labels.
+
+
+It also allows setting a weight for each of these labels. These weights make possible to penalize FN and FP and reward early detections. In this way, the FN and FP will get a negative score and the early detections will get a higher score than the late ones as is shown in Figure \ref{fig:ScoringEx}. The authors propose to use the weights given in Table \ref{tab:profile}. There are three different profiles \emph{Standard}, \emph{Reward low FP rate} and \emph{Reward low FN rate}. Each one of these profiles penalizes more or less the FP and the FN. Finally, the total score is calculated as the sum of the scores assigned to each detected anomaly and the cumulative scores of missed anomalies. This score is then normalized using the Max-Min normalization as in Eq. \ref{eq:eq1}. The minimum value used, is the score of a null detector, i.e. one that does not detect any anomaly (and no FP). The final score is a value between -inf and 100. For these latest objectives, we have three more functions. First one is \textbf{GetDetectorScore}, that calculates the detector score without normalizing. This function uses the three earlier functions. The second one is  \textbf{GetNullAndPerfectScores} function to obtain the scores of the perfect and null detectors for the dataset. The third one is the \textbf{NormalizeScore} function which allows normalizing detector scores.
+
+\begin{equation}\label{eq:eq1}
+Score_{final} = 100 \frac{Score_{detector} - Score_{null}}{Score_{perfect} - Score_{null}}
+\end{equation}
+
+This package incorporates an additional function to be able to reproduce the results of the benchmarking. Named as \textbf{GetNumTrainingValues}, this function allows obtaining the number of instances used as a training set in NAB \cite{7424283}. The number of training set values is calculated as 15\% of 5000 and for smaller datasets of 5000 instances such as 15\% of the dataset instances.
+
+% \usepackage[table,xcdraw]{xcolor}
+
+\begin{table}[]
+\caption{Label weights per profile}
+\label{tab:profile}
+\centering
+\begin{tabular}{cccc}
+\hline
+\multirow{2}{*}{Label} & \multicolumn{3}{c}{Profile} \\ \cline{2-4}
+ & \textbf{Standard} & \textbf{Reward low FP rate} & \textbf{Reward low FN} \\ \hline
+\textbf{ATP} & 1.0 & 1.0 & 1.0 \\ \hline
+\textbf{AFP} & -0.11 & -0.22 & -0.11 \\ \hline
+\textbf{ATN} & 1.0 & 1.0 & 1.0 \\ \hline
+\textbf{AFN} & -1.0 & -1.0 & -2.0 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\linewidth]{ScoreExample.PNG}
+\caption{Scoring example for a sample anomaly window, where the values represent the scaled sigmoid function. The first point is an FP preceding the anomaly window (red dashed lines) and contributes -1.0 to the score. Within the window, we see two detections, and only count the earliest TP for the score. There are two FPs after the window. The first is less detrimental because it is close to the window, and the second yields -1.0 because it's too far after the window to be associated with the true anomaly. TNs make no score contributions. The scaled sigmoid values are multiplied by the relevant application profile weight, the NAB score for this example would calculate as \( -1.0 A_{FP} + 0.9999 A_{TP} - 0.8093 A_{FP} - 1.0 A_{FP}\). With the standard application profile, this would result in a total score of 0.6909 \cite{7424283}}.
+\label{fig:ScoringEx}
+\end{figure}
+
+\subsubsection{Data sets and function for displaying the results} \label{S:3.1.3}
+
+\textbf{Otsad} includes some data sets from the NAB repository, which can be used to perform experiments. In \cite{7424283} authors provide a publicly available set of 58 labeled one-dimensional time-series from different fields. This package includes 51 of the 58 datasets available in the NAB repository. Each of the datasets included in \textbf{otsad} is composed of three columns.  The \emph{timestamp} column, the \emph{value} column and a third column called \emph{is.real.anomaly} containing the labeled truth anomalies.
+
+It also includes a function called \textbf{PlotDetections} to display the detections results on a chart. This function by default returns an interactive graph, but it also has a choice to get a ggplot object and be able to edit it.
+
+
+\subsubsection{False positive reduction technique} \label{S:3.1.4}
+
+To finish this section, we introduce a new technique for the reduction of false positives. In this work, we have tried to implement the original algorithm proposed by the authors. However, all of them give many false positives. For KNN-CAD \cite{2016arXiv160804585B} and KNN-LDCD \cite{2017arXiv170603412I} algorithms, authors suggest a technique to reduce false positives. So that all the algorithms have the same opportunities, we introduce and implement a simple algorithm to reduce false positives. This algorithm is based on the idea that on a practical case, exists a time lapse between an alarm is triggered and until action is taken. This time-lapse is modeled by a window which length is defined by the user. This window is focused on the first anomaly detected and all the others that fall inside, are discarded. The function's name available in the package is \textbf{ReduceAnomalies.} It is available only for classical processing and after the detector has been applied.
 
 \subsection{Installation}\label{sec:installation}
 
@@ -443,6 +498,125 @@ The use of the Contextual Anomaly detector is similar to the combined use of the
 \caption{Contextual Anomaly Detector results}
 \label{fig:cad}
 \end{figure}
+
+Finally we show a last example using a data set included in the package. For this example, we used the \emph{Speed\_7578} dataset included in the package which has five anomalies. We used the KNN algorithm to try to find those anomalies.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Load the previously installed otsad package}
+\hlkwd{library}\hlstd{(}\hlstr{"otsad"}\hlstd{)}
+
+\hlcom{# Load the dataset speed_7578, included in otsad}
+\hlstd{myData} \hlkwb{<-} \hlstd{speed_7578}
+
+\hlcom{# Initialize parameters}
+\hlstd{n} \hlkwb{<-} \hlkwd{nrow}\hlstd{(myData)}
+\hlstd{n.train} \hlkwb{<-} \hlkwd{GetNumTrainingValues}\hlstd{(n)}
+
+\hlcom{# Calculate anomalies using KNN-CAD}
+\hlstd{result} \hlkwb{<-} \hlkwd{CpKnnCad}\hlstd{(}
+  \hlkwc{data} \hlstd{= myData}\hlopt{$}\hlstd{value,}
+  \hlkwc{n.train} \hlstd{= n.train,}
+  \hlkwc{threshold} \hlstd{=} \hlnum{1}\hlstd{,}
+  \hlkwc{l} \hlstd{=} \hlnum{19}\hlstd{,}
+  \hlkwc{k} \hlstd{=} \hlnum{27}\hlstd{,}
+  \hlkwc{ncm.type} \hlstd{=} \hlstr{"ICAD"}\hlstd{,}
+  \hlkwc{reducefp} \hlstd{=} \hlnum{TRUE}
+\hlstd{)}
+
+\hlcom{# Add results to dataset}
+\hlstd{myData} \hlkwb{<-} \hlkwd{cbind}\hlstd{(myData, result)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Once the algorithm is applied, we will show the results using the PlotDetections function. Since the resulting graph is interactive, in Figure \ref{fig:Example1Score} we show a capture of it.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Plot Results}
+\hlkwd{PlotDetections}\hlstd{(myData,} \hlkwc{title} \hlstd{=} \hlstr{"KNN-CAD ANOMALY DETECTOR"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{Example1Score.PNG}
+\caption{Anomalies detected in speed_7578 dataset by KNN_CAD detector.}
+\label{fig:Example1Score}
+\end{figure}
+
+
+Next, we get the detector's score.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Get detector score}
+\hlstd{score} \hlkwb{<-} \hlkwd{GetDetectorScore}\hlstd{(myData)}
+
+\hlcom{# See this results}
+\hlkwd{data.frame}\hlstd{(score[}\hlopt{-}\hlnum{1}\hlstd{])}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+This function has an option to show the results on a chart by adding the following parameters, see \ref{fig:Ej1ScoreDe}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Get detector score}
+\hlstd{score} \hlkwb{<-} \hlkwd{GetDetectorScore}\hlstd{(}
+  \hlstd{myData,}
+  \hlkwc{print} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+  \hlkwc{title} \hlstd{=} \hlstr{"speed_7578 results using KNN-CAD detector"}
+\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{Ej1ScoreDe.PNG}
+\caption{KNN-CAD detector measurement results for speed\_7578 dataset.}
+\label{fig:Ej1ScoreDe}
+\end{figure}
+
+Finally, we normalize the scores and show them.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Normalize results}
+\hlstd{null.perfect} \hlkwb{<-} \hlkwd{GetNullAndPerfectScores}\hlstd{(myData)}
+
+\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{standard,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
+
+\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{low_FP_rate,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
+
+\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{low_FN_rate,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
+
+\hlcom{# Show normalized scores}
+\hlkwd{cbind}\hlstd{(standar.score, low_FP_rate.score, low_FN_rate.score)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 
 \section{Summary}\label{sec:summary}
