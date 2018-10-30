@@ -22,7 +22,7 @@ the real anomaly and it can be used to know if the detected anomaly is a true po
 }
 \details{
 \code{nrow.data} and \code{num.real.anomaly} must be numeric. Window length is
-calculated by default as 10% of the length of the data set divided by the number of real 
+calculated by default as 10% of the length of the data set divided by the number of real
 anomalies contained in it.
 }
 \references{
