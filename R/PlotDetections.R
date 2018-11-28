@@ -62,8 +62,10 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
         as.character(data[data[data$is.real.anomaly == 1,"start.limit"],"timestamp"])
       data[data$is.real.anomaly == 1 & data$end.limit != 0,"end.limit"] <-
         as.character(data[data[data$is.real.anomaly == 1,"end.limit"],"timestamp"])
-      data[data$is.real.anomaly != 1 & data$start.limit == 0,"start.limit"] <- "1900-01-01 00:00:00"
-      data[data$is.real.anomaly != 1 & data$end.limit == 0,"end.limit"] <- "1900-01-01 00:00:00"
+      data[data$is.real.anomaly != 1,"start.limit"] <- "1900-01-01 00:00:00"
+      data[data$is.real.anomaly != 1,"end.limit"] <- "1900-01-01 00:00:00"
+      data[data$is.real.anomaly == 1 & data$start.limit == 0,"start.limit"] <- "1900-01-01 00:00:00"
+      data[data$is.real.anomaly == 1 & data$end.limit == 0,"end.limit"] <- "1900-01-01 00:00:00"
       data$start.limit <- as.POSIXct(data$start.limit, tz="UTC")
       data$end.limit <- as.POSIXct(data$end.limit, tz="UTC")
 
