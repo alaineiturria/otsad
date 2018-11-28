@@ -71,10 +71,12 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
 
 
       myPlot <- myPlot + ggplot2::geom_rect(
-        data = data[data$is.real.anomaly == 1,],
+        data = data[data$is.real.anomaly == 1 & as.character(data$start.limit) != "1900-01-01 00:00:00",],
         ggplot2::aes(
-          xmin = data[data$is.real.anomaly == 1,"start.limit"],
-          xmax = data[data$is.real.anomaly == 1,"end.limit"],
+          xmin = data[data$is.real.anomaly == 1 &
+                        as.character(data$start.limit) != "1900-01-01 00:00:00", "start.limit"],
+          xmax = data[data$is.real.anomaly == 1 &
+                        as.character(data$start.limit) != "1900-01-01 00:00:00", "end.limit"],
           ymin = min(data$value), ymax = max(data$value)
         ),
         fill = "orange", alpha = 0.2, colour = NA
