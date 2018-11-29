@@ -175,7 +175,8 @@ GetDetectorScore <- function(data, print = FALSE, title = ""){
               low_FP_rate = sum(data$low_FP_rate.score),
               low_FN_rate = sum(data$low_FN_rate.score),
               tp = sum(data$label == "tp" & data$is.real.anomaly == 1),
-              tn = sum(data$label == "tn"),
+              tn = nrow(data) - (sum(data$label == "tp" & data$is.real.anomaly == 1) +
+                                 sum(data$label == "fp") + sum(data$label == "fn")),
               fp = sum(data$label == "fp"),
               fn = sum(data$label == "fn")
               )
