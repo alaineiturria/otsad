@@ -25,7 +25,7 @@
 #'
 #' @references Smirnov, M. (2018). CAD: Contextual Anomaly
 #'     Detector. https://github.com/smirmik/CAD
-#'     
+#'
 #' @example tests/examples/contextual_ad_example.R
 #'
 #' @export
@@ -39,21 +39,21 @@ ContextualAnomalyDetector <- function(data,
                                       max.value = max(data, na.rm = T),
                                       python.object = NULL){
   if (is.null(python.object)){
-    CAD_OSE <- reticulate::import_from_path("CAD_OSE", 
-                                            system.file("python", "CAD", 
-                                                        package = utils::packageName(), 
+    CAD_OSE <- reticulate::import_from_path("CAD_OSE",
+                                            system.file("python", "CAD",
+                                                        package = utils::packageName(),
                                                         mustWork = TRUE))
-    python.object <- CAD_OSE$CAD_OSE(min.value, max.value, base.threshold, rest.period,
+    python.object <- CAD_OSE$ContextualAnomalyDetectorOSE(min.value, max.value, base.threshold, rest.period,
                                      max.left.semicontexts, max.active.neurons,
                                      num.norm.value.bits)
   }
-  
+
   anomaly.score <- numeric(length = length(data))
-  
+
   for(i in 1:length(data)){
     anomaly.score[i] <- python.object$getAnomalyScore(data[i])
   }
-  
+
   return(list("result" = cbind(anomaly.score = anomaly.score, is.anomaly = anomaly.score > base.threshold),
               "python.Object" = python.object))
 }

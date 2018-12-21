@@ -594,23 +594,14 @@ Finally, we normalize the scores and show them.
 \hlcom{# Normalize results}
 \hlstd{null.perfect} \hlkwb{<-} \hlkwd{GetNullAndPerfectScores}\hlstd{(myData)}
 
-\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
-  \hlstd{score}\hlopt{$}\hlstd{standard,}
-  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
-  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
-\hlstd{)}
+\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{standard,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,}
+    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
 
-\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
-  \hlstd{score}\hlopt{$}\hlstd{low_FP_rate,}
-  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
-  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
-\hlstd{)}
+\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{low_FP_rate,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,}
+    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
 
-\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
-  \hlstd{score}\hlopt{$}\hlstd{low_FN_rate,}
-  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
-  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
-\hlstd{)}
+\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{low_FN_rate,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,}
+    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
 
 \hlcom{# Show normalized scores}
 \hlkwd{cbind}\hlstd{(standar.score, low_FP_rate.score, low_FN_rate.score)}

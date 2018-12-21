@@ -1,116 +1,144 @@
-# -*- coding: utf-8 -*-
-# -----------------------------------------------------------------------------
-# Contextual Anomaly Detector - Open Source Edition
-# Copyright (C) 2016, Mikhail Smirnov   smirmik@gmail.com
-# https://github.com/smirmik/CAD
+# ----------------------------------------------------------------------
+# Copyright (C) 2016, Numenta, Inc.  Unless you have an agreement
+# with Numenta, Inc., for a separate license for this software code, the
+# following terms and conditions apply:
 #
-# This program is free software: you can redistribute it and/or modify it under
-# the terms  of  the  GNU Affero Public License version 3  as  published by the
-# Free Software Foundation.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero Public License version 3 as
+# published by the Free Software Foundation.
 #
-# This program is distributed  in  the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Affero Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Affero Public License for more details.
 #
-# You should have received a copy of the  GNU Affero Public License  along with
-# this program.  If not, see http://www.gnu.org/licenses.
+# You should have received a copy of the GNU Affero Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
 #
-# ------------------------------------------------------------------------------
+# http://numenta.org/licenses/
+# ----------------------------------------------------------------------
 
-from contextOperator import ContextOperator
+from context_operator import ContextOperator
 
-class CAD_OSE(object):
-    '''
-    Contextual Anomaly Detector - Open Source Edition
-    https://github.com/smirmik/CAD
-    '''
+class ContextualAnomalyDetectorOSE(object):
 
-    def __init__(self,  minValue,
-                        maxValue,
-                        baseThreshold = 0.75,
-                        restPeriod = 30,
-                        maxLeftSemiContextsLenght = 7,
-                        maxActiveNeuronsNum = 15,
-                        numNormValueBits = 3 ) :
+  """
+  Contextual Anomaly Detector - Open Source Edition
+  2016, Mikhail Smirnov   smirmik@gmail.com
+  https://github.com/smirmik/CAD
+  """
 
-        self.minValue = float(minValue)
-        self.maxValue = float(maxValue)
-        self.restPeriod = restPeriod  
-        self.baseThreshold = baseThreshold
-        self.maxActiveNeuronsNum = int(maxActiveNeuronsNum)
-        self.numNormValueBits = int(numNormValueBits)
+  def __init__( self,
+                minValue,
+                maxValue,
+                baseThreshold = 0.75,
+                restPeriod = 30,
+                maxLeftSemiContextsLenght = 7,
+                maxActiveNeuronsNum = 15,
+                numNormValueBits = 3 ) :
 
-        self.maxBinValue = 2 ** self.numNormValueBits - 1.0
-        self.fullValueRange = self.maxValue - self.minValue
-        if self.fullValueRange == 0.0 :
-            self.fullValueRange = self.maxBinValue
-        self.minValueStep = self.fullValueRange / float(self.maxBinValue)
+    self.minValue = float(minValue)
+    self.maxValue = float(maxValue)
+    self.restPeriod = int(restPeriod)
+    self.baseThreshold = float(baseThreshold)
+    self.maxActNeurons = int(maxActiveNeuronsNum)
+    self.numNormValueBits = int(numNormValueBits)
 
-        self.leftFactsGroup = tuple()
-        
-        self.contextOperator = ContextOperator( maxLeftSemiContextsLenght )
+    self.maxBinValue = 2 ** self.numNormValueBits - 1.0
+    self.fullValueRange = self.maxValue - self.minValue
+    if self.fullValueRange == 0.0 :
+      self.fullValueRange = self.maxBinValue
+    self.minValueStep = self.fullValueRange / self.maxBinValue
 
-        self.potentialNewContexts = []
-        
-        self.lastPredictionedFacts = []
-        self.resultValuesHistory = [ 1.0 ]
+    self.leftFactsGroup = tuple()
+
+    self.contextOperator = ContextOperator( maxLeftSemiContextsLenght )
+
+    self.potentialNewContexts = []
+
+    self.aScoresHistory = [ 1.0 ]
+
+  def step(self, inpFacts):
+
+    currSensFacts = tuple(sorted(set(inpFacts)))
+
+    uniqPotNewContexts = set()
+
+    if len(self.leftFactsGroup) > 0 and len(currSensFacts) > 0 :
+      potNewZeroLevelContext = tuple([self.leftFactsGroup,currSensFacts])
+      uniqPotNewContexts.add(potNewZeroLevelContext)
+      newContextFlag = self.contextOperator.getContextByFacts(
+        [potNewZeroLevelContext],
+        zerolevel = 1
+      )
+    else :
+      newContextFlag = False
+
+    leftCrossing = self.contextOperator.contextCrosser (
+      leftOrRight = 1,
+      factsList = currSensFacts,
+      newContextFlag = newContextFlag
+    )
+    activeContexts, numSelContexts, potNewContexts = leftCrossing
+
+    uniqPotNewContexts.update(potNewContexts)
+    numUniqPotNewContext = len(uniqPotNewContexts)
+
+    if numSelContexts > 0 :
+      percentSelectedContextActive = len(activeContexts) / float(numSelContexts)
+    else :
+      percentSelectedContextActive = 0.0
+
+    srtAContexts = sorted(activeContexts, cmp=aContextsCMP)
+    activeNeurons = [ cInf[0] for cInf in srtAContexts[-self.maxActNeurons:] ]
+    currNeurFacts = set([ 2 ** 31 + fact for fact in activeNeurons ])
+    leftFactsGroup = set()
+    leftFactsGroup.update(currSensFacts, currNeurFacts)
+    self.leftFactsGroup = tuple(sorted(leftFactsGroup))
+
+    numNewCont  =  self.contextOperator.contextCrosser  (
+      leftOrRight = 0,
+      factsList = self.leftFactsGroup,
+      potentialNewContexts = potNewContexts
+    )
+
+    numNewCont += 1 if newContextFlag else 0
+
+    if newContextFlag and numUniqPotNewContext > 0 :
+      percentAddedContextToUniqPotNew = numNewCont / float(numUniqPotNewContext)
+    else :
+      percentAddedContextToUniqPotNew = 0.0
+
+    return  percentSelectedContextActive, percentAddedContextToUniqPotNew
 
 
-    def step(self, inpFacts):
+  def getAnomalyScore(self,inputData):
 
-        currSensFacts = tuple(sorted(set(inpFacts)))
+    normInpVal = int((inputData - self.minValue) / self.minValueStep)
+    binInpValue = bin(normInpVal).lstrip("0b").rjust(self.numNormValueBits,"0")
 
-        if len(self.leftFactsGroup) > 0 and len(currSensFacts) > 0 :
-            potNewZeroLevelContext = tuple([self.leftFactsGroup,currSensFacts])
-            newContextFlag = self.contextOperator.getContextByFacts([potNewZeroLevelContext], zerolevel = 1)
-        else :
-            potNewZeroLevelContext = False
-            newContextFlag = False
+    outSens = []
+    for sNum, currSymb in enumerate(reversed(binInpValue)) :
+      outSens.append( sNum * 2 + ( 1 if currSymb == "1" else 0 ) )
+    setOutSens = set(outSens)
 
-        activeContexts, numSelectedContext, potentialNewContextList =  self.contextOperator.contextCrosser ( 
-                                                                            leftOrRight = 1,
-                                                                            factsList = currSensFacts,
-                                                                            newContextFlag = newContextFlag
-                                                                        )
+    anomalyVal1, anomalyVal2 = self.step(setOutSens)
+    currentAnomalyScore = (1.0 - anomalyVal1 + anomalyVal2) / 2.0
 
-        numUniqPotNewContext = len(set(potentialNewContextList).union([potNewZeroLevelContext]) if potNewZeroLevelContext else set(potentialNewContextList))
+    if max(self.aScoresHistory[-int(self.restPeriod):]) < self.baseThreshold :
+      returnedAnomalyScore = currentAnomalyScore
+    else :
+      returnedAnomalyScore = 0.0
 
-        percentSelectedContextActive = len(activeContexts) / float(numSelectedContext) if numSelectedContext > 0 else 0.0 
+    self.aScoresHistory.append(currentAnomalyScore)
 
-        activeContexts = sorted(activeContexts)
-        activeNeurons = [ activeContextInfo[0] for activeContextInfo in activeContexts[-self.maxActiveNeuronsNum:] ]
-
-        currNeurFacts = set([ 2 ** 31 + fact for fact in activeNeurons ])
-
-        self.leftFactsGroup = set()
-        self.leftFactsGroup.update(currSensFacts, currNeurFacts)
-        self.leftFactsGroup = tuple(sorted(self.leftFactsGroup))
-
-        numNewContexts  =  self.contextOperator.contextCrosser  (   
-                                                        leftOrRight = 0,
-                                                        factsList = self.leftFactsGroup,
-                                                        potentialNewContexts = potentialNewContextList
-                                                    )
-
-        numNewContexts += 1 if newContextFlag else 0
-
-        percentAddedContextToUniqPotNew = numNewContexts / float(numUniqPotNewContext) if newContextFlag and numUniqPotNewContext > 0 else 0.0        
-
-        return percentSelectedContextActive, percentAddedContextToUniqPotNew  
+    return returnedAnomalyScore
 
 
-    def getAnomalyScore(self,inputData):
-
-        normInputValue = int((inputData - self.minValue) / self.minValueStep) 
-        binInputNormValue = bin(normInputValue).lstrip("0b").rjust(int(self.numNormValueBits),"0")
-
-        outSens = set([ sNum * 2 + ( 1 if currSymb == "1" else 0 ) for sNum, currSymb in enumerate(reversed(binInputNormValue)) ])
-
-        anomalyValue0, anomalyValue1 = self.step(outSens)
-
-        currentAnomalyScore = (1.0 - anomalyValue0 + anomalyValue1) / 2.0 
-
-        returnedAnomalyScore = currentAnomalyScore if max(self.resultValuesHistory[-int(self.restPeriod):]) < self.baseThreshold else 0.0 
-        self.resultValuesHistory.append(currentAnomalyScore)
-
-        return returnedAnomalyScore
+def aContextsCMP(x, y):
+  if cmp(x[1], y[1]) !=0 :
+    return cmp(x[1], y[1])
+  elif cmp(x[2], y[2]) !=0 :
+    return cmp(x[2], y[2])
+  else :
+    return cmp(x[3], y[3])
