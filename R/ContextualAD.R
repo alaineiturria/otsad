@@ -13,6 +13,8 @@
 #' @param min.value Minimum expected value.
 #' @param max.value Maximum expected value.
 #' @param python.object Python object for incremental processing.
+#' @param lib 0 to run the original python script, 1 to get the same results on all operating
+#' systems. Requires hashlib and bencode python libraries.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
@@ -20,7 +22,8 @@
 #' observation will be considered abnormal.
 #'
 #' @return List
-#'    \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly score with \code{base.threshold}.}
+#'    \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly
+#'     score with \code{base.threshold}.}
 #'    \item{python.object}{ContextualAnomalyDetector Python object used in online anomaly detection}
 #'
 #' @references Smirnov, M. (2018). CAD: Contextual Anomaly
@@ -37,7 +40,8 @@ ContextualAnomalyDetector <- function(data,
                                       base.threshold = 0.75,
                                       min.value = min(data, na.rm = T),
                                       max.value = max(data, na.rm = T),
-                                      python.object = NULL){
+                                      python.object = NULL,
+                                      lib = 0){
   if (is.null(python.object)){
     CAD_OSE <- reticulate::import_from_path("CAD_OSE",
                                             system.file("python", "CAD",
@@ -45,7 +49,7 @@ ContextualAnomalyDetector <- function(data,
                                                         mustWork = TRUE))
     python.object <- CAD_OSE$ContextualAnomalyDetectorOSE(min.value, max.value, base.threshold, rest.period,
                                      max.left.semicontexts, max.active.neurons,
-                                     num.norm.value.bits)
+                                     num.norm.value.bits, lib)
   }
 
   anomaly.score <- numeric(length = length(data))

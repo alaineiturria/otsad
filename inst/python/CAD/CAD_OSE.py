@@ -35,7 +35,8 @@ class ContextualAnomalyDetectorOSE(object):
                 restPeriod = 30,
                 maxLeftSemiContextsLenght = 7,
                 maxActiveNeuronsNum = 15,
-                numNormValueBits = 3 ) :
+                numNormValueBits = 3,
+                lib = 0) :
 
     self.minValue = float(minValue)
     self.maxValue = float(maxValue)
@@ -52,7 +53,7 @@ class ContextualAnomalyDetectorOSE(object):
 
     self.leftFactsGroup = tuple()
 
-    self.contextOperator = ContextOperator( maxLeftSemiContextsLenght )
+    self.contextOperator = ContextOperator( maxLeftSemiContextsLenght, lib )
 
     self.potentialNewContexts = []
 

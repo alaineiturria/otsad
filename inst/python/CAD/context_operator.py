@@ -18,15 +18,18 @@
 # http://numenta.org/licenses/
 # ----------------------------------------------------------------------
 
+import hashlib
+import bencode
+
 class ContextOperator(object):
-  
+
   """
   Contextual Anomaly Detector - Open Source Edition
   2016, Mikhail Smirnov   smirmik@gmail.com
   https://github.com/smirmik/CAD
   """
 
-  def __init__(self, maxLeftSemiContextsLenght):
+  def __init__(self, maxLeftSemiContextsLenght, lib):
 
     self.maxLeftSemiContextsLenght = maxLeftSemiContextsLenght
 
@@ -37,6 +40,7 @@ class ContextOperator(object):
     self.contextsValuesList = []
 
     self.newContextID = False
+    self.lib = lib
 
 
   def getContextByFacts (self, newContextsList, zerolevel = 0 ) :
@@ -66,8 +70,12 @@ class ContextOperator(object):
 
     for leftFacts, rightFacts in newContextsList :
 
-      leftHash = leftFacts.__hash__()
-      rightHash = rightFacts.__hash__()
+      if self.lib == 0:
+        leftHash = leftFacts.__hash__()
+        rightHash = rightFacts.__hash__()
+      else:
+        leftHash = int(hashlib.sha1(bencode.bencode(leftFacts)).hexdigest()[:16], 16)
+        rightHash = int(hashlib.sha1(bencode.bencode(rightFacts)).hexdigest()[:16], 16)
 
       nextLeftSemiContextNumber = len(self.semiContextDics[0])
       leftSemiContextID = self.semiContextDics[0].setdefault(

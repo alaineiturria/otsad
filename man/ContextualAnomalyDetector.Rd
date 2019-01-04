@@ -8,7 +8,7 @@ ContextualAnomalyDetector(data, rest.period = max(min(150,
   round(length(data) * 0.03), 1)), max.left.semicontexts = 7,
   max.active.neurons = 15, num.norm.value.bits = 3,
   base.threshold = 0.75, min.value = min(data, na.rm = T),
-  max.value = max(data, na.rm = T), python.object = NULL)
+  max.value = max(data, na.rm = T), python.object = NULL, lib = 0)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}
@@ -28,10 +28,14 @@ ContextualAnomalyDetector(data, rest.period = max(min(150,
 \item{max.value}{Maximum expected value.}
 
 \item{python.object}{Python object for incremental processing.}
+
+\item{lib}{0 to run the original python script, 1 to get the same results on all operating
+systems. Requires hashlib and bencode python libraries.}
 }
 \value{
 List
-   \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly score with \code{base.threshold}.}
+   \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly
+    score with \code{base.threshold}.}
    \item{python.object}{ContextualAnomalyDetector Python object used in online anomaly detection}
 }
 \description{
