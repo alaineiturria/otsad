@@ -30,7 +30,7 @@ ContextualAnomalyDetector(data, rest.period = max(min(150,
 \item{python.object}{Python object for incremental processing.}
 
 \item{lib}{0 to run the original python script, 1 to get the same results on all operating
-systems. Requires hashlib and bencode python libraries.}
+systems.}
 }
 \value{
 List
@@ -47,7 +47,7 @@ probabilistic abnormality scores.
 \code{data} must be a numerical vector without NA values.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 score obtained for an observation is greater than the \code{threshold}, the
-observation will be considered abnormal.
+observation will be considered abnormal. Requires hashlib and bencode python libraries.
 }
 \examples{
 ## Generate data

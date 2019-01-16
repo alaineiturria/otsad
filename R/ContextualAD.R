@@ -14,12 +14,12 @@
 #' @param max.value Maximum expected value.
 #' @param python.object Python object for incremental processing.
 #' @param lib 0 to run the original python script, 1 to get the same results on all operating
-#' systems. Requires hashlib and bencode python libraries.
+#' systems.
 #'
 #' @details \code{data} must be a numerical vector without NA values.
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 #' score obtained for an observation is greater than the \code{threshold}, the
-#' observation will be considered abnormal.
+#' observation will be considered abnormal. Requires hashlib and bencode python libraries.
 #'
 #' @return List
 #'    \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly
@@ -43,10 +43,19 @@ ContextualAnomalyDetector <- function(data,
                                       python.object = NULL,
                                       lib = 0){
   if (is.null(python.object)){
-    CAD_OSE <- reticulate::import_from_path("CAD_OSE",
-                                            system.file("python", "CAD",
-                                                        package = utils::packageName(),
-                                                        mustWork = TRUE))
+    version <- reticulate::py_discover_config()$version_string
+    version.number <- as.numeric(substring(version, 1, 1))
+    if(version.number == 3) {
+      CAD_OSE <- reticulate::import_from_path("cad_ose3",
+                                              system.file("python", "CAD",
+                                                          package = utils::packageName(),
+                                                          mustWork = TRUE))
+    } else {
+      CAD_OSE <- reticulate::import_from_path("CAD_OSE",
+                                              system.file("python", "CAD",
+                                                          package = utils::packageName(),
+                                                          mustWork = TRUE))
+    }
     python.object <- CAD_OSE$ContextualAnomalyDetectorOSE(min.value, max.value, base.threshold, rest.period,
                                      max.left.semicontexts, max.active.neurons,
                                      num.norm.value.bits, lib)

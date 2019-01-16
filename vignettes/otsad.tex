@@ -144,7 +144,7 @@ For an easier understanding of this section, we divided it into four subsections
 
 \subsubsection{Anomaly detection algorithms} \label{S:3.1.1}
 
-This package implements, documents, explains and provides references for a set of detectors listed below.  \textcolor{red}{The first four algorithms belong to prediction based techniques and the last two belong to the window-based ones. The first two algorithms are for stationary environments and the other four for non-stationary environments. Table \ref{tab:features} shows the most important characteristics of each algorithm.}
+This package implements, documents, explains and provides references for a set of detectors listed below.  The first three algorithms belong to prediction based techniques and the last three belong to the window-based ones. The first two algorithms are for stationary environments and the other four for non-stationary environments. Table \ref{tab:features} shows the most important characteristics of each algorithm.
 
 \begin{itemize}
 
@@ -192,7 +192,7 @@ The \textbf{Otsad} package implements the method used in NAB \cite{7424283} to m
 This metric uses windows to determine the label of the detected anomaly, i.e. True Positive (TP), False Positive (FP), True Negative (TN), and False Negative (FN). To determine this label, it is centered a window on the real anomaly, so if the detected anomaly falls inside, it is considered as a TP, if it falls outside as a FP and if there are no anomalies inside the window as a FN.  The window size is calculated as the division between 10\% of the number of observations and the number of real anomalies in the time series. The package includes three functions to perform these tasks. On the one hand, \textbf{GetWindowLength} and \textbf{GetWindowsLimits} that gets the size of the window and the start and end limits of each of them after being focused on the real anomalies. On the other hand, \textbf{GetLabels} to get the TP, FP, TN and FN labels.
 
 
-It also allows setting a weight for each of these labels. These weights make possible to penalize FN and FP and reward early detections. In this way, the FN and FP will get a negative score and the early detections will get a higher score than the late ones as is shown in Figure \ref{fig:ScoringEx}. The authors propose to use the weights given in Table \ref{tab:profile}. There are three different profiles \emph{Standard}, \emph{Reward low FP rate} and \emph{Reward low FN rate}. Each one of these profiles penalizes more or less the FP and the FN. Finally, the total score is calculated as the sum of the scores assigned to each detected anomaly and the cumulative scores of missed anomalies. This score is then normalized using the Max-Min normalization as in Eq. \ref{eq:eq1}. The minimum value used, is the score of a null detector, i.e. one that does not detect any anomaly (and no FP). The final score is a value between -inf and 100. For these latest objectives, we have three more functions. First one is \textbf{GetDetectorScore}, that calculates the detector score without normalizing. This function uses the three earlier functions. The second one is  \textbf{GetNullAndPerfectScores} function to obtain the scores of the perfect and null detectors for the dataset. The third one is the \textbf{NormalizeScore} function which allows normalizing detector scores.
+It also allows setting a weight for each of these labels. These weights make possible to penalize FN and FP and reward early detections. In this way, the FN and FP will get a negative score and the early detections will get a higher score than the late ones as is shown in Figure \ref{fig:ScoringEx}. The authors propose to use the weights given in Table \ref{tab:profile}. There are three different profiles \emph{Standard}, \emph{Reward low FP rate} and \emph{Reward low FN rate}. Each one of these profiles penalizes more or less the FP and the FN. Finally, the total score is calculated as the sum of the scores assigned to each detected anomaly and the cumulative scores of missed anomalies. This score is then normalized using the Max-Min normalization as in Eq. \ref{eq:eq1}. The maximum value used, is the score of a perfect detector, i.e. one that detect all anomaly with maximum score and the minimum value, is the score of a null detector, i.e. one that does not detect any anomaly (and no FP). The final score is a value between -inf and 100. For these latest objectives, we have three more functions. First one is \textbf{GetDetectorScore}, that calculates the detector score without normalizing. This function uses the three earlier functions. The second one is  \textbf{GetNullAndPerfectScores} function to obtain the scores of the perfect and null detectors for the dataset. The third one is the \textbf{NormalizeScore} function which allows normalizing detector scores.
 
 \begin{equation}\label{eq:eq1}
 Score_{final} = 100 \frac{Score_{detector} - Score_{null}}{Score_{perfect} - Score_{null}}
@@ -257,6 +257,10 @@ To easily access all the package’s functions, it must be attached in the usual
 \end{alltt}
 \end{kframe}
 \end{knitrout}
+
+\textbf{Special note: }
+
+CAD-OSE executes a python script so it is necessary to have python2 or python3 installed. In addition, to get the same results in all operating systems it is necessary to have installed the hashlib and bencode python libraries.
 
 \subsection{Documentation}\label{sec:documentation}
 

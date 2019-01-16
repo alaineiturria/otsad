@@ -94,7 +94,7 @@ For an easier understanding of this section, we divided it into four subsections
 
 \subsubsection{Anomaly detection algorithms} \label{S:3.1.1}
 
-This package implements, documents, explains and provides references for a set of detectors listed below.  \textcolor{red}{The first four algorithms belong to prediction based techniques and the last two belong to the window-based ones. The first two algorithms are for stationary environments and the other four for non-stationary environments. Table \ref{tab:features} shows the most important characteristics of each algorithm.}
+This package implements, documents, explains and provides references for a set of detectors listed below.  The first three algorithms belong to prediction based techniques and the last three belong to the window-based ones. The first two algorithms are for stationary environments and the other four for non-stationary environments. Table \ref{tab:features} shows the most important characteristics of each algorithm.
 
 \begin{itemize}
 
@@ -199,6 +199,10 @@ To easily access all the package’s functions, it must be attached in the usual
 <<install2>>=
 library(otsad)
 @
+
+\textbf{Special note: }
+
+CAD-OSE executes a python script so it is necessary to have python2 or python3 installed. In addition, to get the same results in all operating systems it is necessary to have installed the hashlib and bencode python libraries.
 
 \subsection{Documentation}\label{sec:documentation}
 
