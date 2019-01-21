@@ -80,7 +80,7 @@ The rest of the paper is organized as follows. The next section introduces the c
 
 In this section we introduce the first package for R that develops a set of current and effective online anomaly detectors for univariate time series. The \pkg{otsad} package implements six anomaly detection algorithms along with other functionalities and contents that can be interesting in order to perform the best results.
 
-For an easier understanding of this section, we divided it into four subsections. In the first subsection we described each implemented algorithms. A novel detector evaluation technique is presented in section \ref{sec:measure}. Then, we introduce included datasets and the function to visualize the results in section \ref{sec:display}. Finally, section \ref{sec:fp},  describes a simple but effective technique for reducing false positives.
+For an easier understanding of this section, we divided it into four subsections. In the first subsection we described each implemented algorithms. A novel detector evaluation technique is presented in section \ref{sec:measure}. Then, we introduce included datasets and the function to visualize the results in section \ref{sec:display}. Finally, section \ref{sec:fp} describes a simple but effective technique for reducing false positives.
 
 \subsection{Anomaly detection algorithms} \label{sec:detectors}
 
@@ -173,13 +173,13 @@ Our package also includes a function called \textbf{PlotDetections} to display t
 
 \subsection{False positive reduction technique} \label{sec:fp}
 
-In this work, we have implemented the algorithms as were originally proposed by their authors. However, the results are not as expected or could be better because all of them give many false positives. KNN-CAD \cite{2016arXiv160804585B}, KNN-LDCD \cite{2017arXiv170603412I} and CAD-OSE \cite{2018-Smirnov-ContextualAnomalyDetector} authors suggested some techniques to reduce false positives. These techniques can be only applied to above algorithms, so the rest of the algorithms selected in this paper are at a disadvantage.
+In this work, we have implemented the algorithms as were originally proposed by their authors. However, the results are not as expected or could be better because all of them give many false positives. KNN-CAD \cite{2016arXiv160804585B}, KNN-LDCD \cite{2017arXiv170603412I} and CAD-OSE \cite{2018-Smirnov-ContextualAnomalyDetector} authors suggested some techniques to reduce false positives.
 
-For this reason, we introduce and implement a simple algorithm to reduce false positives, ensuring that it can be applied in all the algorithms. The function's name in the package is \textbf{ReduceAnomalies}. Our algorithm is based on the real life situation where a time-lapse exists between an alarm is triggered and until action is taken. The time-lapse is modeled by a window sized by the user. This window is only focused on the first anomaly detected inside the window and all the others are discarded. Because the need to keep algorithms in the manner authors proposed, our function is now limited to classical processing and wherever a detector has been previously applied.
+These techniques can be only applied to above algorithms, so the rest of the algorithms selected in this paper are at a disadvantage. For this reason, we introduce and implement a simple algorithm to reduce false positives, ensuring that it can be applied in all the algorithms. The function's name in the package is \textbf{ReduceAnomalies}. Our algorithm is based on the real life situation where a time-lapse exists between an alarm is triggered and until action is taken. The time-lapse is modeled by a window sized by the user. This window is only focused on the first anomaly detected inside the window and all the others are discarded. Because the need to keep algorithms in the manner authors proposed, our function is now limited to classical processing and wherever a detector has been previously applied.
 
 \section{Use example}\label{sec:examplesec}
 
-In this section, in addition to explaining how to install the package in section \ref{sec:installation} and load the documentation in section \ref{sec:documentation}, there are also several examples to show how to use the package in section \ref{sec:examples}.
+In this section we explain how to use the package. Section \ref{sec:installation} describes  how to install the package. In section \ref{sec:documentation} we show how to load the documentation. Finally, section \ref{sec:examples} includes some examples to show how to use the package.
 
 \subsection{Installation}\label{sec:installation}
 
@@ -234,7 +234,7 @@ In addition, a user manual is available in the github repository of the  \pkg{ot
 
 \subsection{Examples}\label{sec:examples}
 
-Here is an example of how to solve a simple problem. The example will be made with the SD-EWMA algorithm. The data has been generated as follows:
+Here is an example of how to solve a simple problem using SD-EWMA algorithm. The data has been generated as follows:
 
 <<generateData>>=
 ## Generate data
@@ -283,19 +283,19 @@ adf.test(df$value, alternative = 'stationary', k = 0)
 kpss.test(df$value)
 @
 
-On the recommendation of the algorithm authors, also indicated in the details section of this function, we set \code{threshold} to 0.01.One of the usual values for the $\sigma$ multiplier \code{l} is usually 3. Next, we apply the SD-EWMA anomaly detector, as the example is simple we use the classical processing algorithm. Note that the optimized algorithm could be used in the same way. Finally, we separate the training and test sets, using the first five values for training and the rest values for testing.
+On the recommendation of the algorithm authors we set \code{threshold} to 0.01.One of the usual values for the $\sigma$ multiplier \code{l} is usually 3. Next, we apply the SD-EWMA anomaly detector, as the example is simple we use the classical processing algorithm. Note that the optimized algorithm could be used in the same way. Finally, we separate the training and test sets, using the first five values for training and the rest values for testing.
 
 <<detector>>=
 result <- CpSdEwma(data = df$value, n.train = 5, threshold = 0.01, l = 3)
 @
 
-If we print the results we can observe that the results are of data.frame type and have three columns: \emph{is.anomaly} indicating whether or not the test observation is anomalous and the columns \emph{ucl} and \emph{lcl} with the upper and lower control limits, used to determine whether or not the observation is anomalous.
+This results are of data.frame type and have three columns: \emph{is.anomaly} indicating whether or not the test observation is anomalous and the columns \emph{ucl} and \emph{lcl} with the upper and lower control limits, used to determine whether or not the observation is anomalous.
 
 <<printResult>>=
 head(result, n = 15)
 @
 
-Finally, we can see the results (Figure \ref{fig:result}) by writing the following code:
+Finally, we can plot the results (Figure \ref{fig:result}) by writing the following code:
 
 <<plotResult, eval = FALSE>>=
 res <- cbind(df, result)
@@ -309,7 +309,7 @@ PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
 \label{fig:result}
 \end{figure}
 
-In Figure \ref{fig:result} we can see that the detector has detected both abrupt transient anomalies well and the third one, distributional shift anomaly, a little late.
+In Figure \ref{fig:result} we can see that the detector has detected well both abrupt transient anomalies  and distributional shift anomaly.
 
 This example has used classical processing, but by using the incremental function we can simulate online processing as follows:
 
@@ -340,7 +340,7 @@ for(i in iter) {
 }
 @
 
-In the same way we can view the results (Figure ref{fig:result2}) by writing:
+In the same way we can plot the results (Figure ref{fig:result2}) by writing:
 
 <<plotResult2, eval = FALSE>>=
 PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
@@ -353,7 +353,7 @@ PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 \label{fig:result2}
 \end{figure}
 
-The use of the Contextual Anomaly detector is similar to the combined use of the Classic and Incremental use of the previous algorithms.
+The use of the Contextual Anomaly detector is similar to the use of the previous algorithms.
 
 <<contextual.ad, eval = FALSE>>=
 cad.results <- ContextualAnomalyDetector(
@@ -379,7 +379,7 @@ PlotDetections(res, title = "CONTEXTUAL ANOMALY DETECTOR")
 \label{fig:cad}
 \end{figure}
 
-Finally we show a last example using a data set included in the package. For this example, we used the \emph{Speed\_7578} dataset included in the package which has five anomalies. We used the KNN algorithm to try to find those anomalies.
+Finally we show a complete example using a data set included in the package. For this example, we used the \emph{Speed\_7578} dataset included in the package which has five anomalies. We used the KNN algorithm to try to find those anomalies.
 
 <<exapmle1, eval = FALSE>>=
 # Load the previously installed otsad package
@@ -408,7 +408,7 @@ myData <- cbind(myData, result)
 
 @
 
-Once the algorithm is applied, we will show the results using the PlotDetections function. Since the resulting graph is interactive, in Figure \ref{fig:Example1Score} we show a capture of it.
+Once the algorithm is applied, we could show the results using the PlotDetections function. Since the resulting graph is interactive, in Figure \ref{fig:Example1Score} we show a capture of it.
 
 <<exapmle1a, eval = FALSE>>=
 # Plot Results
@@ -418,7 +418,7 @@ PlotDetections(myData, title = "KNN-CAD ANOMALY DETECTOR")
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\linewidth]{Example1Score.PNG}
-\caption{Anomalies detected in speed_7578 dataset by KNN_CAD detector.}
+\caption{Anomalies detected in speed\_7578 dataset by KNN\_CAD detector.}
 \label{fig:Example1Score}
 \end{figure}
 
