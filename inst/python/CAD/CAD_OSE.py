@@ -36,7 +36,7 @@ class ContextualAnomalyDetectorOSE(object):
                 maxLeftSemiContextsLenght = 7,
                 maxActiveNeuronsNum = 15,
                 numNormValueBits = 3,
-                lib = 0) :
+                lib = 1) :
 
     self.minValue = float(minValue)
     self.maxValue = float(maxValue)
