@@ -6,57 +6,7 @@
 %\VignetteCompiler{knitr}
 %\VignetteEngine{knitr::knitr}
 
-\documentclass[a4paper]{article}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-\let\hlipl\hlkwb
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
+\documentclass[a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,array}
@@ -77,7 +27,8 @@
 
 \usepackage{booktabs}
 \usepackage{multirow}
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+\usepackage{Sweave}
 \begin{document}
 
 \providecommand{\pkg}[1]{\textbf{#1}}
@@ -235,24 +186,20 @@ In this section we explain how to use the package. Section \ref{sec:installation
 
 The \pkg{otsad} package is available at GitHub repository, so it can be downloaded and installed directly from the R command line by typing:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{install.packages}\hlstd{(}\hlstr{"devtools"}\hlstd{)}
-\hlstd{devtools}\hlopt{::}\hlkwd{install_github}\hlstd{(}\hlstr{"alaineiturria/otsad"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> install.packages("devtools")
+> devtools::install_github("alaineiturria/otsad")
+\end{Sinput}
+\end{Schunk}
 
 To easily access all the package’s functions, it must be attached in the usual way:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{library}\hlstd{(otsad)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> library(otsad)
+\end{Sinput}
+\end{Schunk}
 
 \textbf{Special note: }
 
@@ -274,14 +221,12 @@ Considering that this vignette provides the user with an overview of the \pkg{ot
 
 As usual in R, the documentation pages for each function can be loaded from the command line with the commands \code{?} or \code{help}:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlopt{?}\hlstd{CpSdEwma}
-\hlkwd{help}\hlstd{(CpSdEwma)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> ?CpSdEwma
+> help(CpSdEwma)
+\end{Sinput}
+\end{Schunk}
 
 In addition, a user manual is available in the github repository of the  \pkg{otsad} package, which contains the complete documentation of the package and its functions.
 
@@ -298,34 +243,30 @@ In addition, a user manual is available in the github repository of the  \pkg{ot
 
 Here is an example of how to solve a simple problem using SD-EWMA algorithm. The data has been generated as follows:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{## Generate data}
-\hlkwd{set.seed}\hlstd{(}\hlnum{100}\hlstd{)}
-\hlstd{n} \hlkwb{<-} \hlnum{500}
-\hlstd{x} \hlkwb{<-} \hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{100}\hlstd{, n,} \hlkwc{replace} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\hlstd{x[}\hlnum{70}\hlopt{:}\hlnum{90}\hlstd{]} \hlkwb{<-} \hlkwd{sample}\hlstd{(}\hlnum{110}\hlopt{:}\hlnum{115}\hlstd{,} \hlnum{21}\hlstd{,} \hlkwc{replace} \hlstd{=} \hlnum{TRUE}\hlstd{)} \hlcom{# distributional shift}
-\hlstd{x[}\hlnum{25}\hlstd{]} \hlkwb{<-} \hlnum{200} \hlcom{# abrupt transient anomaly}
-\hlstd{x[}\hlnum{320}\hlstd{]} \hlkwb{<-} \hlnum{170} \hlcom{# abrupt transient anomaly}
-\hlstd{df} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{timestamp} \hlstd{=} \hlnum{1}\hlopt{:}\hlstd{n,} \hlkwc{value} \hlstd{= x)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> ## Generate data
+> set.seed(100)
+> n <- 500
+> x <- sample(1:100, n, replace = TRUE)
+> x[70:90] <- sample(110:115, 21, replace = TRUE) # distributional shift
+> x[25] <- 200 # abrupt transient anomaly
+> x[320] <- 170 # abrupt transient anomaly
+> df <- data.frame(timestamp = 1:n, value = x)
+\end{Sinput}
+\end{Schunk}
 
 We can visualize the time-series as in Figure \ref{fig:ts} by typing:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{plot}\hlstd{(}\hlkwc{x} \hlstd{= df}\hlopt{$}\hlstd{timestamp,} \hlkwc{y} \hlstd{= df}\hlopt{$}\hlstd{value,} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{,}
-     \hlkwc{main} \hlstd{=} \hlstr{"Time-Serie"}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"blue"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{"Time"}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{"Value"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> plot(x = df$timestamp, y = df$value, type = "l",
++      main = "Time-Serie", col = "blue", xlab = "Time", ylab = "Value")
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{timeSerie.PNG}
+\includegraphics[width=0.7\linewidth]{timeSerie.PNG}
 \caption{Our time-series visualization}
 \label{fig:ts}
 \end{figure}
@@ -333,82 +274,72 @@ We can visualize the time-series as in Figure \ref{fig:ts} by typing:
 
 The SD-EWMA algorithm is designed for stationary time-series. Therefore, we must first check that the time-series is stationary. To do this, we can display the acf and pacf graphics (Figure \ref{fig:acf}) by:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{forecast}\hlopt{::}\hlkwd{Acf}\hlstd{(}\hlkwd{ts}\hlstd{(df}\hlopt{$}\hlstd{value),} \hlkwc{main} \hlstd{=} \hlstr{"ACF"}\hlstd{,} \hlkwc{lag} \hlstd{=} \hlnum{20}\hlstd{)}
-\hlstd{forecast}\hlopt{::}\hlkwd{Pacf}\hlstd{(}\hlkwd{ts}\hlstd{(df}\hlopt{$}\hlstd{value),} \hlkwc{main} \hlstd{=} \hlstr{"PACF"}\hlstd{,} \hlkwc{lag} \hlstd{=} \hlnum{20}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> forecast::Acf(ts(df$value), main = "ACF", lag = 20)
+> forecast::Pacf(ts(df$value), main = "PACF", lag = 20)
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{acf.PNG}
+\includegraphics[width=0.7\linewidth]{acf.PNG}
 \caption{ACF and PACF graphs}
 \label{fig:acf}
 \end{figure}
 
 We can observe that since almost all the lags are within the limits, the time-series is stationary. In addition, we can use two statistical tests, adf test and kpss test. The tests also indicate that the time-series is stationary.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{library}\hlstd{(tseries)}
-\hlkwd{adf.test}\hlstd{(df}\hlopt{$}\hlstd{value,} \hlkwc{alternative} \hlstd{=} \hlstr{'stationary'}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0}\hlstd{)}
-\hlkwd{kpss.test}\hlstd{(df}\hlopt{$}\hlstd{value)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> library(tseries)
+> adf.test(df$value, alternative = 'stationary', k = 0)
+> kpss.test(df$value)
+\end{Sinput}
+\end{Schunk}
 
 On the recommendation of the algorithm authors we set \code{threshold} to 0.01.One of the usual values for the $\sigma$ multiplier \code{l} is usually 3. Next, we apply the SD-EWMA anomaly detector, as the example is simple we use the classical processing algorithm. Note that the optimized algorithm could be used in the same way. Finally, we separate the training and test sets, using the first five values for training and the rest values for testing.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{result} \hlkwb{<-} \hlkwd{CpSdEwma}\hlstd{(}\hlkwc{data} \hlstd{= df}\hlopt{$}\hlstd{value,} \hlkwc{n.train} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{threshold} \hlstd{=} \hlnum{0.01}\hlstd{,} \hlkwc{l} \hlstd{=} \hlnum{3}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> result <- CpSdEwma(data = df$value, n.train = 5, threshold = 0.01, l = 3)
+\end{Sinput}
+\end{Schunk}
 
 This results are of data.frame type and have three columns: \emph{is.anomaly} indicating whether or not the test observation is anomalous and the columns \emph{ucl} and \emph{lcl} with the upper and lower control limits, used to determine whether or not the observation is anomalous.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{head}\hlstd{(result,} \hlkwc{n} \hlstd{=} \hlnum{15}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-##    is.anomaly        lcl      ucl
-## 1           0  31.000000 31.00000
-## 2           0  26.000000 26.00000
-## 3           0  56.000000 56.00000
-## 4           0   6.000000  6.00000
-## 5           0  47.000000 47.00000
-## 6           0 -16.718459 83.33762
-## 7           0 -15.120715 84.87796
-## 8           0 -12.127443 91.30896
-## 9           0 -12.029491 90.89286
-## 10          0 -10.427275 92.40430
-## 11          0 -12.931167 90.31049
-## 12          0 -10.756584 92.99798
-## 13          0  -7.669897 99.48715
-## 14          0  -9.332986 97.76851
-## 15          0  -9.501358 97.09333
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> head(result, n = 15)
+\end{Sinput}
+\begin{Soutput}
+   is.anomaly        lcl      ucl
+1           0  31.000000 31.00000
+2           0  26.000000 26.00000
+3           0  56.000000 56.00000
+4           0   6.000000  6.00000
+5           0  47.000000 47.00000
+6           0 -16.718459 83.33762
+7           0 -15.120715 84.87796
+8           0 -12.127443 91.30896
+9           0 -12.029491 90.89286
+10          0 -10.427275 92.40430
+11          0 -12.931167 90.31049
+12          0 -10.756584 92.99798
+13          0  -7.669897 99.48715
+14          0  -9.332986 97.76851
+15          0  -9.501358 97.09333
+\end{Soutput}
+\end{Schunk}
 
 Finally, we can plot the results (Figure \ref{fig:result}) by writing the following code:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{res} \hlkwb{<-} \hlkwd{cbind}\hlstd{(df, result)}
-\hlkwd{PlotDetections}\hlstd{(res,} \hlkwc{title} \hlstd{=} \hlstr{"KNN-CAD ANOMALY DETECTOR"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> res <- cbind(df, result)
+> PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
@@ -421,46 +352,41 @@ In Figure \ref{fig:result} we can see that the detector has detected well both a
 
 This example has used classical processing, but by using the incremental function we can simulate online processing as follows:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{## Initialize parameters for the loop}
-\hlstd{last.res} \hlkwb{<-} \hlkwa{NULL}
-\hlstd{res} \hlkwb{<-} \hlkwa{NULL}
-\hlstd{nread} \hlkwb{<-} \hlnum{250}
-\hlstd{numIter} \hlkwb{<-} \hlstd{n}\hlopt{%/%}\hlstd{nread}
-\hlstd{iter} \hlkwb{<-} \hlkwd{seq}\hlstd{(}\hlnum{1}\hlstd{, nread} \hlopt{*} \hlstd{numIter, nread)}
-
-\hlcom{## Calculate anomalies}
-\hlkwa{for}\hlstd{(i} \hlkwa{in} \hlstd{iter) \{}
-  \hlcom{# read new data}
-  \hlstd{newRow} \hlkwb{<-} \hlstd{df[i}\hlopt{:}\hlstd{(i} \hlopt{+} \hlstd{nread} \hlopt{-} \hlnum{1}\hlstd{),]}
-  \hlcom{# calculate if it's an anomaly}
-  \hlstd{last.res} \hlkwb{<-} \hlkwd{IpSdEwma}\hlstd{(}
-    \hlkwc{data} \hlstd{= newRow}\hlopt{$}\hlstd{value,}
-    \hlkwc{n.train} \hlstd{=} \hlnum{5}\hlstd{,}
-    \hlkwc{threshold} \hlstd{=} \hlnum{0.01}\hlstd{,}
-    \hlkwc{l} \hlstd{=} \hlnum{3}\hlstd{,}
-    \hlkwc{last.res} \hlstd{= last.res}\hlopt{$}\hlstd{last.res}
-  \hlstd{)}
-  \hlcom{# prepare the result}
-  \hlkwa{if}\hlstd{(}\hlopt{!}\hlkwd{is.null}\hlstd{(last.res}\hlopt{$}\hlstd{result))\{}
-    \hlstd{res} \hlkwb{<-} \hlkwd{rbind}\hlstd{(res,} \hlkwd{cbind}\hlstd{(newRow, last.res}\hlopt{$}\hlstd{result))}
-  \hlstd{\}}
-\hlstd{\}}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> ## Initialize parameters for the loop
+> last.res <- NULL
+> res <- NULL
+> nread <- 250
+> numIter <- n%/%nread
+> iter <- seq(1, nread * numIter, nread)
+> ## Calculate anomalies
+> for(i in iter) {
++   # read new data
++   newRow <- df[i:(i + nread - 1),]
++   # calculate if it's an anomaly
++   last.res <- IpSdEwma(
++     data = newRow$value,
++     n.train = 5,
++     threshold = 0.01,
++     l = 3,
++     last.res = last.res$last.res
++   )
++   # prepare the result
++   if(!is.null(last.res$result)){
++     res <- rbind(res, cbind(newRow, last.res$result))
++   }
++ }
+\end{Sinput}
+\end{Schunk}
 
 In the same way we can plot the results (Figure ref{fig:result2}) by writing:
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{PlotDetections}\hlstd{(res,} \hlkwc{title} \hlstd{=} \hlstr{"SD-EWMA ANOMALY DETECTOR"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
@@ -471,26 +397,23 @@ In the same way we can plot the results (Figure ref{fig:result2}) by writing:
 
 The use of the Contextual Anomaly detector is similar to the use of the previous algorithms.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{cad.results} \hlkwb{<-} \hlkwd{ContextualAnomalyDetector}\hlstd{(}
-  \hlstd{df}\hlopt{$}\hlstd{value[}\hlnum{1}\hlopt{:}\hlnum{250}\hlstd{],}
-  \hlkwc{base.threshold} \hlstd{=} \hlnum{0.75}\hlstd{,}
-  \hlkwc{rest.period} \hlstd{=} \hlnum{5}\hlstd{,}
-  \hlkwc{max.value} \hlstd{=} \hlnum{200}\hlstd{,}
-  \hlkwc{min.value} \hlstd{=} \hlnum{0}
-\hlstd{)}
-\hlstd{cad.results.online} \hlkwb{<-} \hlkwd{ContextualAnomalyDetector}\hlstd{(}
-  \hlstd{df}\hlopt{$}\hlstd{value[}\hlnum{251}\hlopt{:}\hlnum{500}\hlstd{],}
-  \hlkwc{python.object} \hlstd{= cad.results}\hlopt{$}\hlstd{python.Object}
-\hlstd{)}
-
-\hlstd{res} \hlkwb{<-} \hlkwd{cbind}\hlstd{(df,} \hlkwd{rbind}\hlstd{(cad.results}\hlopt{$}\hlstd{result, cad.results.online}\hlopt{$}\hlstd{result))}
-\hlkwd{PlotDetections}\hlstd{(res,} \hlkwc{title} \hlstd{=} \hlstr{"CONTEXTUAL ANOMALY DETECTOR"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> cad.results <- ContextualAnomalyDetector(
++   df$value[1:250],
++   base.threshold = 0.75,
++   rest.period = 5,
++   max.value = 200,
++   min.value = 0
++ )
+> cad.results.online <- ContextualAnomalyDetector(
++   df$value[251:500],
++   python.object = cad.results$python.Object
++ )
+> res <- cbind(df, rbind(cad.results$result, cad.results.online$result))
+> PlotDetections(res, title = "CONTEXTUAL ANOMALY DETECTOR")
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
@@ -501,46 +424,39 @@ The use of the Contextual Anomaly detector is similar to the use of the previous
 
 Finally we show a complete example using a data set included in the package. For this example, we used the \emph{Speed\_7578} dataset included in the package which has five anomalies. We used the KNN algorithm to try to find those anomalies.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{# Load the previously installed otsad package}
-\hlkwd{library}\hlstd{(}\hlstr{"otsad"}\hlstd{)}
-
-\hlcom{# Load the dataset speed_7578, included in otsad}
-\hlstd{myData} \hlkwb{<-} \hlstd{speed_7578}
-
-\hlcom{# Initialize parameters}
-\hlstd{n} \hlkwb{<-} \hlkwd{nrow}\hlstd{(myData)}
-\hlstd{n.train} \hlkwb{<-} \hlkwd{GetNumTrainingValues}\hlstd{(n)}
-
-\hlcom{# Calculate anomalies using KNN-CAD}
-\hlstd{result} \hlkwb{<-} \hlkwd{CpKnnCad}\hlstd{(}
-  \hlkwc{data} \hlstd{= myData}\hlopt{$}\hlstd{value,}
-  \hlkwc{n.train} \hlstd{= n.train,}
-  \hlkwc{threshold} \hlstd{=} \hlnum{1}\hlstd{,}
-  \hlkwc{l} \hlstd{=} \hlnum{19}\hlstd{,}
-  \hlkwc{k} \hlstd{=} \hlnum{27}\hlstd{,}
-  \hlkwc{ncm.type} \hlstd{=} \hlstr{"ICAD"}\hlstd{,}
-  \hlkwc{reducefp} \hlstd{=} \hlnum{TRUE}
-\hlstd{)}
-
-\hlcom{# Add results to dataset}
-\hlstd{myData} \hlkwb{<-} \hlkwd{cbind}\hlstd{(myData, result)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> # Load the previously installed otsad package
+> library("otsad")
+> # Load the dataset speed_7578, included in otsad
+> myData <- speed_7578
+> # Initialize parameters
+> n <- nrow(myData)
+> n.train <- GetNumTrainingValues(n)
+> # Calculate anomalies using KNN-CAD
+> result <- CpKnnCad(
++   data = myData$value,
++   n.train = n.train,
++   threshold = 1,
++   l = 19,
++   k = 27,
++   ncm.type = "ICAD",
++   reducefp = TRUE
++ )
+> # Add results to dataset
+> myData <- cbind(myData, result)
+> 
+\end{Sinput}
+\end{Schunk}
 
 Once the algorithm is applied, we could show the results using the PlotDetections function. Since the resulting graph is interactive, in Figure \ref{fig:Example1Score} we show a capture of it.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{# Plot Results}
-\hlkwd{PlotDetections}\hlstd{(myData,} \hlkwc{title} \hlstd{=} \hlstr{"KNN-CAD ANOMALY DETECTOR"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> # Plot Results
+> PlotDetections(myData, title = "KNN-CAD ANOMALY DETECTOR")
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
@@ -552,32 +468,27 @@ Once the algorithm is applied, we could show the results using the PlotDetection
 
 Next, we get the detector's score.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{# Get detector score}
-\hlstd{score} \hlkwb{<-} \hlkwd{GetDetectorScore}\hlstd{(myData)}
-
-\hlcom{# See this results}
-\hlkwd{data.frame}\hlstd{(score[}\hlopt{-}\hlnum{1}\hlstd{])}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> # Get detector score
+> score <- GetDetectorScore(myData)
+> # See this results
+> data.frame(score[-1])
+\end{Sinput}
+\end{Schunk}
 
 This function has an option to show the results on a chart by adding the following parameters, see \ref{fig:Ej1ScoreDe}.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{# Get detector score}
-\hlstd{score} \hlkwb{<-} \hlkwd{GetDetectorScore}\hlstd{(}
-  \hlstd{myData,}
-  \hlkwc{print} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-  \hlkwc{title} \hlstd{=} \hlstr{"speed_7578 results using KNN-CAD detector"}
-\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> # Get detector score
+> score <- GetDetectorScore(
++   myData,
++   print = TRUE,
++   title = "speed_7578 results using KNN-CAD detector"
++ )
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[htbp]
 \centering
@@ -588,35 +499,30 @@ This function has an option to show the results on a chart by adding the followi
 
 Finally, we normalize the scores and show them.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{# Normalize results}
-\hlstd{null.perfect} \hlkwb{<-} \hlkwd{GetNullAndPerfectScores}\hlstd{(myData)}
-
-\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
-  \hlstd{score}\hlopt{$}\hlstd{standard,}
-  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
-  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
-\hlstd{)}
-
-\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
-  \hlstd{score}\hlopt{$}\hlstd{low_FP_rate,}
-  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
-  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
-\hlstd{)}
-
-\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
-  \hlstd{score}\hlopt{$}\hlstd{low_FN_rate,}
-  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
-  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
-\hlstd{)}
-
-\hlcom{# Show normalized scores}
-\hlkwd{cbind}\hlstd{(standar.score, low_FP_rate.score, low_FN_rate.score)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\begin{Schunk}
+\begin{Sinput}
+> # Normalize results
+> null.perfect <- GetNullAndPerfectScores(myData)
+> standar.score <- NormalizeScore(
++   score$standard,
++   perfect.score = null.perfect[1, "perfect.score"],
++   null.score = null.perfect[1, "null.score"]
++ )
+> low_FP_rate.score <- NormalizeScore(
++   score$low_FP_rate,
++   perfect.score = null.perfect[2, "perfect.score"],
++   null.score = null.perfect[2, "null.score"]
++ )
+> low_FN_rate.score <- NormalizeScore(
++   score$low_FN_rate,
++   perfect.score = null.perfect[3, "perfect.score"],
++   null.score = null.perfect[3, "null.score"]
++ )
+> # Show normalized scores
+> cbind(standar.score, low_FP_rate.score, low_FN_rate.score)
+> 
+\end{Sinput}
+\end{Schunk}
 
 
 \section{Summary}\label{sec:summary}

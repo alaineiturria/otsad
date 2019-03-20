@@ -30,7 +30,6 @@ Suggests:
     rmarkdown
 Imports: 
     stats,
-    digest,
     ggplot2,
     plotly,
     sigmoid,

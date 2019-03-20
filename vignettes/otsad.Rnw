@@ -255,7 +255,7 @@ plot(x = df$timestamp, y = df$value, type = "l",
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{timeSerie.PNG}
+\includegraphics[width=0.7\linewidth]{timeSerie.PNG}
 \caption{Our time-series visualization}
 \label{fig:ts}
 \end{figure}
@@ -270,7 +270,7 @@ forecast::Pacf(ts(df$value), main = "PACF", lag = 20)
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{acf.PNG}
+\includegraphics[width=0.7\linewidth]{acf.PNG}
 \caption{ACF and PACF graphs}
 \label{fig:acf}
 \end{figure}
