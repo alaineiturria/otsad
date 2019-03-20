@@ -3,7 +3,7 @@ Type: Package
 Title: Online Time Serie Anomaly Detectors
 Version: 0.1.0
 Authors@R: c(
-    person("Alaiñe", "Iturria", email = "alaineiturria@hotmail.es", role = c("aut","cre")),
+    person("Alaiñe", "Iturria", email = "aiturria@ikerlan.es", role = c("aut","cre")),
     person("Jacinto", "Carrasco", email = "jacintocc@decsai.ugr.es", role = c("aut")),
     person("Francisco", "Herrera", email = "herrera@decsai.ugr.es", role = c("aut")),
     person("Santiago", "Charramendieta", email = "scharramendieta@ikerlan.es", role = c("aut")),
