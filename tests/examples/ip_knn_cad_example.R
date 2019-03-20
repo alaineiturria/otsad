@@ -32,7 +32,7 @@ PlotDetections(res, print.time.window = FALSE, title = "KNN-CAD ANOMALY DETECTOR
 ## EXAMPLE 2: ----------------------
 ## You can use it in an incremental way. This is an example using the stream
 ## library. This library allows the simulation of streaming operation.
-
+\donttest{
 # install.packages("stream")
 library("stream")
 
@@ -78,7 +78,6 @@ for(i in 1:numIter) {
 
 ## Plot results
 PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
-
-
+}
 
 

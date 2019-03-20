@@ -4,7 +4,7 @@
 
 ## Generate data
 set.seed(100)
-n <- 500
+n <- 350
 x <- sample(1:100, n, replace = TRUE)
 x[70:90] <- sample(110:115, 21, replace = TRUE)
 x[25] <- 200
@@ -28,7 +28,7 @@ PlotDetections(res, title = "PEWMA ANOMALY DETECTOR")
 ## EXAMPLE 2: ----------------------
 ## You can use it in an incremental way. This is an example using the stream
 ## library. This library allows the simulation of streaming operation.
-
+\donttest{
 # install.packages("stream")
 library("stream")
 
@@ -69,6 +69,6 @@ for(i in 1:numIter) {
 
 ## Plot results
 PlotDetections(res, title = "PEWMA ANOMALY DETECTOR")
-
+}
 
 

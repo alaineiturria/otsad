@@ -1,6 +1,6 @@
 ## Generate data
 set.seed(100)
-n <- 500
+n <- 350
 x <- sample(1:100, n, replace = TRUE)
 x[70:90] <- sample(110:115, 21, replace = TRUE)
 x[25] <- 200
