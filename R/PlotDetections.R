@@ -56,7 +56,7 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
 
   if (print.time.window) {
     if ("is.real.anomaly" %in% column.names) {
-      if (sum(data$is.real.anomal) > 0) {
+      if (sum(data$is.real.anomaly) > 0) {
         data <- GetWindowsLimits(data)
         data[data$is.real.anomaly == 1 & data$start.limit != 0,"start.limit"] <-
           as.character(data[data[data$is.real.anomaly == 1,"start.limit"],"timestamp"])
@@ -121,8 +121,8 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
   }
 
   if (print.real.anomaly) {
-    if (sum(data$is.real.anomal) > 0) {
-      if ("is.real.anomaly" %in% column.names) {
+    if ("is.real.anomaly" %in% column.names) {
+      if (sum(data$is.real.anomal) > 0) {
         myPlot <- myPlot + ggplot2::geom_point(
           data = data[data$is.real.anomaly == 1,],
           colour = "orange", size = 3, alpha = 0.5
