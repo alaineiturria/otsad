@@ -118,11 +118,11 @@ Unlike classical techniques, techniques for anomaly detection in time series mus
 
 Due to the evolution of new technologies, the amount of data is increasing and it is collected faster. For this reason, detection techniques must face new challenges such as an increase in the amount of data and online processing capacity. As opposed to classic techniques, online time-series anomaly detection techniques do not have the complete data set to work with and time must be taken into account. Another major challenge with the introduction of online time series processing is that time-series can be stationary and non-stationary. As we already previously commented,  most statistical or predictive techniques assume that time-series are stationary, but in most real cases they never are. Although there are techniques to make time-series stationary, it may be difficult to make it stationary because in online processing the full data set is not available.
 
-In recent years, most of the work has focused on the evolution of predictive and moving window-based techniques \cite{a3e0f1cf080343d98cae7430cd6e43c4}. Predictive techniques are models in which parameters or components are modified as new data arrives to capture normal data trends in a better way. They calculate if a value is anomalous based on the dissimilarity or error obtained between the observation and its prediction. On the other hand, techniques based on moving windows are commonly used to improve distance-based techniques. The distance calculation is an expensive method and proportional to the number of observations to be considered. The use of moving windows allows reducing the set of observations to be considered, but also maintaining the most recent subset of data.
+In recent years, most of the work has focused on the evolution of evolving prediction models and sliding window-based techniques \cite{a3e0f1cf080343d98cae7430cd6e43c4}. Evolving techniques are models in which parameters or components are modified as new data arrives to capture normal data trends in a better way. On the other hand, techniques based on sliding windows are commonly used to improve distance-based techniques. The distance calculation is an expensive method and proportional to the number of observations to be considered. The use of sliding windows allows reducing the set of observations to be considered, but also maintaining the most recent subset of data.
 
-Despite the detection of anomalies is a highly studied field, there is little theory and open source software able to address these new challenges. For python, we have found a few algorithms in GitHub of \emph{Numenta Anomaly Benchmark (NAB)} \cite{7424283} including \textbf{Numenta HTM}, \textbf{CAD-OSE}, \textbf{KNN-CAD}, and others. For R, there are few CRAN packages to address the problem of time series anomaly detection. The first and most popular is the \CRANpkg{tsoutliers} package. There is also the \CRANpkg{qicharts} package that implements basic control chart algorithms. Finally, another package that is becoming increasingly popular is \pkg{Twitter's Anomaly Detection} package (only available on GitHub). One of the main disadvantages of these three packages is that the implemented algorithms are not suitable to work online. In addition to the above, there are two other packages available for online time-series anomaly detection: \CRANpkg{SmartSifter} and \CRANpkg{EnergyOnlineCPM}. Moreover, we only found two CRAN packages able to address these challenges. The general conclusion is that few algorithms and packages are available and ready to use for online anomaly detection.
+Despite the detection of anomalies is a highly studied field, there is little theory and open source software able to address these new challenges. For python, we have found a few algorithms in GitHub of \emph{Numenta Anomaly Benchmark (NAB)} \cite{7424283} including \textbf{Numenta HTM}, \textbf{CAD-OSE}, \textbf{KNN-CAD}, and others. For R, there are few CRAN packages to address the problem of time series anomaly detection. The first and most popular is the \CRANpkg{tsoutliers} package. There is also the \CRANpkg{qicharts} package that implements basic control chart algorithms. One of the main disadvantages of these packages is that the implemented algorithms are not suitable to work online. In addition to the above, there are few other packages available for online time-series anomaly detection: \CRANpkg{SmartSifter} and \CRANpkg{EnergyOnlineCPM}. Moreover, we only found two CRAN packages able to address these challenges. The general conclusion is that few algorithms and packages are available and ready to use for online anomaly detection.
 
-For all explained reasons, in this paper, we present a novel R package that includes up-to-date and powerful anomaly detection algorithms for univariate time series. Named as \pkg{ostad}, it aims to provide algorithms that cover different current needs such as online processing and the ability to work in stationary and non-stationary environments. With this package, we intend to address both prediction and moving window-based techniques that are gaining strength, including algorithms of both.
+For all explained reasons, in this paper, we present a novel R package that includes up-to-date and powerful anomaly detection algorithms for univariate time series. Named as \pkg{ostad}, it aims to provide algorithms that cover different current needs such as online processing and the ability to work in stationary and non-stationary environments. With this package, we intend to address both evolving and sliding window-based techniques that are gaining strength, including algorithms of both.
 
 The rest of the paper is organized as follows. The next section introduces the content of the \pkg{otsad} package, while section \ref{sec:examplesec} describes in detail how to use implemented detectors and reduce false positives. Finally we conclude the paper with some conclusions and future lines for continuing the work, section \ref{sec:summary}.
 
@@ -134,7 +134,7 @@ For an easier understanding of this section, we divided it into four subsections
 
 \subsection{Anomaly detection algorithms} \label{sec:detectors}
 
-This package implements and documents the set of detectors listed below. The first three algorithms belong to prediction based techniques and the last three belong to the window-based ones. From a stationary environment perspective, the first two algorithms can be use with stationary data, while the other four are suitable for using with non-stationary data. Table \ref{tab:features} shows the most important characteristics of each algorithm.
+This package implements and documents the set of detectors listed below. The first three algorithms belong to evolving based techniques and the last three belong to the window-based ones. From a stationary environment perspective, the first two algorithms can be use with stationary data, while the other four are suitable for using with non-stationary data. Table \ref{tab:features} shows the most important characteristics of each algorithm.
 
 \begin{itemize}
 
@@ -161,9 +161,9 @@ This package implements and documents the set of detectors listed below. The fir
 \toprule
 \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Online anomaly\\  detectors\end{tabular}} & \multicolumn{2}{c}{Features}  \\ \cmidrule(l){2-3}
                                                                                      & Stationarity   & Technique    \\ \midrule
-PEWMA                                                                                & Stationary     & Prediction   \\
-SD-EWMA                                                                              & Stationary     & Prediction   \\
-TSSD-EWMA                                                                            & Non-stationary & Prediction   \\
+PEWMA                                                                                & Stationary     & Evolving   \\
+SD-EWMA                                                                              & Stationary     & Evolving   \\
+TSSD-EWMA                                                                            & Non-stationary & Evolving   \\
 KNN-CAD                                                                              & Non-stationary & Window-based \\
 KNN-LDCD                                                                             & Non-stationary & Window-based  \\
 CAD-OSE                                                                              & Non-stationary & Window-based \\ \bottomrule
@@ -594,14 +594,23 @@ Finally, we normalize the scores and show them.
 \hlcom{# Normalize results}
 \hlstd{null.perfect} \hlkwb{<-} \hlkwd{GetNullAndPerfectScores}\hlstd{(myData)}
 
-\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{standard,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,}
-    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
+\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{standard,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
 
-\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{low_FP_rate,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,}
-    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
+\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{low_FP_rate,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
 
-\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{low_FN_rate,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,}
-    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
+\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{low_FN_rate,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
 
 \hlcom{# Show normalized scores}
 \hlkwd{cbind}\hlstd{(standar.score, low_FP_rate.score, low_FN_rate.score)}
@@ -612,7 +621,7 @@ Finally, we normalize the scores and show them.
 
 \section{Summary}\label{sec:summary}
 
-In this paper, we present the \pkg{otsad} package for R. This package fully meets the demand for anomaly detection algorithms over univariate time series in online environments. With this package we tackle with the ability to work with stationary and non-stationary data. We also provide algorithms of the two detection techniques (predictive and window based) that are gaining strength on research.
+In this paper, we present the \pkg{otsad} package for R. This package fully meets the demand for anomaly detection algorithms over univariate time series in online environments. With this package we tackle with the ability to work with stationary and non-stationary data. We also provide algorithms of the two detection techniques (evolving and window based) that are gaining strength on research.
 
 As a future job, we propose to maintain and add functionalities to our \pkg{otsad} package, i.e. provide more sophisticated false positive reduction techniques and incorporate them into algorithms.
 
