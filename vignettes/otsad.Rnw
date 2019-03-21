@@ -353,7 +353,7 @@ PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 \label{fig:result2}
 \end{figure}
 
-The use of the Contextual Anomaly detector is similar to the use of the previous algorithms.
+The use of the Contextual Anomaly detector is similar to the use of the previous algorithms. It is important to note that if the bencode python module is not installed, this method will rise an error. This can be prevented installing the bencode library with \code{install\_bencode} function of \code{otsad} package. 
 
 <<contextual.ad, eval = FALSE>>=
 cad.results <- ContextualAnomalyDetector(

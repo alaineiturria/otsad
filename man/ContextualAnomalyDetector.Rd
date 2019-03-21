@@ -47,7 +47,8 @@ probabilistic abnormality scores.
 \code{data} must be a numerical vector without NA values.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 score obtained for an observation is greater than the \code{threshold}, the
-observation will be considered abnormal. Requires hashlib and bencode python libraries.
+observation will be considered abnormal. Requires hashlib (included in python installation) 
+and bencode (which can be installed from R with \code{otsad::install_bencode()}) python libraries.
 }
 \examples{
 \donttest{
