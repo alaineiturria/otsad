@@ -1,6 +1,6 @@
 Package: otsad
 Type: Package
-Title: Online Time Serie Anomaly Detectors
+Title: Online Time Series Anomaly Detectors
 Version: 0.1.0
 Authors@R: c(
     person("Alaiñe", "Iturria", email = "aiturria@ikerlan.es", role = c("aut","cre")),
@@ -9,11 +9,11 @@ Authors@R: c(
     person("Santiago", "Charramendieta", email = "scharramendieta@ikerlan.es", role = c("aut")),
     person("Karmele", "Intxausti", email = "kintxausti@ikerlan.es", role = c("aut")))
 Description: Implements a set of online fault detector detectors 
-             for time-series, called: EWMA, TSSD-EWMA, PEWMA and KNN-CAD and 
-             KNN-LDCD. The first three algorithms belong to prediction-based 
-             techniques and the last two belong to window-based techniques. 
+             for time-series, called: EWMA, TSSD-EWMA, PEWMA, KNN-CAD, 
+             KNN-LDCD and CAD-OSE. The first three algorithms belong to prediction-based 
+             techniques and the last three belong to window-based techniques. 
              In addition, the SD-EWMA and PEWMA algorithms are algorithms 
-             designed to work in stationary environments, while the other three 
+             designed to work in stationary environments, while the other four 
              are algorithms designed to work in non-stationary environments.
 Depends:
     R (>= 3.4.0)

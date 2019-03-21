@@ -59,7 +59,7 @@ CpSdEwma <- function(data, n.train, threshold = 0.01, l = 3) {
     row$i <- row$i + 1
     row$z.ant <- row$z
     row$std.ant <- row$std
-    row$z <- row$lambda * row$x + (1-row$lambda) * row$z.ant
+    row$z <- row$lambda * row$x + (1 - row$lambda) * row$z.ant
     row$error <- row$x - row$z.ant
     row$error.sum <- row$error.sum + row$error ^ 2
     row$std <- row$error.sum / row$i
