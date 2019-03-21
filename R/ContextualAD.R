@@ -29,6 +29,7 @@
 #' @references Smirnov, M. (2018). CAD: Contextual Anomaly
 #'     Detector. https://github.com/smirmik/CAD
 #'
+#'
 #' @example tests/examples/contextual_ad_example.R
 #'
 #' @export

@@ -50,6 +50,7 @@ score obtained for an observation is greater than the \code{threshold}, the
 observation will be considered abnormal. Requires hashlib and bencode python libraries.
 }
 \examples{
+\donttest{
 ## Generate data
 set.seed(100)
 n <- 200
@@ -65,6 +66,7 @@ result <- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.thre
 ## Plot results
 res <- cbind(df, result$result)
 PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
+}
 
 }
 \references{
