@@ -9,10 +9,13 @@ Authors@R: c(
     person("Santiago", "Charramendieta", email = "scharramendieta@ikerlan.es", role = c("aut")),
     person("Karmele", "Intxausti", email = "kintxausti@ikerlan.es", role = c("aut")))
 Description: Implements a set of online fault detector detectors 
-             for time-series, called: EWMA, TSSD-EWMA, PEWMA, KNN-CAD, 
-             KNN-LDCD and CAD-OSE. The first three algorithms belong to prediction-based 
-             techniques and the last three belong to window-based techniques. 
-             In addition, the SD-EWMA and PEWMA algorithms are algorithms 
+             for time-series, called: PEWMA see M. Carter et al. (2012) 
+             <doi:10.1109/SSP.2012.6319708>, SD-EWMA and TSSD-EWMA see H. Raza et al. (2015) 
+             <doi:https://doi.org/10.1016/j.patcog.2014.07.028>, KNN-CAD see E. Burnaev et al. (2016)
+             <arXiv:1608.04585>, KNN-LDCD see V. Ishimtsev et al. (2017) <arXiv:1706.03412> and 
+             CAD-OSE see M. Smirnov (2018) <url:https://github.com/smirmik/CAD>. The first three 
+             algorithms belong to prediction-based techniques and the last three belong to 
+             window-based techniques. In addition, the SD-EWMA and PEWMA algorithms are algorithms 
              designed to work in stationary environments, while the other four 
              are algorithms designed to work in non-stationary environments.
 Depends:
