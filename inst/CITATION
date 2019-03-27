@@ -4,7 +4,7 @@ year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
 vers <- paste("R package version", meta$Version)
 
 citEntry(entry="Manual",
-         title = "otsad:  Online Time Series Anomaly Detectors",
+         title = "otsad:  Online Time Serie Anomaly Detectors",
          author = personList(as.person("Alaiñe Iturria"),
                              as.person("Jacinto Carrasco"),
                              as.person("Francisco Herrera"),
