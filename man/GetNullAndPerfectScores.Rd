@@ -25,6 +25,23 @@ For the standard profile weights are tp = 1, tn = 1, fp, = 0.11, and fn = 1.
 For the reward_low_FP_rate profile weights are tp = 1, tn = 1, fp, = 0.22, and fn = 1.
 For the reward_low_FN_rate profile weights are tp = 1, tn = 1, fp, = 0.11, and fn = 2.
 }
+\examples{
+## Generate data
+set.seed(100)
+n <- 180
+x <- sample(1:100, n, replace = TRUE)
+x[70:90] <- sample(110:115, 21, replace = TRUE)
+x[25] <- 200
+x[150] <- 170
+df <- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly <- 0
+df[c(25,80,150), "is.real.anomaly"] <- 1
+
+# Get null and perfect scores
+GetNullAndPerfectScores(df)
+}
 \references{
 A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
 Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and

@@ -22,11 +22,28 @@ the real anomaly and it can be used to know if the detected anomaly is a true po
 }
 \details{
 \code{nrow.data} and \code{num.real.anomaly} must be numeric. Window length is
-calculated by default as 10% of the length of the data set divided by the number of real
+calculated by default as 10\% of the length of the data set divided by the number of real
 anomalies contained in it.
+}
+\examples{
+## Generate data
+set.seed(100)
+n <- 180
+x <- sample(1:100, n, replace = TRUE)
+x[70:90] <- sample(110:115, 21, replace = TRUE)
+x[25] <- 200
+x[150] <- 170
+df <- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly <- 0
+df[c(25,80,150), "is.real.anomaly"] <- 1
+
+# Get window length
+GetWindowLength(data.length = nrow(df), num.real.anomaly = 3)
 }
 \references{
 A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
 Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
-Applications (IEEE ICMLA’15), 2015.
+Applications (IEEE ICMLA 15), 2015.
 }

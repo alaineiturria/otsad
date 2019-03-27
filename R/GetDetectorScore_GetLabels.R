@@ -21,6 +21,8 @@
 #' Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
 #' Applications (IEEE ICMLA’15), 2015.
 #'
+#' @example tests/examples/getLabels_example.R
+#'
 #' @export
 
 GetLabels <- function(data) {

@@ -16,6 +16,8 @@
 #' Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
 #' Applications (IEEE ICMLA’15), 2015.
 #'
+#' @example tests/examples/normalizeScore_example.R
+#'
 #' @export
 
 NormalizeScore <- function(real.score, perfect.score, null.score){

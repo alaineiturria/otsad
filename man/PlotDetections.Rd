@@ -42,6 +42,28 @@ or a character type date convertible  to POSIXlt. The \code{value} column must b
 some of the variables returned by the algorithms included in this package and must be numeric
 or boolean in the case of columns is.anomaly, is.real.anomaly .
 }
+\examples{
+## Generate data
+set.seed(100)
+n <- 180
+x <- sample(1:100, n, replace = TRUE)
+x[70:90] <- sample(110:115, 21, replace = TRUE)
+x[25] <- 200
+x[150] <- 170
+df <- data.frame(timestamp = 1:n, value = x)
+
+## Calculate anomalies
+result <- CpSdEwma(
+  data = df$value,
+  n.train = 5,
+  threshold = 0.01,
+  l = 3
+)
+res <- cbind(df, result)
+
+## Plot results
+PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
+}
 \references{
 A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
 Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and

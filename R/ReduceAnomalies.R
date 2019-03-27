@@ -9,6 +9,8 @@
 #'
 #' @return New Numerical vector with reduced anomaly labels.
 #'
+#' @example tests/examples/reduceAnomalies_example.R
+#'
 #' @export
 
 ReduceAnomalies <- function (data, windowLength) {

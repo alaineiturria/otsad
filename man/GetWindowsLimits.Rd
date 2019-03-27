@@ -28,6 +28,24 @@ true positive or not.
 and \code{is.real.anomaly} columns. \code{timestamp} column can be numeric, of type POSIXct, or a
 character type date convertible to POSIXct. \code{windowLength} must be numeric value.
 }
+\examples{
+## Generate data
+set.seed(100)
+n <- 180
+x <- sample(1:100, n, replace = TRUE)
+x[70:90] <- sample(110:115, 21, replace = TRUE)
+x[25] <- 200
+x[150] <- 170
+df <- data.frame(timestamp = 1:n, value = x)
+
+# Add is.real.anomaly column
+df$is.real.anomaly <- 0
+df[c(25,80,150), "is.real.anomaly"] <- 1
+
+# Get Window Limits
+data <- GetWindowsLimits(df)
+data[data$is.real.anomaly == 1,]
+}
 \references{
 A. Lavin and S. Ahmad, “Evaluating Real-time Anomaly Detection Algorithms – the
 Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and

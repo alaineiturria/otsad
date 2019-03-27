@@ -28,6 +28,8 @@
 #' Numenta Anomaly Benchmark,” in 14th International Conference on Machine Learning and
 #' Applications (IEEE ICMLA’15), 2015.
 #'
+#' @example tests/examples/cp_sd_ewma_example.R
+#'
 #' @export
 
 PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window = FALSE, title = "",
@@ -57,32 +59,59 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
   if (print.time.window) {
     if ("is.real.anomaly" %in% column.names) {
       if (sum(data$is.real.anomaly) > 0) {
-        data <- GetWindowsLimits(data)
-        data[data$is.real.anomaly == 1 & data$start.limit != 0,"start.limit"] <-
-          as.character(data[data[data$is.real.anomaly == 1,"start.limit"],"timestamp"])
-        data[data$is.real.anomaly == 1 & data$end.limit != 0,"end.limit"] <-
-          as.character(data[data[data$is.real.anomaly == 1,"end.limit"],"timestamp"])
-        data[data$is.real.anomaly != 1,"start.limit"] <- "1900-01-01 00:00:00"
-        data[data$is.real.anomaly != 1,"end.limit"] <- "1900-01-01 00:00:00"
-        data[data$is.real.anomaly == 1 & data$start.limit == 0,"start.limit"] <- "1900-01-01 00:00:00"
-        data[data$is.real.anomaly == 1 & data$end.limit == 0,"end.limit"] <- "1900-01-01 00:00:00"
-        data$start.limit <- as.POSIXct(data$start.limit, tz="UTC")
-        data$end.limit <- as.POSIXct(data$end.limit, tz="UTC")
+        if (is.numeric(data$timestamp) | is.integer(data$timestamp)) {
+          data <- GetWindowsLimits(data)
+          data[data$is.real.anomaly == 1 & data$start.limit != 0,"start.limit"] <-
+            data[data[data$is.real.anomaly == 1,"start.limit"],"timestamp"]
+          data[data$is.real.anomaly == 1 & data$end.limit != 0,"end.limit"] <-
+            data[data[data$is.real.anomaly == 1,"end.limit"],"timestamp"]
+          data[data$is.real.anomaly != 1,"start.limit"] <- -1
+          data[data$is.real.anomaly != 1,"end.limit"] <- -1
+          data[data$is.real.anomaly == 1 & data$start.limit == 0,"start.limit"] <- -1
+          data[data$is.real.anomaly == 1 & data$end.limit == 0,"end.limit"] <- -1
+
+          myPlot <- myPlot + ggplot2::geom_rect(
+            data = data[data$is.real.anomaly == 1 & as.character(data$start.limit) != -1,],
+            ggplot2::aes(
+              xmin = data[data$is.real.anomaly == 1 &
+                            as.character(data$start.limit) != -1, "start.limit"],
+              xmax = data[data$is.real.anomaly == 1 &
+                            as.character(data$start.limit) != -1, "end.limit"],
+              ymin = min(data$value), ymax = max(data$value)
+            ),
+            fill = "orange", alpha = 0.2, colour = NA
+          )
+          traza <- traza + 1
+          eliminate <- c(eliminate, traza)
+
+        } else {
+          data <- GetWindowsLimits(data)
+          data[data$is.real.anomaly == 1 & data$start.limit != 0,"start.limit"] <-
+            as.character(data[data[data$is.real.anomaly == 1,"start.limit"],"timestamp"])
+          data[data$is.real.anomaly == 1 & data$end.limit != 0,"end.limit"] <-
+            as.character(data[data[data$is.real.anomaly == 1,"end.limit"],"timestamp"])
+          data[data$is.real.anomaly != 1,"start.limit"] <- "1900-01-01 00:00:00"
+          data[data$is.real.anomaly != 1,"end.limit"] <- "1900-01-01 00:00:00"
+          data[data$is.real.anomaly == 1 & data$start.limit == 0,"start.limit"] <- "1900-01-01 00:00:00"
+          data[data$is.real.anomaly == 1 & data$end.limit == 0,"end.limit"] <- "1900-01-01 00:00:00"
+          data$start.limit <- as.POSIXct(data$start.limit, tz="UTC")
+          data$end.limit <- as.POSIXct(data$end.limit, tz="UTC")
 
 
-        myPlot <- myPlot + ggplot2::geom_rect(
-          data = data[data$is.real.anomaly == 1 & as.character(data$start.limit) != "1900-01-01 00:00:00",],
-          ggplot2::aes(
-            xmin = data[data$is.real.anomaly == 1 &
-                          as.character(data$start.limit) != "1900-01-01 00:00:00", "start.limit"],
-            xmax = data[data$is.real.anomaly == 1 &
-                          as.character(data$start.limit) != "1900-01-01 00:00:00", "end.limit"],
-            ymin = min(data$value), ymax = max(data$value)
-          ),
-          fill = "orange", alpha = 0.2, colour = NA
-        )
-        traza <- traza + 1
-        eliminate <- c(eliminate, traza)
+          myPlot <- myPlot + ggplot2::geom_rect(
+            data = data[data$is.real.anomaly == 1 & as.character(data$start.limit) != "1900-01-01 00:00:00",],
+            ggplot2::aes(
+              xmin = data[data$is.real.anomaly == 1 &
+                            as.character(data$start.limit) != "1900-01-01 00:00:00", "start.limit"],
+              xmax = data[data$is.real.anomaly == 1 &
+                            as.character(data$start.limit) != "1900-01-01 00:00:00", "end.limit"],
+              ymin = min(data$value), ymax = max(data$value)
+            ),
+            fill = "orange", alpha = 0.2, colour = NA
+          )
+          traza <- traza + 1
+          eliminate <- c(eliminate, traza)
+        }
       }
     } else {
       stop("It isn't posible print time windows without is.real.anomaly column")
