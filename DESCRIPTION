@@ -20,8 +20,10 @@ Description: Implements a set of online fault detectors for time-series, called:
 Depends:
     R (>= 3.4.0)
 SystemRequirements: 
-  Python (>= 3.0.1)
+  Python (>= 3.0.1); bencode-python3 (1.0.2)
 License: AGPL (>= 3) | file LICENSE
+URL: https://github.com/alaineiturria/otsad
+BugReports: https://github.com/alaineiturria/otsad/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

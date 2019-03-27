@@ -48,10 +48,9 @@ probabilistic abnormality scores.
 \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 score obtained for an observation is greater than the \code{threshold}, the
 observation will be considered abnormal. Requires hashlib (included in python installation)
-and bencode (which can be installed from R with \code{otsad::install_bencode()}) python libraries.
+and bencode-python3 (which can be installed using pip) python libraries.
 }
 \examples{
-\donttest{
 ## Generate data
 set.seed(100)
 n <- 200
@@ -62,11 +61,12 @@ x[150] <- 170
 df <- data.frame(timestamp = 1:n, value = x)
 
 ## Calculate anomalies
-result <- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.threshold = 0.9)
+\donttest{
+   result <- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.threshold = 0.9)
 
-## Plot results
-res <- cbind(df, result$result)
-PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
+   ## Plot results
+   res <- cbind(df, result$result)
+   PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
 }
 
 

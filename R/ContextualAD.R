@@ -20,7 +20,7 @@
 #' \code{threshold} must be a numeric value between 0 and 1. If the anomaly
 #' score obtained for an observation is greater than the \code{threshold}, the
 #' observation will be considered abnormal. Requires hashlib (included in python installation)
-#' and bencode (which can be installed from R with \code{otsad::install_bencode()}) python libraries.
+#' and bencode-python3 (which can be installed using pip) python libraries.
 #'
 #' @return List
 #'    \item{result}{Data frame with \code{anomaly.score} and \code{is.anomaly} comparing the anomaly

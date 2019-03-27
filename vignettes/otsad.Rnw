@@ -198,7 +198,7 @@ library(otsad)
 
 \textbf{Special note: }
 
-CAD-OSE executes a python script so it is necessary to have python2 or python3 installed. In addition, to get the same results in all operating systems it is necessary to have installed the hashlib and bencode python libraries.
+CAD-OSE executes a python script so it is necessary to have python2 or python3 installed. In addition, to get the same results in all operating systems it is necessary to have installed the hashlib and bencode-python3 python libraries.
 
 \subsection{Documentation}\label{sec:documentation}
 
@@ -353,7 +353,7 @@ PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 \label{fig:result2}
 \end{figure}
 
-The use of the Contextual Anomaly detector is similar to the use of the previous algorithms. It is important to note that if the bencode python module is not installed, this method will rise an error. This can be prevented installing the bencode library with \code{install\_bencode} function of \code{otsad} package. 
+The use of the Contextual Anomaly detector is similar to the use of the previous algorithms. It is important to note that if the bencode python module is not installed, this method will rise an error. This can be prevented installing the bencode-pyhthon3 library with Python package manager \code{pip}. 
 
 <<contextual.ad, eval = FALSE>>=
 cad.results <- ContextualAnomalyDetector(
