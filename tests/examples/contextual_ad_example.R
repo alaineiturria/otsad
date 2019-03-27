@@ -8,10 +8,12 @@ x[150] <- 170
 df <- data.frame(timestamp = 1:n, value = x)
 
 ## Calculate anomalies
-result <- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.threshold = 0.9)
+\donttest{
+   result <- ContextualAnomalyDetector(data = df$value, rest.period = 10, base.threshold = 0.9)
 
-## Plot results
-res <- cbind(df, result$result)
-PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
+   ## Plot results
+   res <- cbind(df, result$result)
+   PlotDetections(res, title = "CAD_OSE ANOMALY DETECTOR")
+}
 
 
