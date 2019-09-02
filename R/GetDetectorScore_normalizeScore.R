@@ -21,6 +21,17 @@
 #' @export
 
 NormalizeScore <- function(real.score, perfect.score, null.score){
+
+  if (!is.numeric(real.score) | length(real.score) > 1) {
+    stop("n.train argument must be a numeric value.")
+  }
+  if (!is.numeric(perfect.score) | length(perfect.score) > 1) {
+    stop("perfect.score argument must be a numeric value.")
+  }
+  if (!is.numeric(null.score) | length(null.score) > 1) {
+    stop("null.score argument must be a numeric value.")
+  }
+
   if (perfect.score == null.score) {
     res <- real.score
   } else {

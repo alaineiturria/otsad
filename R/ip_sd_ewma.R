@@ -141,6 +141,7 @@ IpSdEwma <- function(data, n.train, threshold = 0.01, l = 3, last.res = NULL) {
   }
   if (unique(last.res$i) == n.train) {
     last.res <- last.res[last.res$error.sum == min(last.res$error.sum),]
+    last.res <- last.res[1,]
   }
 
   # Testing phase

@@ -20,5 +20,12 @@
 #' @export
 
 GetNumTrainingValues <- function(n.row, prob.percent = 0.15) {
+  if (!is.numeric(n.row) | n.row <= 0 | length(n.row) > 1) {
+    stop("n.row argument must be a positive numeric value.")
+  }
+  if (!is.numeric(prob.percent) | prob.percent <= 0 | length(prob.percent) > 1) {
+    stop("prob.percent argument must be a positive numeric value.")
+  }
+
   return(min(floor(n.row * prob.percent), floor(prob.percent * 5000)))
 }

@@ -1,20 +1,17 @@
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 otsad
 =====
 
 *Online Time Series Anomaly Detectors*
 
-This package provides anomaly detectors in the context of online time
-series and their evaluation with the Numenta score.
+This package provides anomaly detectors in the context of online time series and their evaluation with the Numenta score.
 
 Installation
 ------------
 
 ### Dependencies
 
-CAD-OSE algorithm is implemented in Python. It uses
-[bencode](https://pypi.org/project/bencode-python3/) library in the
-hashing step. This dependency can be installed with the Python package
-manager *pip*.
+CAD-OSE algorithm is implemented in Python. It uses [bencode](https://pypi.org/project/bencode-python3/) library in the hashing step. This dependency can be installed with the Python package manager *pip*.
 
 ``` sh
 $ sudo pip install bencode-python3
@@ -22,8 +19,7 @@ $ sudo pip install bencode-python3
 
 ### otsad package
 
-You can install the released version of otsad from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of otsad from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 # Get the released version from CRAN

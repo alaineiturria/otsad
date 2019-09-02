@@ -1,7 +1,7 @@
 Package: otsad
 Type: Package
 Title: Online Time Series Anomaly Detectors
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person("Alaiñe", "Iturria", email = "aiturria@ikerlan.es", role = c("aut","cre")),
     person("Jacinto", "Carrasco", email = "jacintocc@decsai.ugr.es", role = c("aut")),
@@ -21,7 +21,7 @@ Depends:
     R (>= 3.4.0)
 SystemRequirements: 
   Python (>= 3.0.1); bencode-python3 (1.0.2)
-License: AGPL (>= 3) | file LICENSE
+License: AGPL (>= 3)
 URL: https://github.com/alaineiturria/otsad
 BugReports: https://github.com/alaineiturria/otsad/issues
 Encoding: UTF-8

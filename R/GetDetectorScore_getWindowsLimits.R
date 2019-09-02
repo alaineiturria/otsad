@@ -28,19 +28,24 @@
 GetWindowsLimits <- function(data, windowLength = NULL) {
 
   col.names <- names(data)
+  n <- nrow(data)
 
-  if (sum(c("timestamp", "value", "is.real.anomaly") %in% col.names) != 3) {
+  if (sum(c("timestamp", "value", "is.real.anomaly") %in% col.names) != 3 | n < 1) {
     stop("data argument must be a data.frame with timestamp, value and is.real.anomaly columns.")
   }
 
   if (!is.null(windowLength)) {
-    if (!is.numeric(windowLength)) {
-      stop("windowLength argument must be numeric.")
+    if (!is.numeric(windowLength) | windowLength < 0) {
+      stop("windowLength argument must be an integer.")
     }
   } else {
-    windowLength <- GetWindowLength(nrow(data), sum(data$is.real.anomaly))
-  }
+    if (sum(data$is.real.anomaly) == 0) {
+      windowLength <- 0
+    } else {
+      windowLength <- GetWindowLength(n, sum(data$is.real.anomaly))
+    }
 
+  }
 
   Calculate.limits <- function(index) {
     start <- index - floor(windowLength / 2)
@@ -54,9 +59,14 @@ GetWindowsLimits <- function(data, windowLength = NULL) {
     return(c(start, end))
   }
 
-  anomaly.index <- which(data$is.real.anomaly == 1)
   data$start.limit <- 0
   data$end.limit <- 0
+
+  if(windowLength == 0) {
+    return(data)
+  }
+
+  anomaly.index <- which(data$is.real.anomaly == 1)
   data[anomaly.index, c("start.limit", "end.limit")] <- t(sapply(anomaly.index, Calculate.limits))
 
   if (length(anomaly.index) > 1) {

@@ -49,6 +49,12 @@ GetDetectorScore <- function(data, print = FALSE, title = ""){
     stop("data argument must be a data.frame with timestamp}, value, is.anomaly and is.real.anomaly
          columns.")
   }
+  if (!is.logical(print)) {
+    stop("print must be logical value.")
+  }
+  if (!is.character(title)) {
+    stop("title must be a string.")
+  }
 
   data <- GetWindowsLimits(data)
   data <- GetLabels(data)

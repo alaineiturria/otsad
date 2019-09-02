@@ -4,7 +4,7 @@
 \alias{CpTsSdEwma}
 \title{Classic Processing Two-Stage Shift-Detection based on EWMA}
 \usage{
-CpTsSdEwma(data, n.train, threshold, l = 3, m = 5)
+CpTsSdEwma(data, n.train, threshold = 0.01, l = 3, m = 5)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}

@@ -101,6 +101,7 @@ CpSdEwma <- function(data, n.train, threshold = 0.01, l = 3) {
   # Testing phase
   res <- NULL
   last.res <- train.set[train.set$error.sum == min(train.set$error.sum),]
+  last.res <- last.res[1,]
   for (i in 1:length(test.data)) {
     last.res <- SdEwmaTest(last.res, test.data[i])
     res <- rbind(res, last.res[,c("is.anomaly", "lcl", "ucl")])

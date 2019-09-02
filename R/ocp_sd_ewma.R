@@ -105,6 +105,7 @@ OcpSdEwma <- function(data, n.train, threshold, l = 3) {
   sapply(train.data, SdEwmaTrain, new.enviroment)
   last.res <- get("last.res", envir = new.enviroment)
   last.res <- last.res[last.res$error.sum == min(last.res$error.sum),]
+  last.res <- last.res[1,]
   assign("last.res", last.res, envir = new.enviroment)
 
   # Testing phase

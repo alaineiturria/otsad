@@ -22,7 +22,23 @@
 #' @export
 
 GetWindowLength <- function(data.length, num.real.anomaly, window.length.perc = 0.1) {
-  windowLength <- floor((data.length * window.length.perc) / num.real.anomaly)
-  if (windowLength %% 2 != 0) windowLength <- windowLength - 1
-  return(windowLength)
+
+  if (!is.numeric(data.length) | length(data.length) > 1 | data.length <= 0) {
+    stop("data.length must be postive integer value")
+  }
+  if (!is.numeric(num.real.anomaly) | length(num.real.anomaly) > 1 | num.real.anomaly < 0) {
+    stop("num.real.anomaly must be postive integer value major than 0")
+  }
+  if (!is.numeric(window.length.perc) | length(window.length.perc) > 1 | window.length.perc <= 0) {
+    stop("window.length.perc must be positive numeric value")
+  }
+
+  if (num.real.anomaly == 0) {
+    return(0)
+  } else {
+    windowLength <- floor((data.length * window.length.perc) / num.real.anomaly)
+    if (windowLength %% 2 != 0) windowLength <- windowLength - 1
+    return(windowLength)
+  }
+
 }

@@ -40,7 +40,7 @@
 #' @export
 
 
-CpTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5) {
+CpTsSdEwma <- function(data, n.train, threshold = 0.01, l = 3, m = 5) {
 
   # validate parameters
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {

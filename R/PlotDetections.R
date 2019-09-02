@@ -38,7 +38,25 @@ PlotDetections <- function(data, print.real.anomaly = FALSE, print.time.window =
   column.names <- names(data)
 
   if (sum(c("timestamp", "value") %in% column.names) != 2) {
-    stop("the data.frame must have timestamp and value columns")
+    stop("data.frame must have timestamp and value columns.")
+  }
+  if (!is.logical(print.real.anomaly)) {
+    stop("print.real.anomaly must logical value.")
+  }
+  if (!is.logical(print.time.window)) {
+    stop("print.time.window must logical value.")
+  }
+  if (!is.character(title)) {
+    stop("title must be a string value.")
+  }
+  if (!is.character(xlab)) {
+    stop("xlab must be a string value.")
+  }
+  if (!is.character(ylab)) {
+    stop("ylab must be a string value.")
+  }
+  if (!is.logical(return.ggplot)) {
+    stop("return.ggplot must logical value.")
   }
 
   if (is.character(data$timestamp)) {
