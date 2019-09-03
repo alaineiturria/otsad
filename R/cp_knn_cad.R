@@ -60,6 +60,9 @@ CpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27,
   if (ncm.type != "ICAD" & ncm.type != "LDCD") {
     stop("ncm.type argument must be ICAD or LDCD")
   }
+  if (!is.logical(reducefp)) {
+    stop("reducefp argument must be logical.")
+  }
 
   training.set <- NULL
   calibration.set <- NULL

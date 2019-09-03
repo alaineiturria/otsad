@@ -66,8 +66,8 @@ IpPewma <- function(data, n.train = 5, alpha0 = 0.8, beta = 0, l = 3, last.res =
   if (!is.numeric(data) | (sum(is.na(data)) > 0)) {
     stop("data argument must be a numeric vector and without NA values.")
   }
-  if (!is.numeric(n.train) | n.train >= length(data)) {
-    stop("n.train argument must be a numeric value and less than data length.")
+  if (!is.numeric(n.train) | n.train <= 0) {
+    stop("n.train argument must be positive numeric value.")
   }
   if (!is.numeric(alpha0) | alpha0 <= 0 |  alpha0 > 1) {
     stop("alpha0 argument must be a numeric value in (0,1] range.")

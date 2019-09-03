@@ -89,6 +89,15 @@ IpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27, ncm.type = "I
   if (!is.numeric(k)) {
     stop("k argument must be a numeric value.")
   }
+  if (!is.numeric(n.train) | n.train <= 0) {
+    stop("n.train argument must be a positive numeric value.")
+  }
+  if (ncm.type != "ICAD" & ncm.type != "LDCD") {
+    stop("ncm.type argument must be ICAD or LDCD.")
+  }
+  if (!is.logical(reducefp)) {
+    stop("reducefp argument must be logical.")
+  }
 
   # auxiliar function
   Calcular.knn <- function(test, training.set, sigma) {
