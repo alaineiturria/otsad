@@ -35,16 +35,15 @@
 #'
 #' @return A list of the following items.
 #'
-#'   \item{last.data.checked}{Anomaly results of the last \code{m} results of
-#'   the previous iteration. dataset conformed by the following columns.}
+#'   \item{result}{Dataset conformed by the following columns:}
 #'   \itemize{
 #'      \item \code{is.anomaly} 1 if the value is anomalous 0 otherwise.
 #'      \item \code{ucl} Upper control limit.
 #'      \item \code{lcl} Lower control limit.
+#'      \item \code{i} row id or index
 #'  }
-#'  \item{checked.results}{Anomaly results of the dataset excluding the
-#'  last \code{m} values because they could not be verified. dataset conformed
-#'  by the following columns: \code{is.anomaly}, \code{ucl}, \code{lcl}.}
+#'  \item{last.data.checked}{Data frame with checked anomalies. \code{i} column is the id or
+#'  index and \code{is.anomaly} is its new is.anomaly value.}
 #'  \item{to.next.iteration}{Last result returned by the algorithm. It is a list
 #'  containing the following items.}
 #'  \itemize{
@@ -52,11 +51,8 @@
 #'      SD-EWMA function with the calculations of the parameters of the last run
 #'      . These are necessary for the next run.
 #'      \item \code{to.check} Subsequence of the last remaining unchecked
-#'      values to be checked in the next iteration. dataset conformed by the
-#'      following columns: \code{is.anomaly}, \code{ucl}, \code{lcl},
-#'      \code{value}.
-#'      \item \code{last.m} Subsequence of the m values prior to the to.check
-#'      subsecuence necessary to verify the values in to.check.
+#'      values to be checked in the next iterations.
+#'      \item \code{last.m} Subsequence of the last m values.
 #'  }
 #'
 #' @references Raza, H., Prasad, G., & Li, Y. (03 de 2015). EWMA model based
@@ -95,46 +91,83 @@ IpTsSdEwma <- function(data, n.train, threshold, l = 3, m = 5,
           result.")
   }
 
-  ApplyKolmogorovTest <- function(pos, all.data) {
-    if ((pos - (m - 1)) > 0 & (pos + m) <= length(all.data)) {
-      part1 <- all.data[( pos - (m - 1)):pos]
-      part2 <- all.data[(pos + 1):(pos + m)]
-      res.test <- suppressWarnings(stats::ks.test(part1, part2, exact = NULL))
-      return(ifelse(res.test$p.value > 0.05, 0, 1))
+  ApplyKolmogorovTest <- function(part1, part2) {
+    res.test <- suppressWarnings(stats::ks.test(part1, part2, exact = NULL))
+    return(ifelse(res.test$p.value > 0.05, 0, 1))
+  }
+
+  OnePointTssdEwma <- function(data, n.train, threshold, l, m, to.next.iteration) {
+    result <- IpSdEwma(data, n.train, threshold, l, to.next.iteration$last.res)
+
+    if (is.null(to.next.iteration)) {
+      last.m <- NULL
+      to.check <- list()
     } else {
-      return(1)
+      last.m <- to.next.iteration$last.m
+      to.check <- to.next.iteration$to.check
     }
+
+    last.m.values <- ifelse(is.null(last.m), 0, length(last.m))
+    result$result$i <- result$last.res[1,"i"]
+
+    if (last.m.values < m) {
+      last.m <- c(last.m, data)
+      to.check <- NULL
+      last.data.checked <- NULL
+    } else {
+      last.m <- last.m[-1]
+      last.m <- c(last.m, data)
+      to.check.len <- length(to.check)
+      if (result$result$is.anomaly) {
+        to.check[[to.check.len + 1]] <- list(index = result$result$i,
+                                             check.in = result$result$i + m,
+                                             last.m = last.m)
+      }
+      if (to.check.len >= 1) {
+        if (to.check[[1]]$check.in == result$result$i) {
+          is.anomaly <- ApplyKolmogorovTest(to.check[[1]]$last.m, last.m)
+          last.data.checked <- data.frame(i = to.check[[1]]$index, is.anomaly = is.anomaly)
+          to.check <- to.check[-1]
+        } else {
+          last.data.checked <- NULL
+        }
+      } else {
+        last.data.checked <- NULL
+      }
+    }
+
+    to.next.iteration <- list(last.res = result$last.res, to.check = to.check, last.m = last.m)
+
+    return(list(result = result$result, last.data.checked = last.data.checked,
+                to.next.iteration = to.next.iteration))
   }
 
-  # get anomalous rows
-  result <- IpSdEwma(data, n.train, threshold, l, to.next.iteration$last.res)
-  # merge result and to.check data and check anomalous rows
-  result$result$value <- data
-  all.data <- rbind(to.next.iteration$to.check, result$result)
-  rownames(all.data) <- 1:nrow(all.data)
-  anomaly.pos <- which(all.data$is.anomaly == 1)
-  if (length(anomaly.pos) != 0) {
-    all.data[anomaly.pos, "is.anomaly"] <-
-    sapply((anomaly.pos + length(to.next.iteration$last.m)), ApplyKolmogorovTest,
-               c(to.next.iteration$last.m, all.data$value))
-  }
-  # prepare result
-  n <- nrow(all.data)
-  if (is.null(to.next.iteration$to.check)) {
-    last.data.checked <- NULL
-    checked.results <- all.data[1:(n - m), names(all.data) != "value"]
+  if (length(data) == 1) {
+    return(OnePointTssdEwma(data, n.train, threshold, l, m, to.next.iteration))
   } else {
-    last.data.checked.n <- nrow(to.next.iteration$to.check)
-    last.data.checked <-
-    all.data[1:last.data.checked.n, names(all.data) != "value"]
-    checked.results <-
-    all.data[(last.data.checked.n + 1):(n - m), names(all.data) != "value"]
-  }
-  to.next.iteration$to.check <- all.data[(n - m + 1):n,]
-  to.next.iteration$last.m <- all.data[(n - 2 * m + 1):(n - m), "value"]
-  to.next.iteration$last.res <- result$last.res
+    n <- length(data)
+    last.res <- list()
+    last.res$result <- NULL
+    last.res$to.next.iteration <- to.next.iteration
+    res <- NULL
+    last.data.checked <- NULL
+    ## Calculate anomalies
+    for (i in 1:n) {
+      last.res <- OnePointTssdEwma(data = data[i], n.train, threshold, l, m,
+                                   last.res$to.next.iteration)
+      res <- rbind(res, last.res$result)
+      if (!is.null(last.res$last.data.checked)) {
+        last.data.checked <- rbind(last.data.checked, last.res$last.data.checked)
+      }
+    }
+    if (!is.null(last.data.checked)) {
+      res[res$i %in% last.data.checked$i, "is.anomaly"] <- last.data.checked$is.anomaly
+      last.data.checked <- last.data.checked[!(last.data.checked$i %in% res$i),]
+      if (nrow(last.data.checked) == 0) last.res[2] <- list(NULL)
+      else last.res$last.data.checked <- last.data.checked
+    }
 
-  return(list(last.data.checked = last.data.checked,
-              checked.results = checked.results,
-              to.next.iteration = to.next.iteration))
+    last.res$result <- res
+    return(last.res)
+  }
 }

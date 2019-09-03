@@ -30,6 +30,7 @@ test_that("OipTsSdEwma gives the correct result", {
   df <- data.frame(timestamp=1:n,value=x)
 
   ## Initialize parameters for the loop
+  ## Initialize parameters for the loop
   last.res <- NULL
   res <- NULL
   nread <- 250
@@ -51,24 +52,10 @@ test_that("OipTsSdEwma gives the correct result", {
       to.next.iteration = last.res$to.next.iteration
     )
     # prepare result
-    if(!is.null(last.res$last.data.checked)){
-      res <- rbind(res, cbind(last.timestamp, last.res$last.data.checked))
+    res <- rbind(res, last.res$result)
+    if (!is.null(last.res$last.data.checked)) {
+      res[res$i %in% last.res$last.data.checked$i, "is.anomaly"] <- last.res$last.data.checked$is.anomaly
     }
-    if(!is.null(last.res$checked.results)){
-      init <- nread - (nrow(last.res$checked.results) +
-          nrow(last.res$to.next.iteration$to.check)) + 1
-      end <- init + nrow(last.res$checked.results) - 1
-      res <- rbind(res, cbind(newRow[init:end,], last.res$checked.results))
-    }
-    if(i == numIter){
-      res <- rbind(res,
-        cbind(timestamp = newRow[
-          (nread - nrow(last.res$to.next.iteration$to.check)
-            + 1):nread, "timestamp"],
-          last.res$to.next.iteration$to.check))
-    }
-    last.timestamp <- newRow[(nread-m+1):nread,]
-    iterador <- iterador + nread
   }
 
   ## read correct results

@@ -26,16 +26,15 @@ the next iteration}
 \value{
 A list of the following items.
 
-  \item{last.data.checked}{Anomaly results of the last \code{m} results of
-  the previous iteration. dataset conformed by the following columns.}
+  \item{result}{Dataset conformed by the following columns:}
   \itemize{
      \item \code{is.anomaly} 1 if the value is anomalous 0 otherwise.
      \item \code{ucl} Upper control limit.
      \item \code{lcl} Lower control limit.
+     \item \code{i} row id or index
  }
- \item{checked.results}{Anomaly results of the dataset excluding the
- last \code{m} values because they could not be verified. dataset conformed
- by the following columns: \code{is.anomaly}, \code{ucl}, \code{lcl}.}
+ \item{last.data.checked}{Data frame with checked anomalies. \code{i} column is the id or
+ index and \code{is.anomaly} is its new is.anomaly value.}
  \item{to.next.iteration}{Last result returned by the algorithm. It is a list
  containing the following items.}
  \itemize{
@@ -43,11 +42,8 @@ A list of the following items.
      SD-EWMA function with the calculations of the parameters of the last run
      . These are necessary for the next run.
      \item \code{to.check} Subsequence of the last remaining unchecked
-     values to be checked in the next iteration. dataset conformed by the
-     following columns: \code{is.anomaly}, \code{ucl}, \code{lcl},
-     \code{value}.
-     \item \code{last.m} Subsequence of the m values prior to the to.check
-     subsecuence necessary to verify the values in to.check.
+     values to be checked in the next iterations.
+     \item \code{last.m} Subsequence of the last m values.
  }
 }
 \description{
@@ -96,10 +92,10 @@ result <- IpTsSdEwma(
   n.train = 5,
   threshold = 0.01,
   l = 3,
-  m = 20
+  m = 20,
+  to.next.iteration = NULL
 )
-res <- cbind(df, rbind(result$last.data.checked, result$checked.results,
-                             result$to.next.iteration$to.check[, -4]))
+res <- cbind(df, result$result)
 
 ## Plot results
 PlotDetections(res, print.time.window = FALSE, title = "TSSD-EWMA ANOMALY DETECTOR")
@@ -124,9 +120,10 @@ dsd_df <- DSD_Memory(df)
 ## Initialize parameters for the loop
 last.res <- NULL
 res <- NULL
-nread <- 100
+nread <- 50
 numIter <- n\%/\%nread
 m <- 20
+dsd_df <- DSD_Memory(df)
 
 ## Calculate anomalies
 for(i in 1:numIter) {
@@ -138,25 +135,15 @@ for(i in 1:numIter) {
     n.train = 5,
     threshold = 0.01,
     l = 3,
-    m = m,
+    m = 20,
     to.next.iteration = last.res$to.next.iteration
   )
   # prepare result
-  if(!is.null(last.res$last.data.checked)){
-    res <- rbind(res, cbind(last.timestamp, last.res$last.data.checked))
+  res <- rbind(res, cbind(newRow, last.res$result))
+  if (!is.null(last.res$last.data.checked)) {
+    res[res$i \%in\% last.res$last.data.checked$i, "is.anomaly"] <-
+      last.res$last.data.checked$is.anomaly
   }
-  if(!is.null(last.res$checked.results)){
-    init <- nread - (nrow(last.res$checked.results) +
-            nrow(last.res$to.next.iteration$to.check)) + 1
-    end <- init + nrow(last.res$checked.results) - 1
-    res <- rbind(res, cbind(newRow[init:end,], last.res$checked.results))
-  }
-  if(i == numIter){
-    res <- rbind(res,
-           cbind(timestamp = newRow[(nread - nrow(last.res$to.next.iteration$to.check) + 1):nread,
-                                    "timestamp"], last.res$to.next.iteration$to.check))
-  }
-  last.timestamp <- newRow[(nread-m+1):nread,]
 }
 
 ## Plot results
