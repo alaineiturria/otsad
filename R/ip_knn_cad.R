@@ -105,15 +105,14 @@ IpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27, ncm.type = "I
       diff <- a - b
       return((diff %*% sigma) %*% t(t(diff)))
     }
-
     arr <- apply(training.set, 1, metric, test)
     if (ncm.type == "ICAD") {
       return(sum(sort(as.vector(arr))[1:k]))
-    } else {
+    }
+    else {
       return(mean(sort(as.vector(arr))[1:k]))
     }
   }
-
   if (is.null(to.next.iteration)) {
     training.set <- NULL
     calibration.set <- NULL
@@ -123,86 +122,104 @@ IpKnnCad <- function(data, n.train, threshold = 1, l = 19, k = 27, ncm.type = "I
     pred <- -1
     record.count <- 0
     init <- 1
-  } else {
+  }
+  else {
     training.set <- to.next.iteration$training.set
     calibration.set <- to.next.iteration$calibration.set
     sigma <- to.next.iteration$sigma
     alphas <- to.next.iteration$alphas
     pred <- to.next.iteration$pred
     record.count <- to.next.iteration$record.count
-    data <- c(calibration.set[nrow(calibration.set), 2:l], data)
-    init <- l
   }
 
   results <- NULL
+  index.row <- 0
+  n <- length(data)
+  if (record.count < (l-1)) {
+    while (record.count < (l-1) & index.row < n) {
+      index.row <- index.row + 1
+      record.count <- record.count + 1
+      calibration.set <- cbind(calibration.set, data[index.row])
+      results <- c(results, 0)
+    }
+    if (index.row > 0) {
+      data <- data[-(1:index.row)]
+    }
+  }
 
-  for (index.row in init:length(data)) {
-    record.count <- record.count + 1
-    if (record.count < l) {
-      result <- 0
+  if (record.count >= (l-1) & index.row != n) {
+
+    if (record.count == (l-1)) {
+      data <- c(calibration.set[nrow(calibration.set),], data)
+      calibration.set <- NULL
+    } else if (record.count >= l & record.count < n.train) {
+      data <- c(training.set[nrow(training.set),2:l], data)
     } else {
+      data <- c(calibration.set[nrow(calibration.set), 2:l], data)
+    }
+    init <- l
+    n <- length(data)
+
+    for (index.row in init:n) {
+      record.count <- record.count + 1
       new.item <- data[(index.row - l + 1):index.row]
       if (record.count < n.train) {
         training.set <- rbind(training.set, new.item)
         result <- 0
-      } else {
-        ost <- record.count %% n.train
-        if (ost == 0 | ost == floor(n.train / 2)) {
+      }
+      else {
+        ost <- record.count%%n.train
+        if (ost == 0 | ost == floor(n.train/2)) {
           tryCatch({
             sigma <- solve(t(training.set) %*% training.set)
           }, error = function(e) {
-            print(paste0("Singular Matrix at record", record.count))
+            print(paste0("Singular Matrix at record",
+                         record.count))
           })
         }
         if (length(alphas) == 0) {
           alphas <- sapply(1:nrow(training.set), function(j) {
-            Calcular.knn(training.set[j,], training.set[-j,], sigma)
+            Calcular.knn(training.set[j, ], training.set[-j,
+                                                         ], sigma)
           })
         }
-
-        alpha <- Calcular.knn(new.item, training.set, sigma)
-
+        alpha <- Calcular.knn(new.item, training.set,
+                              sigma)
         if (ncm.type == "ICAD") {
-          result <- sum(alphas < alpha) / length(alphas)
-        } else {
-          result <- 1 - sum(alphas >= alpha) / (length(alphas) + 1)
+          result <- sum(alphas < alpha)/length(alphas)
         }
-
-
+        else {
+          result <- 1 - sum(alphas >= alpha)/(length(alphas) +
+                                                1)
+        }
         if (record.count >= 2 * n.train) {
-          training.set <- training.set[-1,]
-          training.set <- rbind(training.set, calibration.set[1,])
-          calibration.set <- calibration.set[-1,]
+          training.set <- training.set[-1, ]
+          training.set <- rbind(training.set, calibration.set[1,
+                                                              ])
+          calibration.set <- calibration.set[-1, ]
         }
-
         alphas <- alphas[-1]
         calibration.set <- rbind(calibration.set, new.item)
         alphas <- c(alphas, alpha)
-
         if (reducefp) {
           if (pred > 0) {
             pred <- pred - 1
             result <- 0.5
-          } else if (result >= 0.9965) {
-            pred <- floor(n.train / 5)
+          }
+          else if (result >= 0.9965) {
+            pred <- floor(n.train/5)
           }
         }
-
       }
+      results <- c(results, result)
     }
-
-    results <- c(results, result)
-
   }
-
-  return(list(anomaly.score = results, is.anomaly = results >= threshold,
+  return(list(anomaly.score = results,
+              is.anomaly = results >= threshold,
               to.next.iteration = list(
                 training.set = training.set,
                 calibration.set = calibration.set,
-                sigma = sigma,
-                alphas = alphas,
-                pred = pred,
-                record.count = record.count
-              )))
+                sigma = sigma, alphas = alphas,
+                pred = pred, record.count = record.count)))
 
 }
