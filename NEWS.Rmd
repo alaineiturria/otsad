@@ -26,4 +26,5 @@ knitr::opts_chunk$set(
     + Fixed the error in `GetWindowsLimits` that gave an error when there were not anomalies in
     the dataset.
     + `IpTsSdEwma` and `OipTsSdEwma` implementation changed to its easier use.
+    + Fixed an error in `IpKnnCad`.
 

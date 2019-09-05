@@ -8,3 +8,4 @@ otsad 0.2.0
     -   Fixed the problems with `CpSdEwma` `IpSdEwma` `OcpSdEwma` and `OipSdEwma` that in some cases made return more results than rows in the dataset.
     -   Fixed the error in `GetWindowsLimits` that gave an error when there were not anomalies in the dataset.
     -   `IpTsSdEwma` and `OipTsSdEwma` implementation changed to its easier use.
+    -   Fixed an error in `IpKnnCad`.
