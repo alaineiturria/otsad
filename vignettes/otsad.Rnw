@@ -423,7 +423,7 @@ PlotDetections(myData, title = "KNN-CAD ANOMALY DETECTOR")
 
 Next, we get the detector's score.
 
-<<exapmle1b, tidy = TRUE, eval = FALSE>>=
+<<exapmle1b, eval = FALSE>>=
 # Get detector score
 score <- GetDetectorScore(myData)
 
@@ -451,7 +451,7 @@ score <- GetDetectorScore(
 
 Finally, we normalize the scores and show them.
 
-<<exapmle1d, tidy = TRUE, eval = FALSE>>=
+<<exapmle1d, eval = FALSE>>=
 # Normalize results
 null.perfect <- GetNullAndPerfectScores(myData)
 
