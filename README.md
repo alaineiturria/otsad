@@ -29,6 +29,54 @@ install.packages("otsad")
 devtools::install_github("alaineiturria/otsad")
 ```
 
+Most useful functions
+---------------------
+
+### Detectors
+
+-   **PEWMA**
+    -   Offline: CpPewma
+    -   Online: IpPewma
+-   **SD-EWMA**
+    -   Offline: CpSdEwma
+    -   Online: IpSdEwma
+-   **TSSD-EWMA**
+    -   Offline: CpTsSdEwma
+    -   Online: IpTsSdEwma
+-   **KNN-ICAD**
+    -   Offline: CpKnnCad(ncm.type = "ICAD")
+    -   Online: IpKnnCad(ncm.type = "ICAD")
+-   **KNN-LDCD**
+    -   Offline CpKnnCad(ncm.type = "LDCD")
+    -   Online: IpKnnCad(ncm.type = "LDCD")
+-   **CAD-OSE**
+    -   Offline and Online: ContextualAnomalyDetector
+
+### NAB score
+
+-   Get score: GetDetectorScore
+-   Normalize score: NormalizeScore + GetNullAndPerfectScores
+
+### False Positve Reduction
+
+-   Offline and Online: ReduceAnomalies
+
+### Static or interactive visualizations
+
+-   Offline: PlotDetections
+
+<div style="background-color: #cceeff; padding: 10px;">
+
+**NOTE:** 
+
+As usual in R, the documentation pages for each function can be loaded from the command line with the commands ? or help:
+
+``` r
+?CpSdEwma
+help(CpSdEwma)
+```
+</div>
+
 Example
 -------
 
@@ -38,6 +86,8 @@ This is a basic example of the use of otsad package:
 library(otsad)
 
 ## basic example code
+
+# Generate data
 set.seed(100)
 n <- 500
 x <- sample(1:100, n, replace = TRUE)
@@ -46,7 +96,7 @@ x[25] <- 200 # abrupt transient anomaly
 x[320] <- 170 # abrupt transient anomaly
 df <- data.frame(timestamp = 1:n, value = x)
 
-
+# Apply classic processing SD-EWMA detector
 result <- CpSdEwma(data = df$value, n.train = 5, threshold = 0.01, l = 3)
 ```
 
