@@ -72,6 +72,7 @@ res <- cbind(df, result)
 PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR", return.ggplot = TRUE)
 ```
 
+See plotly [interactive graph](https://alaineiturria.github.io/otsad/)
 
 For more details, see otsad documentation and vignettes.
 

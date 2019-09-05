@@ -223,13 +223,11 @@ Our package also includes a function called \textbf{PlotDetections} to display t
 
 \subsection{False positive reduction technique} \label{sec:fp}
 
-In this work, we have implemented the algorithms as were originally proposed by their authors. However, the results are not as expected or could be better because all of them give many false positives. KNN-CAD \cite{2016arXiv160804585B}, KNN-LDCD \cite{2017arXiv170603412I} and CAD-OSE \cite{2018-Smirnov-ContextualAnomalyDetector} authors suggested some techniques to reduce false positives.
-
-These techniques can be only applied to above algorithms, so the rest of the algorithms selected in this paper are at a disadvantage. For this reason, we introduce and implement a simple algorithm to reduce false positives, ensuring that it can be applied in all the algorithms. The function's name in the package is \textbf{ReduceAnomalies}. Our algorithm is based on the real life situation where a time-lapse exists between an alarm is triggered and until action is taken. The time-lapse is modeled by a window sized by the user. This window is only focused on the first anomaly detected inside the window and all the others are discarded. Because the need to keep algorithms in the manner authors proposed, our function is now limited to classical processing and wherever a detector has been previously applied.
+Some algorithms already included techniques to reduce false positives. These can be only applied to the above algorithms. For this reason, we introduce and implement our own algorithm, \emph{ReduceAnomalies}, to reduce false positives, ensuring that it can be applied in all the algorithms. This algorithm is inspired by the real-life situation where a time-lapse exists between an alarm is triggered and until corrective action is taken. In other words, the minimum time lapse between the first and the second alarm. Our algorithm’s uses the number of processed data points between two detected anomalies to reduce the number of false positives. When the first anomaly $x_t$ is detected a new window of length $w$ is created, with $x_{t+1}$ as the starter point and $x_{t+w}$ as the endpoint. For each newly detected anomaly, its relative position compared to the window is evaluated. Detected anomalies inside the window are excluded. If a detected anomaly is outside the window, it is then considered as a real anomaly and new window is calculated in the same way as mentioned above.
 
 \section{Use example}\label{sec:examplesec}
 
-In this section we explain how to use the package. Section \ref{sec:installation} describes  how to install the package. In section \ref{sec:documentation} we show how to load the documentation. Finally, section \ref{sec:examples} includes some examples to show how to use the package.
+In this section we explain how to use the package. Section \ref{sec:installation} describes  how to install the package. In section \ref{sec:documentation} we show how to load the documentation. Then, section \ref{sec:examples} includes some examples to show how to use the package. Finally, section \ref{sec:summaryfunctions}
 
 \subsection{Installation}\label{sec:installation}
 
@@ -469,7 +467,7 @@ In the same way we can plot the results (Figure ref{fig:result2}) by writing:
 \label{fig:result2}
 \end{figure}
 
-The use of the Contextual Anomaly detector is similar to the use of the previous algorithms. It is important to note that if the bencode python module is not installed, this method will rise an error. This can be prevented installing the bencode-pyhthon3 library with Python package manager \code{pip}. 
+The use of the Contextual Anomaly detector is similar to the use of the previous algorithms. It is important to note that if the bencode python module is not installed, this method will rise an error. This can be prevented installing the bencode-pyhthon3 library with Python package manager \code{pip}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -594,14 +592,23 @@ Finally, we normalize the scores and show them.
 \hlcom{# Normalize results}
 \hlstd{null.perfect} \hlkwb{<-} \hlkwd{GetNullAndPerfectScores}\hlstd{(myData)}
 
-\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{standard,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,}
-    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
+\hlstd{standar.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{standard,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{1}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
 
-\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{low_FP_rate,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,}
-    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
+\hlstd{low_FP_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{low_FP_rate,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{2}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
 
-\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(score}\hlopt{$}\hlstd{low_FN_rate,} \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,}
-    \hlstr{"perfect.score"}\hlstd{],} \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{])}
+\hlstd{low_FN_rate.score} \hlkwb{<-} \hlkwd{NormalizeScore}\hlstd{(}
+  \hlstd{score}\hlopt{$}\hlstd{low_FN_rate,}
+  \hlkwc{perfect.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"perfect.score"}\hlstd{],}
+  \hlkwc{null.score} \hlstd{= null.perfect[}\hlnum{3}\hlstd{,} \hlstr{"null.score"}\hlstd{]}
+\hlstd{)}
 
 \hlcom{# Show normalized scores}
 \hlkwd{cbind}\hlstd{(standar.score, low_FP_rate.score, low_FN_rate.score)}
@@ -609,6 +616,31 @@ Finally, we normalize the scores and show them.
 \end{kframe}
 \end{knitrout}
 
+\subsection{Most useful functions}
+\label{sec:summaryfunctions}
+
+\begin{table}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llll}
+    \hline
+    \textbf{Functionality} & \textbf{Description} & \textbf{Offline} & \textbf{Online} \\ \hline
+    \multirow{6}{*}{Detectors} & PEWMA & CpPewma & IpPewma \\
+     & SD-EWMA & CpSdEwma & IpSdEwma \\
+     & TSSD-EWMA & CpTsSdEwma & IpTsSdEwma \\
+     & KNN-ICAD & CpKnnCad(ncm.type = "ICAD") & IpKnnCad(ncm.type = "ICAD") \\
+     & KNN-LDCD & CpKnnCad(ncm.type = "LDCD") & IpKnnCad(ncm.type = "LDCD") \\
+     & CAD-OSE & ContextualAnomalyDetector & ContextualAnomalyDetector \\ \hline
+    \multirow{2}{*}{NAB score} & Get score & GetDetectorScore & \multicolumn{1}{c}{-} \\
+     & Normalize score: & \begin{tabular}[c]{@{}l@{}}NormalizeScore\\
+     GetNullAndPerfectScores\end{tabular} & \multicolumn{1}{c}{-} \\ \hline
+    \begin{tabular}[c]{@{}l@{}}False Positve \\
+    Reduction\end{tabular} & False positive reduction & ReduceAnomalies & ReduceAnomalies \\ \hline
+    Visualization & \begin{tabular}[c]{@{}l@{}}Static or \\
+    interactive visualizations\end{tabular} & PlotDetections & \multicolumn{1}{c}{-} \\ \hline
+  \end{tabular}%
+  }
+\end{table}
 
 \section{Summary}\label{sec:summary}
 

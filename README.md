@@ -57,4 +57,6 @@ PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR", return.ggplot = TRUE)
 
 <img src="man/figures/README-plot.Anomaly-1.png" width="100%" />
 
+See plotly [interactive graph](https://alaineiturria.github.io/otsad/)
+
 For more details, see otsad documentation and vignettes.
