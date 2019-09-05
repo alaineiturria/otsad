@@ -65,17 +65,12 @@ Most useful functions
 
 -   Offline: PlotDetections
 
-<div style="background-color: #cceeff; padding: 10px;">
-
-**NOTE:** 
-
-As usual in R, the documentation pages for each function can be loaded from the command line with the commands ? or help:
+***NOTE:*** *As usual in R, the documentation pages for each function can be loaded from the command line with the commands ? or help:*
 
 ``` r
 ?CpSdEwma
 help(CpSdEwma)
 ```
-</div>
 
 Example
 -------
