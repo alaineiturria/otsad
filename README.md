@@ -35,35 +35,35 @@ Most useful functions
 ### Detectors
 
 -   **PEWMA**
-    -   Offline: CpPewma
-    -   Online: IpPewma
+    -   Offline: `CpPewma`
+    -   Online: `IpPewma`
 -   **SD-EWMA**
-    -   Offline: CpSdEwma
-    -   Online: IpSdEwma
+    -   Offline: `CpSdEwma`
+    -   Online: `IpSdEwma`
 -   **TSSD-EWMA**
-    -   Offline: CpTsSdEwma
-    -   Online: IpTsSdEwma
+    -   Offline: `CpTsSdEwma`
+    -   Online: `IpTsSdEwma`
 -   **KNN-ICAD**
-    -   Offline: CpKnnCad(ncm.type = "ICAD")
-    -   Online: IpKnnCad(ncm.type = "ICAD")
+    -   Offline: `CpKnnCad(ncm.type = "ICAD")`
+    -   Online: `IpKnnCad(ncm.type = "ICAD")`
 -   **KNN-LDCD**
-    -   Offline CpKnnCad(ncm.type = "LDCD")
-    -   Online: IpKnnCad(ncm.type = "LDCD")
+    -   Offline `CpKnnCad(ncm.type = "LDCD")`
+    -   Online: `IpKnnCad(ncm.type = "LDCD")`
 -   **CAD-OSE**
-    -   Offline and Online: ContextualAnomalyDetector
+    -   Offline and Online: `ContextualAnomalyDetector`
 
 ### NAB score
 
 -   Get score: GetDetectorScore
--   Normalize score: NormalizeScore + GetNullAndPerfectScores
+-   Normalize score: `NormalizeScore` + `GetNullAndPerfectScores`
 
 ### False Positve Reduction
 
--   Offline and Online: ReduceAnomalies
+-   Offline and Online: `ReduceAnomalies`
 
 ### Static or interactive visualizations
 
--   Offline: PlotDetections
+-   Offline: `PlotDetections`
 
 ***NOTE:*** *As usual in R, the documentation pages for each function can be loaded from the command line with the commands ? or help:*
 
