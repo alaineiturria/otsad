@@ -8,18 +8,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Test environments
-* ubuntu 12.04 (on travis-ci), R 3.1.2
+* ubuntu 16.04 (on travis-ci), (oldrel release and devel)
 * win-builder (devel and release)
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
-
-There was 1 NOTE:
-
-* checking dependencies in R code ... NOTE
-  Namespace in Imports field not imported from: 'R6'
-
-  R6 is a build-time dependency.
 
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of httr 

@@ -1,0 +1,9 @@
+^Meta$
+^doc$
+^.*\.Rproj$
+^\.Rproj\.user$
+^README.Rmd
+^NEWS.Rmd
+^cran-comments.Rmd
+^docs/
+^\.travis\.yml$
