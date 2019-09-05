@@ -253,7 +253,7 @@ plot(x = df$timestamp, y = df$value, type = "l",
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\linewidth]{timeSerie.PNG}
+\includegraphics[width=0.7\linewidth]{timeSerie.png}
 \caption{Our time-series visualization}
 \label{fig:ts}
 \end{figure}
@@ -268,7 +268,7 @@ forecast::Pacf(ts(df$value), main = "PACF", lag = 20)
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\linewidth]{acf.PNG}
+\includegraphics[width=0.7\linewidth]{acf.png}
 \caption{ACF and PACF graphs}
 \label{fig:acf}
 \end{figure}
@@ -302,7 +302,7 @@ PlotDetections(res, title = "KNN-CAD ANOMALY DETECTOR")
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{sdEwmaresult.PNG}
+\includegraphics[width=0.5\linewidth]{sdEwmaresult.png}
 \caption{Sd-Ewma Anomaly detector results}
 \label{fig:result}
 \end{figure}
@@ -346,7 +346,7 @@ PlotDetections(res, title = "SD-EWMA ANOMALY DETECTOR")
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{onlineSdEwma.PNG}
+\includegraphics[width=0.5\linewidth]{onlineSdEwma.png}
 \caption{Online Sd-Ewma Anomaly detector results}
 \label{fig:result2}
 \end{figure}
@@ -372,7 +372,7 @@ PlotDetections(res, title = "CONTEXTUAL ANOMALY DETECTOR")
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{cadose.PNG}
+\includegraphics[width=0.5\linewidth]{cadose.png}
 \caption{Contextual Anomaly Detector results}
 \label{fig:cad}
 \end{figure}
@@ -415,7 +415,7 @@ PlotDetections(myData, title = "KNN-CAD ANOMALY DETECTOR")
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\linewidth]{Example1Score.PNG}
+\includegraphics[width=1\linewidth]{Example1Score.png}
 \caption{Anomalies detected in speed\_7578 dataset by KNN\_CAD detector.}
 \label{fig:Example1Score}
 \end{figure}
@@ -444,7 +444,7 @@ score <- GetDetectorScore(
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\linewidth]{Ej1ScoreDe.PNG}
+\includegraphics[width=1\linewidth]{Ej1ScoreDe.png}
 \caption{KNN-CAD detector measurement results for speed\_7578 dataset.}
 \label{fig:Ej1ScoreDe}
 \end{figure}
