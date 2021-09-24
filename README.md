@@ -51,6 +51,8 @@ Most useful functions
     -   Online: `IpKnnCad(ncm.type = "LDCD")`
 -   **CAD-OSE**
     -   Offline and Online: `ContextualAnomalyDetector`
+-   **EORELM-AD**
+    - Offline and Online: `EorelmAD`
 
 ### NAB score
 
@@ -64,6 +66,36 @@ Most useful functions
 ### Static or interactive visualizations
 
 -   Offline: `PlotDetections`
+
+## From prediction to anomaly detection framework
+
+It is developed a framework that eases the adoption of any online time series prediction algorithm into an anomaly detection algorithm.
+
+The framework is composed of two main components, one for online data normalization and the other for streaming anomaly scoring based on prediction error. The procedure to adapt an online prediction model into anomaly detection using this framework is shown in the following Figure. First, if the prediction model requires it, the current data point is normalized incrementally. Then, the normalized data point is used to train and predict the expected value using the chosen prediction model. After that, to compute the outlierness, the prediction error is calculated and passed to the outlier scoring function.
+
+<img src="vignettes/AD-FRAMEWORK.jpg" width="100%" />
+
+### Online normalization
+
+-   **Dynamic normalization**
+    - Online: `DinamycNormalizer`
+-   **Window normalization**
+    - Online: `WindowNormalizer`
+-   **Adaptive normalization**
+    - Online: `AdaptiveNormalizer`
+-   **Adaptive normalization2**
+    - Online: `AdaptiveNormalizer2`
+    
+### Outlier scoring
+    
+-   **Anomaly likelihood**
+    - Online: `AnomalyLikelihoodScorer`
+-   **Dynamic threshold**
+    - Online: `DynamicThresholdScorer`
+-   **Sigma scoring**
+    - Online: `SigmaScorer`
+-   **Dynamic sigma scoring**
+    - Online: `DynamicSigmaScorer`
 
 ***NOTE:*** *As usual in R, the documentation pages for each function can be loaded from the command line with the commands ? or help:*
 
