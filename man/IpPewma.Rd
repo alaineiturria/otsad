@@ -4,8 +4,7 @@
 \alias{IpPewma}
 \title{Incremental Processing Probabilistic-EWMA (PEWMA).}
 \usage{
-IpPewma(data, n.train = 5, alpha0 = 0.8, beta = 0, l = 3,
-  last.res = NULL)
+IpPewma(data, n.train = 5, alpha0 = 0.8, beta = 0, l = 3, last.res = NULL)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}

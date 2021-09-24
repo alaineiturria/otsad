@@ -4,8 +4,15 @@
 \alias{CpKnnCad}
 \title{Classic processing KNN based Conformal Anomaly Detector (KNN-CAD)}
 \usage{
-CpKnnCad(data, n.train, threshold = 1, l = 19, k = 27,
-  ncm.type = "ICAD", reducefp = TRUE)
+CpKnnCad(
+  data,
+  n.train,
+  threshold = 1,
+  l = 19,
+  k = 27,
+  ncm.type = "ICAD",
+  reducefp = TRUE
+)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}

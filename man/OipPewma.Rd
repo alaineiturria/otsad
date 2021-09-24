@@ -4,8 +4,7 @@
 \alias{OipPewma}
 \title{Optimized Incremental Processing Probabilistic-EWMA (PEWMA).}
 \usage{
-OipPewma(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3,
-  last.res = NULL)
+OipPewma(data, alpha0 = 0.2, beta = 0, n.train = 5, l = 3, last.res = NULL)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}

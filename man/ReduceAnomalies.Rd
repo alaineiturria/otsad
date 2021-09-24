@@ -4,8 +4,7 @@
 \alias{ReduceAnomalies}
 \title{Reduce Anomalies}
 \usage{
-ReduceAnomalies(data, windowLength, incremental = FALSE,
-  last.res = NULL)
+ReduceAnomalies(data, windowLength, incremental = FALSE, last.res = NULL)
 }
 \arguments{
 \item{data}{Numerical vector with anomaly labels.}

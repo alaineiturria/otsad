@@ -4,9 +4,14 @@
 \alias{IpTsSdEwma}
 \title{Incremental Processing Two-Stage Shift-Detection based on EWMA}
 \usage{
-IpTsSdEwma(data, n.train, threshold, l = 3, m = 5,
-  to.next.iteration = list(last.res = NULL, to.check = NULL, last.m =
-  NULL))
+IpTsSdEwma(
+  data,
+  n.train,
+  threshold,
+  l = 3,
+  m = 5,
+  to.next.iteration = list(last.res = NULL, to.check = NULL, last.m = NULL)
+)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}

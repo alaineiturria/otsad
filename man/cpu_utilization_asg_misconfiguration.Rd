@@ -4,10 +4,12 @@
 \name{cpu_utilization_asg_misconfiguration}
 \alias{cpu_utilization_asg_misconfiguration}
 \title{cpu_utilization_asg_misconfiguration.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 cpu_utilization_asg_misconfiguration
 }

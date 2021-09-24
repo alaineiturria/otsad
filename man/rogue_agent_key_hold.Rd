@@ -4,10 +4,12 @@
 \name{rogue_agent_key_hold}
 \alias{rogue_agent_key_hold}
 \title{rogue_agent_key_hold.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 rogue_agent_key_hold
 }

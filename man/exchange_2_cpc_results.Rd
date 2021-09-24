@@ -4,10 +4,12 @@
 \name{exchange_2_cpc_results}
 \alias{exchange_2_cpc_results}
 \title{exchange_2_cpc_results.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 exchange_2_cpc_results
 }

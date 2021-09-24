@@ -4,9 +4,15 @@
 \alias{PlotDetections}
 \title{PLOT DETECTIONS}
 \usage{
-PlotDetections(data, print.real.anomaly = FALSE,
-  print.time.window = FALSE, title = "", xlab = "Time",
-  ylab = "Value", return.ggplot = FALSE)
+PlotDetections(
+  data,
+  print.real.anomaly = FALSE,
+  print.time.window = FALSE,
+  title = "",
+  xlab = "Time",
+  ylab = "Value",
+  return.ggplot = FALSE
+)
 }
 \arguments{
 \item{data}{data.frame composed of at least one column called timestamp and another column

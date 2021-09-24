@@ -11,3 +11,5 @@ inst/doc
 **.bbl
 **.blg
 **.log
+/doc/
+/Meta/

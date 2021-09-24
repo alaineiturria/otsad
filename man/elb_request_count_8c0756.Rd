@@ -4,10 +4,17 @@
 \name{elb_request_count_8c0756}
 \alias{elb_request_count_8c0756}
 \title{elb_request_count_8c0756.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+
+A data frame with three variables: \code{timestamp}, \code{value},
+  \code{is.real.anomaly}.
+
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 elb_request_count_8c0756
 

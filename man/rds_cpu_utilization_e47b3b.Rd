@@ -4,10 +4,12 @@
 \name{rds_cpu_utilization_e47b3b}
 \alias{rds_cpu_utilization_e47b3b}
 \title{rds_cpu_utilization_e47b3b.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 rds_cpu_utilization_e47b3b
 }

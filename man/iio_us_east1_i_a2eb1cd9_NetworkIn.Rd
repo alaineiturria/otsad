@@ -4,10 +4,12 @@
 \name{iio_us_east1_i_a2eb1cd9_NetworkIn}
 \alias{iio_us_east1_i_a2eb1cd9_NetworkIn}
 \title{iio_us_east1_i_a2eb1cd9_NetworkIn.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 iio_us_east1_i_a2eb1cd9_NetworkIn
 }

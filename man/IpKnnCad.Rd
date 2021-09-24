@@ -4,8 +4,16 @@
 \alias{IpKnnCad}
 \title{Incremental processing KNN based Conformal Anomaly Detector (KNN-CAD).}
 \usage{
-IpKnnCad(data, n.train, threshold = 1, l = 19, k = 27,
-  ncm.type = "ICAD", reducefp = TRUE, to.next.iteration = NULL)
+IpKnnCad(
+  data,
+  n.train,
+  threshold = 1,
+  l = 19,
+  k = 27,
+  ncm.type = "ICAD",
+  reducefp = TRUE,
+  to.next.iteration = NULL
+)
 }
 \arguments{
 \item{data}{Numerical vector with training and test dataset.}

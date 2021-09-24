@@ -19,12 +19,13 @@ knitr::opts_chunk$set(
 ## otsad 0.2.0
 
 * New Features
-    + `ReduceAnomalies` is now available for the incremental processing
-* Minor improvements and fixes
-    + Fixed the problems with `CpSdEwma` `IpSdEwma` `OcpSdEwma` and `OipSdEwma` that in 
-    some cases made return more results than rows in the dataset.
-    + Fixed the error in `GetWindowsLimits` that gave an error when there were not anomalies in
-    the dataset.
-    + `IpTsSdEwma` and `OipTsSdEwma` implementation changed to its easier use.
-    + Fixed an error in `IpKnnCad`.
+    + `EORELM-AD` R6 class that implements our ensemble-based online recurrent extreme learning machine anomaly detector (EORELM-AD).
+    + `DinamycNormalizer` R6 class that implements the unsupervised dynamic z-score standardization proposed by Bollegala.
+    + `WindowNormalizer` R6 class allows normalizing the data set in an online manner one-by-one or chunk-by-chunk.
+    + `AdaptiveNormalizer` R6 class with our adaptation of the method proposed by Ogasawara et al. for one-pass online time-series adaptive normalization.
+    + `AdaptiveNormalizer2` R6 class that implements our adaptation to one-pass online processing of the adaptive normalization method proposed by Gupta and Hewett.
+    + `AnomalyLikelihoodScorer` R6 class that implements the anomaly likelihood introduced by Ahmad et al.
+    + `DynamicThresholdScorer` R6 class that implements the online anomaly scoring method (based on the prediction errors) proposed by Buda et al.
+    + `SigmaScorer` R6 class that allows computing the anomaly score online based on historical prediction errors and 3-sigma control limits.
+    + `DynamicSigmaScorer` R6 class that allows computing the anomaly score online based on the prediction errors and 3-sigma control limits.
 

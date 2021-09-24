@@ -4,10 +4,12 @@
 \name{art_increase_spike_density}
 \alias{art_increase_spike_density}
 \title{art_increase_spike_density}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 art_increase_spike_density
 }

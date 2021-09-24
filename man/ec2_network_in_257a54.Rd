@@ -4,10 +4,12 @@
 \name{ec2_network_in_257a54}
 \alias{ec2_network_in_257a54}
 \title{ec2_network_in_257a54.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 ec2_network_in_257a54
 }

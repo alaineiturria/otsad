@@ -1,4 +1,4 @@
-#' Get detector score
+ #' Get detector score
 #'
 #' @description \code{GetDetectorScore} Calculates the start and end positions of each window that
 #' are focused on the real anomalies. This windows can be used to know if the detected anomaly is a

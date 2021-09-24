@@ -4,10 +4,12 @@
 \name{ec2_cpu_utilization_825cc2}
 \alias{ec2_cpu_utilization_825cc2}
 \title{ec2_cpu_utilization_825cc2.}
-\format{A data frame with three variables: \code{timestamp}, \code{value},
+\format{
+A data frame with three variables: \code{timestamp}, \code{value},
   \code{is.real.anomaly}.
 
-For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}}
+For further details, see \url{https://github.com/numenta/NAB/blob/master/data/README.md}
+}
 \usage{
 ec2_cpu_utilization_825cc2
 }
