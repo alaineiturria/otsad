@@ -1,4 +1,4 @@
-#' Adaptive Normalizer
+#' One-pass Adaptive Normalizer
 #'
 #' @description
 #' R6 class with our adaptation of the method proposed by Ogasawara et al. for one-pass online
@@ -29,7 +29,7 @@ AdaptiveNormalizer <- R6::R6Class("AdaptiveNormalizer", cloneable = FALSE,
 
   public = list(
 
-    #' @description Create a new AdaptiveNormalizer2 object.
+    #' @description Create a new AdaptiveNormalizer object.
     #' @param wl Length of the window with historical data values.
     #' @param maxmin If \code{TRUE} standardization and normalization are applied, else only
     #' standardization is applied.

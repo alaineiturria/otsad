@@ -2,7 +2,7 @@
 % Please edit documentation in R/normalizer_adaptive_normalizer2.R
 \name{AdaptiveNormalizer2}
 \alias{AdaptiveNormalizer2}
-\title{Window-based adaptive normalizalizer 2}
+\title{One-pass adaptive min-max normalizalizer}
 \description{
 R6 class that implements our adaptation to one-pass online processing of the adaptive
 normalization method proposed by Gupta and Hewett. A sliding window of past \code{w} data values

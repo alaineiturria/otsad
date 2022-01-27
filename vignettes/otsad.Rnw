@@ -69,21 +69,21 @@ Due to the evolution of new technologies, the amount of data is increasing and i
 
 In recent years, most of the work has focused on the evolution of evolving prediction models and sliding window-based techniques \cite{a3e0f1cf080343d98cae7430cd6e43c4}. Evolving techniques are models in which parameters or components are modified as new data arrives to capture normal data trends in a better way. On the other hand, techniques based on sliding windows are commonly used to improve distance-based techniques. The distance calculation is an expensive method and proportional to the number of observations to be considered. The use of sliding windows allows reducing the set of observations to be considered but also maintaining the most recent subset of data.
 
-Some works \cite{aggarwal_outlier}\cite{Blazquez-Garcia2020}, suggest that prediction-based algorithms are suitable to adapt to online time-series anomaly detection since only the past data is required during the training phase. Moreover, real-time time series prediction is an independent domain whose research is currently more advanced than in online time series anomaly detection. However, the continuous change of the training data set, the non-stationarity of the data, and the lack of the entire data set make it challenging to adapt the online prediction algorithms into an outlier detection. Hence, little research has been done in this domain  \cite{Ahmad2017}\cite{Xu2017}.
+Some works \cite{aggarwal_outlier}\cite{Blazquez-Garcia2020}, suggest that prediction-based algorithms are suitable to adapt to online time-series anomaly detection since only the past data is required during the training phase. Moreover, real-time time series prediction is an independent domain whose research is currently more advanced than TSOD. However, the continuous change of the training data set, the non-stationarity of the data, and the lack of the entire data set make it challenging to adapt the online prediction algorithms into an outlier detection. Hence, little research has been done in this domain  \cite{Ahmad2017}\cite{Xu2017}.
 
 When adapting prediction algorithms to anomaly detection, two challenges must be addressed. The first challenge is the online anomaly scoring based on the prediction error. The techniques used in offline processing algorithms rely on the entire data set to compute the score from the prediction errors, and very few are proposed for online processing \cite{Ahmad2017}\cite{Buda2018}. The second challenge is the streaming input data normalization. Standardization or normalization of the data becomes an essential requirement for some online prediction algorithms, such as those based on neural networks \cite{Liang2006}\cite{Park2017}. However, none of them address online normalization, and they assume that data is already normalized. This is not a realistic assumption, as, in a real scenario where data arrives in real-time, the entry data set is not available. Hence, the statistics needed for normalization, e.g., minimum, maximum, mean, or deviation, may change over time, making these algorithms not suitable for real online learning tasks.
 
 Although anomaly detection is a highly studied field, there is little theory and open-source software able to address these new challenges. For python, we have found a few algorithms in GitHub of \emph{Numenta Anomaly Benchmark (NAB)} \cite{7424283} including \textbf{Numenta HTM}, \textbf{CAD-OSE}, \textbf{KNN-CAD}, and others. For R, there are few CRAN packages. The first and most popular is the \CRANpkg{tsoutliers} package. There is also the \CRANpkg{qicharts} package that implements basic control chart algorithms. One of the main disadvantages of these packages is that the implemented algorithms are not suitable to work online. In addition to the above, there are few other packages available for online time-series anomaly detection: \CRANpkg{SmartSifter} and \CRANpkg{EnergyOnlineCPM}.
 
-This paper presents a novel R package that includes up-to-date and powerful anomaly detection algorithms for univariate time series. Named as \pkg{ostad}, it aims to provide algorithms that cover different current needs such as online processing and the ability to work in stationary and non-stationary environments. This package intends to address both evolving and sliding window-based techniques that are gaining strength, including algorithms of both types. Moreover, to help increase the number of proposed algorithms and further progress in this field, this work aims to provide a novel framework that allows an easy adaptation of any online prediction algorithm into an online time-series anomaly detection. The framework covers these two crucial aspects: streaming normalization and outlier scoring. It contains two main components. The first component is oriented to online data normalization or standardization, while the second focuses on online anomaly scoring based on prediction errors. Both components implement several online normalization and outlier scoring methods already available in state-of-the-art and new proposals.
+This paper presents a novel R package that includes up-to-date and powerful anomaly detection algorithms for univariate time series. Named as \pkg{ostad}, it aims to provide algorithms that cover different current needs such as online processing and the ability to work in stationary and non-stationary environments. This package intends to address both evolving and sliding window-based techniques that are gaining strength, including algorithms of both types. Moreover, to help increase the number of proposed algorithms and further progress in this field, this work aims to provide a novel framework that allows an easy adaptation of any online prediction algorithm into an online TSOD. The framework covers these two crucial aspects: streaming normalization and outlier scoring. It contains two main components. The first component is oriented to online data normalization or standardization, while the second focuses on online anomaly scoring based on prediction errors. Both components implement several online normalization and outlier scoring methods already available in state-of-the-art and new proposals.
 
-The rest of the paper is organized as follows. The following section introduces the content of the \pkg{otsad} package, while Section \ref{sec:examplesec} describes in detail how to use implemented detectors and reduce false positives. Finally, we conclude the paper with some conclusions and future lines for continuing the work, Section \ref{sec:summary}.
+The rest of the paper is organized as follows. The following section introduces the content of the \pkg{otsad} package, while section \ref{sec:examplesec} describes in detail how to use implemented detectors and reduce false positives. Finally, we conclude the paper with some conclusions and future lines for continuing the work, section \ref{sec:summary}.
 
 \section{The \pkg{otsad} package}\label{sec:package}
 
 This section introduces the first R package that develops a set of up-to-date and effective online anomaly detectors for univariate time series. The \pkg{otsad} package implements eight anomaly detection algorithms along with other functionalities and contents that can be interesting to adapt online time-series forecasting algorithms and perform the best results.
 
-For an easier understanding of this section, we divided it into five sections. In the first Section, we described each implemented algorithms. A novel detector evaluation technique is presented in Section \ref{sec:measure}. Then, we introduce included datasets and the function to visualize the results in Section \ref{sec:display}. After that, Section \ref{sec:fp} describes a simple but effective technique for reducing false positives. Finally, in Section \ref{sec:framework} a framework for easily adapting any online prediction model to outlier detection is introduced.
+For an easier understanding of this section, we divided it into five subsections. In the first subsection, we described each implemented algorithms. A novel detector evaluation technique is presented in section \ref{sec:measure}. Then, we introduce included datasets and the function to visualize the results in section \ref{sec:display}. After that, section \ref{sec:fp} describes a simple but effective technique for reducing false positives. Finally, in section \ref{sec:framework} a framework for easily adapting any online prediction model to outlier detection is introduced.
 
 \subsection{Anomaly detection algorithms} \label{sec:detectors}
 
@@ -146,7 +146,7 @@ For these latest objectives, we have extended the package capabilities in three 
 Score_{final} = 100 \frac{Score_{detector} - Score_{null}}{Score_{perfect} - Score_{null}}
 \end{equation}
 
-This package incorporates an additional function to allow the user to reproduce the results of the benchmarking. Named as \textbf{GetNumTrainingValues}, this function enables obtaining the number of instances used as a training set in NAB \cite{7424283}. The number of training set values is calculated as 15\% of 5000, and for smaller datasets of 5000 instances as 15\% of the dataset instances.
+This package incorporates an additional function to allow the user to reproduce the results of the benchmarking. Named as \textbf{GetNumTrainingValues}, this function enables obtaining the number of instances used as a training set in NAB \cite{7424283}. The number of training set values is calculated as 15\% of 5000. and for smaller datasets of 5000 instances as 15\% of the dataset instances.
 
 % \usepackage[table,xcdraw]{xcolor}
 
@@ -218,9 +218,9 @@ In Figure \ref{fig:ad-framework}, in addition to the procedure for transforming 
 
 \item \emph{WN} or \emph{Window nomalization}. This is the traditional approach, used by  Lin and Keogh \cite{Lin2004} and Haykin  \cite{haykin2009neural}, that consists of dividing time series into sliding windows $W$ first, and then normalizing or standardizing them according to the statistical properties ($\mu$ and $\sigma$) inferred from the last window $W$. In one-pass normalization, a sliding window $W$ is updated with the last $n$ data instances whenever a new data $x_{t}$ arrives, i.e.,  $W = \{x_{t-n+1}, ..., x_{t}\}$. Then, considering the statics of the sliding window $W$, the whole $W$ (or only the current data instance $x_{t}$) is normalized.
 
-\item \emph{AN} or \emph{Adaptive nomalization}. This is our adaptation for one-pass learning of the adaptive normalization introduced by Ogasawara et al. \cite{Ogasawara2010}. This method is specifically designed to normalize non-stationary heteroscedastic (non-uniform volatility) time series and is used for neural network learning. Furthermore, it is important to note that the original method is not fully incremental since it is used to train different neural networks (NN) offline. However, it presents some incremental properties, which we exploit to its application in an online environment.
+\item \emph{OAN} or \emph{One-pass adaptive nomalization}. This is our adaptation for one-pass learning of the adaptive normalization introduced by Ogasawara et al. \cite{Ogasawara2010}. This method is specifically designed to normalize non-stationary heteroscedastic (non-uniform volatility) time series and is used for neural network learning. Furthermore, it is important to note that the original method is not fully incremental since it is used to train different neural networks (NN) offline. However, it presents some incremental properties, which we exploit to its application in an online environment.
 
-\item \emph{AN2} or \emph{Adaptive nomalization2}. This is a one-pass adaptation of the adaptive min-max normalization for Big Data stream proposed by Gupta and Hewett \cite{Gupta2019}. The original proposal was designed for online chunk-by-chunk (batches of data) processing, where disjoint (non-overlapping) fixed size sliding windows $W_{i}$ are used. In this case, one-pass overlapping windows are used.
+\item \emph{OAMN} or \emph{One-pass adaptive min-max nomalization}. This is a one-pass adaptation of the adaptive min-max normalization for Big Data stream proposed by Gupta and Hewett \cite{Gupta2019}. The original proposal was designed for online chunk-by-chunk (batches of data) processing, where disjoint (non-overlapping) fixed size sliding windows $W_{i}$ are used. In this case, one-pass overlapping windows are used.
 
 \end{itemize}
 
@@ -246,7 +246,7 @@ In Figure \ref{fig:ad-framework}, in addition to the procedure for transforming 
 
 \section{Use example}\label{sec:examplesec}
 
-In this section we explain how to use the package. Section \ref{sec:installation} describes  how to install the package. In Section \ref{sec:documentation} we show how to load the documentation. Then, Section \ref{sec:examples} includes some examples to show how to use the package. Finally, Section \ref{sec:summaryfunctions} summarizes the most useful functions.
+In this section we explain how to use the package. Section \ref{sec:installation} describes  how to install the package. In section \ref{sec:documentation} we show how to load the documentation. Then, section \ref{sec:examples} includes some examples to show how to use the package. Finally, section \ref{sec:summaryfunctions} summarizes the most useful functions.
 
 \subsection{Installation}\label{sec:installation}
 
@@ -301,7 +301,7 @@ In addition, a user manual is available in the github repository of the  \pkg{ot
 
 \subsection{Examples}\label{sec:examples}
 
-For major clarity we have divided the examples into three blocks. In Section \ref{sec:examples-bloq1} we introduce how to detect anomalies and visualize the results. Then Section \ref{sec:examples-bloq2} introduces how to measure anomaly detectors. Finally, in Section \ref{sec:examples-bloq3} we show an example of using the framework to adapt a prediction algorithm to outlier detection.
+For the sake of clarity we have divided the examples into three blocks. In Section \ref{sec:examples-bloq1} we introduce how to detect anomalies and visualize the results. Then Section \label{sec:examples-bloq2} introduces how to measure anomaly detectors. Finally, in Section \label{sec:examples-bloq3} we show an example of using the framework to adapt a prediction algorithm to outlier detection.
 
 \subsubsection{Anomaly detection and visualization}\label{sec:examples-bloq1}
 
@@ -358,7 +358,7 @@ For major clarity we have divided the examples into three blocks. In Section \re
   kpss.test(df$value)
   @
 
-  On the recommendation of the algorithm authors we set \code{threshold} to 0.01. One of the usual values for the $\sigma$ multiplier \code{l} is usually 3. Next, we apply the SD-EWMA anomaly detector, as the example is simple we use the classical processing algorithm. Note that the optimized algorithm could be used in the same way. Finally, we separate the training and test sets, using the first five values for training and the rest values for testing.
+  On the recommendation of the algorithm authors we set \code{threshold} to 0.01.One of the usual values for the $\sigma$ multiplier \code{l} is usually 3. Next, we apply the SD-EWMA anomaly detector, as the example is simple we use the classical processing algorithm. Note that the optimized algorithm could be used in the same way. Finally, we separate the training and test sets, using the first five values for training and the rest values for testing.
 
   <<detector>>=
   result <- CpSdEwma(data = df$value, n.train = 5, threshold = 0.01, l = 3)
@@ -610,10 +610,10 @@ Now we standardize the data set, using the dynamic normalization method.
 <<Predict>>=
 ## Generate data
 set.seed(100)
-normalizer <- DinamycNormalizer$new()
+normalizer <- DynamicNormalizer$new()
 online_norm_value <- sapply(df$value, normalizer$normalize)
 
-plot(online_norm_value[-1], type = "l",
+plot(online_norm_value, type = "l",
        main = "Standarized time-Serie", col = "blue", xlab = "Time", ylab = "Value")
 @
 
@@ -678,10 +678,10 @@ Finally, it can be seen that the score obtained by DynamicSigmaScoring and the s
     Visualization & \begin{tabular}[c]{@{}l@{}}Static or \\
     interactive visualizations\end{tabular} & PlotDetections & \multicolumn{1}{c}{-} \\ \hline
     \multirow{4}{*}{Online normalization}
-     & Dynamic normalization (R6) & DinamycNormalizer & DinamycNormalizer \\
+     & Dynamic normalization (R6) & DynamicNormalizer & DynamicNormalizer \\
      & Window normalization (R6) & WindowNormalizer & WindowNormalizer \\
-     & Adaptive normalization (R6) & AdaptiveNormalizer & AdaptiveNormalizer \\
-     & Adaptive normalization2 (R6) & AdaptiveNormalizer2 & AdaptiveNormalizer2 \\ \hline
+     & One-pass adaptive normalization (R6) & AdaptiveNormalizer & AdaptiveNormalizer \\
+     & One-pass adaptive min-max normalization (R6) & AdaptiveNormalizer2 & AdaptiveNormalizer2 \\ \hline
      \multirow{4}{*}{Online scoring}
      & Anomaly likelihood (R6) & AnomalyLikelihoodScorer & AnomalyLikelihoodScorer \\
      & Dynamic threshold (R6) & DynamicThresholdScorer & DynamicThresholdScorer \\
@@ -693,10 +693,9 @@ Finally, it can be seen that the score obtained by DynamicSigmaScoring and the s
 
 \section{Summary}\label{sec:summary}
 
-In this paper, we present the \pkg{otsad} package for R. This package fully meets the demand for anomaly detection algorithms over univariate time series in online environments. With this package, we tackle the ability to work with stationary and non-stationary data. We also provide algorithms of the two detection techniques (evolving and window-based) that are gaining strength in research. Furthermore, we offer a novel framework to ease the adaptation of any online prediction algorithm into an online outlier detection.
+In this paper, we present the \pkg{otsad} package for R. This package fully meets the demand for anomaly detection algorithms over univariate time series in online environments. With this package we tackle with the ability to work with stationary and non-stationary data. We also provide algorithms of the two detection techniques (evolving and window based) that are gaining strength on research.
 
-As a future job, we propose to maintain and add functionalities to our \pkg{otsad} package, i.e., provide more sophisticated false positive reduction techniques and incorporate them into algorithms.
-
+As a future job, we propose to maintain and add functionalities to our \pkg{otsad} package, i.e. provide more sophisticated false positive reduction techniques and incorporate them into algorithms.
 
 \bibliography{otsad}
 \bibliographystyle{plain}

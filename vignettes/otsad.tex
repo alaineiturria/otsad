@@ -268,9 +268,9 @@ In Figure \ref{fig:ad-framework}, in addition to the procedure for transforming 
 
 \item \emph{WN} or \emph{Window nomalization}. This is the traditional approach, used by  Lin and Keogh \cite{Lin2004} and Haykin  \cite{haykin2009neural}, that consists of dividing time series into sliding windows $W$ first, and then normalizing or standardizing them according to the statistical properties ($\mu$ and $\sigma$) inferred from the last window $W$. In one-pass normalization, a sliding window $W$ is updated with the last $n$ data instances whenever a new data $x_{t}$ arrives, i.e.,  $W = \{x_{t-n+1}, ..., x_{t}\}$. Then, considering the statics of the sliding window $W$, the whole $W$ (or only the current data instance $x_{t}$) is normalized.
 
-\item \emph{AN} or \emph{Adaptive nomalization}. This is our adaptation for one-pass learning of the adaptive normalization introduced by Ogasawara et al. \cite{Ogasawara2010}. This method is specifically designed to normalize non-stationary heteroscedastic (non-uniform volatility) time series and is used for neural network learning. Furthermore, it is important to note that the original method is not fully incremental since it is used to train different neural networks (NN) offline. However, it presents some incremental properties, which we exploit to its application in an online environment.
+\item \emph{OAN} or \emph{One-pass adaptive nomalization}. This is our adaptation for one-pass learning of the adaptive normalization introduced by Ogasawara et al. \cite{Ogasawara2010}. This method is specifically designed to normalize non-stationary heteroscedastic (non-uniform volatility) time series and is used for neural network learning. Furthermore, it is important to note that the original method is not fully incremental since it is used to train different neural networks (NN) offline. However, it presents some incremental properties, which we exploit to its application in an online environment.
 
-\item \emph{AN2} or \emph{Adaptive nomalization2}. This is a one-pass adaptation of the adaptive min-max normalization for Big Data stream proposed by Gupta and Hewett \cite{Gupta2019}. The original proposal was designed for online chunk-by-chunk (batches of data) processing, where disjoint (non-overlapping) fixed size sliding windows $W_{i}$ are used. In this case, one-pass overlapping windows are used.
+\item \emph{OAMN} or \emph{One-pass adaptive min-max nomalization}. This is a one-pass adaptation of the adaptive min-max normalization for Big Data stream proposed by Gupta and Hewett \cite{Gupta2019}. The original proposal was designed for online chunk-by-chunk (batches of data) processing, where disjoint (non-overlapping) fixed size sliding windows $W_{i}$ are used. In this case, one-pass overlapping windows are used.
 
 \end{itemize}
 
@@ -363,7 +363,7 @@ In addition, a user manual is available in the github repository of the  \pkg{ot
 
 \subsection{Examples}\label{sec:examples}
 
-For the sake of clarity we have divided the examples into three blocks. In Section \ref{sec:examples-bloq1} we introduce how to detect anomalies and visualize the results. Then Section \ref{sec:examples-bloq2} introduces how to measure anomaly detectors. Finally, in Section \ref{sec:examples-bloq3} we show an example of using the framework to adapt a prediction algorithm to outlier detection.
+For the sake of clarity we have divided the examples into three blocks. In Section \ref{sec:examples-bloq1} we introduce how to detect anomalies and visualize the results. Then Section \label{sec:examples-bloq2} introduces how to measure anomaly detectors. Finally, in Section \label{sec:examples-bloq3} we show an example of using the framework to adapt a prediction algorithm to outlier detection.
 
 \subsubsection{Anomaly detection and visualization}\label{sec:examples-bloq1}
 
@@ -760,10 +760,10 @@ Now we standardize the data set, using the dynamic normalization method.
 \begin{alltt}
 \hlcom{## Generate data}
 \hlkwd{set.seed}\hlstd{(}\hlnum{100}\hlstd{)}
-\hlstd{normalizer} \hlkwb{<-} \hlstd{DinamycNormalizer}\hlopt{$}\hlkwd{new}\hlstd{()}
+\hlstd{normalizer} \hlkwb{<-} \hlstd{DynamicNormalizer}\hlopt{$}\hlkwd{new}\hlstd{()}
 \hlstd{online_norm_value} \hlkwb{<-} \hlkwd{sapply}\hlstd{(df}\hlopt{$}\hlstd{value, normalizer}\hlopt{$}\hlstd{normalize)}
 
-\hlkwd{plot}\hlstd{(online_norm_value[}\hlopt{-}\hlnum{1}\hlstd{],} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{,}
+\hlkwd{plot}\hlstd{(online_norm_value,} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{,}
        \hlkwc{main} \hlstd{=} \hlstr{"Standarized time-Serie"}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"blue"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{"Time"}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{"Value"}\hlstd{)}
 \end{alltt}
 \end{kframe}
@@ -859,10 +859,10 @@ Finally, it can be seen that the score obtained by DynamicSigmaScoring and the s
     Visualization & \begin{tabular}[c]{@{}l@{}}Static or \\
     interactive visualizations\end{tabular} & PlotDetections & \multicolumn{1}{c}{-} \\ \hline
     \multirow{4}{*}{Online normalization}
-     & Dynamic normalization (R6) & DinamycNormalizer & DinamycNormalizer \\
+     & Dynamic normalization (R6) & DynamicNormalizer & DynamicNormalizer \\
      & Window normalization (R6) & WindowNormalizer & WindowNormalizer \\
-     & Adaptive normalization (R6) & AdaptiveNormalizer & AdaptiveNormalizer \\
-     & Adaptive normalization2 (R6) & AdaptiveNormalizer2 & AdaptiveNormalizer2 \\ \hline
+     & One-pass adaptive normalization (R6) & AdaptiveNormalizer & AdaptiveNormalizer \\
+     & One-pass adaptive min-max normalization (R6) & AdaptiveNormalizer2 & AdaptiveNormalizer2 \\ \hline
      \multirow{4}{*}{Online scoring}
      & Anomaly likelihood (R6) & AnomalyLikelihoodScorer & AnomalyLikelihoodScorer \\
      & Dynamic threshold (R6) & DynamicThresholdScorer & DynamicThresholdScorer \\
@@ -874,10 +874,9 @@ Finally, it can be seen that the score obtained by DynamicSigmaScoring and the s
 
 \section{Summary}\label{sec:summary}
 
-In this paper, we present the \pkg{otsad} package for R. This package fully meets the demand for anomaly detection algorithms over univariate time series in online environments. With this package, we tackle the ability to work with stationary and non-stationary data. We also provide algorithms of the two detection techniques (evolving and window-based) that are gaining strength in research. Furthermore, we offer a novel framework to ease the adaptation of any online prediction algorithm into an online outlier detection.
+In this paper, we present the \pkg{otsad} package for R. This package fully meets the demand for anomaly detection algorithms over univariate time series in online environments. With this package we tackle with the ability to work with stationary and non-stationary data. We also provide algorithms of the two detection techniques (evolving and window based) that are gaining strength on research.
 
-As a future job, we propose to maintain and add functionalities to our \pkg{otsad} package, i.e., provide more sophisticated false positive reduction techniques and incorporate them into algorithms.
-
+As a future job, we propose to maintain and add functionalities to our \pkg{otsad} package, i.e. provide more sophisticated false positive reduction techniques and incorporate them into algorithms.
 
 \bibliography{otsad}
 \bibliographystyle{plain}

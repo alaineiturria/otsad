@@ -95,12 +95,12 @@ The framework is composed of two main components, one for online data normalizat
 ### Online normalization
 
 * **Dynamic normalization**
-    + Online: `DinamycNormalizer`
+    + Online: `DynamicNormalizer`
 * **Window normalization**
     + Online: `WindowNormalizer`
-* **Adaptive normalization**
+* **One-pass adaptive normalization**
     + Online: `AdaptiveNormalizer`
-* **Adaptive normalization2**
+* **One-pass adaptive min-max normalization**
     + Online: `AdaptiveNormalizer2`
     
 ### Outlier scoring

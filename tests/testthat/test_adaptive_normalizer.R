@@ -1,5 +1,5 @@
 library(otsad)
-context("Adaptive Normalizalizer")
+context("One-pass Adaptive Normalizalizer")
 
 test_that("AdaptiveNormalizer gives the correct result", {
 

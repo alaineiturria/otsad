@@ -5,7 +5,7 @@ OrelmNormalizer <- R6::R6Class("OrelmNormalizer", cloneable = FALSE,
     initialize = function(wl, method, others = NULL) {
 
       stopifnot(is.numeric(wl), wl > 1)
-      stopifnot(is.null(method) |  method %in% c("DN", "WN", "AN", "AN2"))
+      stopifnot(is.null(method) |  method %in% c("DN", "WN", "OAN", "OAMN"))
 
       private$normalized_window <- Buffer$new(wl)
       private$method <- method
@@ -14,19 +14,19 @@ OrelmNormalizer <- R6::R6Class("OrelmNormalizer", cloneable = FALSE,
 
         switch(private$method,
           # dinamyc_normalizalizer
-          DN = private$normalizer <- DinamycNormalizer$new(),
+          DN = private$normalizer <- DynamicNormalizer$new(),
           # window_normalizer
           WN = {
             obj <- get("WindowNormalizer")
             private$normalizer <- do.call(obj$new, c(list(wl = wl), others))
           },
           # adaptive_normalizer
-          AN = {
+          OAN = {
             obj <- get("AdaptiveNormalizer")
             private$normalizer <- do.call(obj$new, c(list(wl = wl - 1), others))
           },
           # adaptive_normalizer2
-          AN2 = {
+          OAMN = {
             obj <- get("AdaptiveNormalizer2")
             private$normalizer <- do.call(obj$new, c(list(wl = wl), others))
           }

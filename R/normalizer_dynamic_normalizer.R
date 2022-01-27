@@ -10,7 +10,7 @@
 #'
 #' @examples
 #'
-#' normalizer <- DinamycNormalizer$new()
+#' normalizer <- DynamicNormalizer$new()
 #'
 #' normalizer$normalize(10)
 #' normalizer$normalize(15)
@@ -23,12 +23,12 @@
 #'
 #' @export
 
-DinamycNormalizer <- R6::R6Class("DinamycNormalizer", cloneable = FALSE,
+DynamicNormalizer <- R6::R6Class("DynamicNormalizer", cloneable = FALSE,
 
   public = list(
 
-    #' @description Create a new DinamycNormalizer object.
-    #' @return A new DinamycNormalizer object.
+    #' @description Create a new DynamicNormalizer object.
+    #' @return A new DynamicNormalizer object.
     initialize = function() {},
 
     #' @description Normalizes the current data value.

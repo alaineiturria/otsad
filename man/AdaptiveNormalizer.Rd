@@ -2,7 +2,7 @@
 % Please edit documentation in R/normalizer_adaptive_normalizer.R
 \name{AdaptiveNormalizer}
 \alias{AdaptiveNormalizer}
-\title{Adaptive Normalizer}
+\title{One-pass Adaptive Normalizer}
 \description{
 R6 class with our adaptation of the method proposed by Ogasawara et al. for one-pass online
 time-series adaptive normalization. This method is designed to train neural networks and returns
@@ -40,7 +40,7 @@ in: Proceedings of the International Joint Conference on Neural Networks, 2010, 
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new AdaptiveNormalizer2 object.
+Create a new AdaptiveNormalizer object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AdaptiveNormalizer$new(wl = 10, maxmin = T, l = 3, returnPoint = F)}\if{html}{\out{</div>}}
 }

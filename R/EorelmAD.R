@@ -68,12 +68,12 @@ EorelmAD <- R6::R6Class("EorelmAD", cloneable = FALSE,
   #' weight forgetting factor. All values must be between 0 and 1. If it is 1, it does not
   #' forget anything.
   #' @param normMethod The normalization method to be used. Possible values are: NULL, "WN",
-  #' "DN", "AN", and "AN2". Note that if the value of \code{normMethod} is NULL, the input data
+  #' "DN", "OAN", and "OAMN". Note that if the value of \code{normMethod} is NULL, the input data
   #'  must be previously normalized or standardized.
   #' @param normParams A list with the additional parameters to configure selected
   #' \code{normMethod}; by default NULL. Please for more details see,
-  #' \code{\link{WindowNormalizer}} (WN), \code{\link{DinamycNormalizer}} (DN),
-  #' \code{\link{AdaptiveNormalizer}} (AN), \code{\link{AdaptiveNormalizer2}} (AN2).
+  #' \code{\link{WindowNormalizer}} (WN), \code{\link{DynamicNormalizer}} (DN),
+  #' \code{\link{AdaptiveNormalizer}} (OAN), \code{\link{AdaptiveNormalizer2}} (OAMN).
   #' @param outlierMethod The outlier method to be used to compute the anomaly score
   #' based on historical prediction errors. Possible values are: "AL", "DT", "SS" and "DSS".
   #' @param outlierParams A list with the additional parameters to configure selected
@@ -117,8 +117,8 @@ EorelmAD <- R6::R6Class("EorelmAD", cloneable = FALSE,
       stop("inputWeightForgettingFactor must be a value or vector between 0 and 1.")
     }
     if (!is.null(normMethod)){
-      if (!(normMethod %in% c("WN", "DN", "AN", "AN2"))) {
-        stop("normMethod must be one of these values: NULL, 'WN', 'DN', 'AN', 'AN2'")
+      if (!(normMethod %in% c("WN", "DN", "OAN", "OAMN"))) {
+        stop("normMethod must be one of these values: NULL, 'WN', 'DN', 'OAN', 'OAMN'")
       }
     }
     if (!is.null(normParams)){

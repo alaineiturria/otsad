@@ -1,9 +1,9 @@
 library(otsad)
 context("Dinamyc Normalizer")
 
-test_that("DinamycNormalizer gives the correct result", {
+test_that("DynamicNormalizer gives the correct result", {
 
-  normalizer <- DinamycNormalizer$new()
+  normalizer <- DynamicNormalizer$new()
 
   expect_equal(normalizer$normalize(10), 10)
   expect_equal(round(normalizer$normalize(15),3), 0.707)

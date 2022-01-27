@@ -1,4 +1,4 @@
-#' Window-based adaptive normalizalizer 2
+#' One-pass adaptive min-max normalizalizer
 #'
 #' @description
 #' R6 class that implements our adaptation to one-pass online processing of the adaptive
