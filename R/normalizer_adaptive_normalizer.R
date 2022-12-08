@@ -156,7 +156,7 @@ AdaptiveNormalizer <- R6::R6Class("AdaptiveNormalizer", cloneable = FALSE,
             private$globalMin <- max(q1 - private$l * iqr, min(v))
             private$globalMax <- min(q3 + private$l * iqr, max(v))
 
-            private$globalMin <- 0.981
+            # private$globalMin <- 0.981
 
             private$bestS <- s_aux[(n.train + 1), j]
             if (private$globalMax == private$globalMin) {
